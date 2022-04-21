@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)https://cs61a.org/lab/lab06/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+    <title>
+Lab 6: Object-Oriented Programming | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab06/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab06/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab06/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Lab 6: Object-Oriented Programming
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/lab/lab06/lab06.zip" class="label label-outline">lab06.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><i>Due by 11:59pm on Wednesday, March 2.</i></p>
+
+
+
+
+
+
+<h2 id="starter-files">Starter Files</h2>
+
+<p>Download <a href="https://cs61a.org/lab/lab06/lab06.zip">lab06.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="https://cs61a.org/lab/lab06/ok">Ok</a> autograder.</p>
+
+
+
+
+
+
+
+
+    
+<h1 id="topics">Topics</h1>
+
+
+<p>Consult this section if you need a refresher on the material for this lab. It's
+okay to skip directly to <a href="https://cs61a.org/lab/lab06/#required-questions">the questions</a> and refer back
+here should you get stuck.</p>
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Object-Oriented Programming<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="object-oriented-programming">Object-Oriented Programming</h2>
+
+<p><strong>Object-oriented programming</strong> (OOP) is a style of programming that
+allows you to think of code in terms of "objects." Here's an example of
+a <code>Car</code> class:</p>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Car</span>:</span>
+    num_wheels = <span class="hljs-number">4</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, color)</span>:</span>
+        self.wheels = Car.num_wheels
+        self.color = color
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">drive</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">if</span> self.wheels &lt;= Car.num_wheels:
+            <span class="hljs-keyword">return</span> self.color + <span class="hljs-string">' car cannot drive!'</span>
+        <span class="hljs-keyword">return</span> self.color + <span class="hljs-string">' car goes vroom!'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pop_tire</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">if</span> self.wheels &gt; <span class="hljs-number">0</span>:
+            self.wheels -= <span class="hljs-number">1</span></code></pre>
+
+<p>Here's some terminology:</p>
+
+<ul>
+  <li><strong>class</strong>: a blueprint for how to build a certain type of object.
+  The <code>Car</code> class (shown above) describes the behavior and data that
+  all <code>Car</code> objects have.</li>
+  <li><p><strong>instance</strong>: a particular occurrence of a class. In Python, we
+  create instances of a class like this:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>my_car = Car(<span class="hljs-string">'red'</span>)</code></pre>
+
+  <p><code>my_car</code> is an instance of the <code>Car</code> class.</p></li>
+  <li><p><strong>data attributes</strong>: a variable that belongs to the instance
+  (also called instance variables).
+  Think of a data attribute as a quality of the object: cars have <em>wheels</em>
+  and <em>color</em>, so we have given our <code>Car</code> instance <code>self.wheels</code> and
+  <code>self.color</code> attributes. We can access attributes using <strong>dot
+  notation</strong>:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>my_car.color
+<span class="hljs-string">'red'</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>my_car.wheels
+<span class="hljs-number">4</span></code></pre></li>
+  <li><p><strong>method</strong>: Methods are just like normal functions, except that they
+  are bound to an instance. Think of a method as a "verb" of
+  the class: cars can <em>drive</em> and also <em>pop their tires</em>, so we have
+  given our <code>Car</code> instance the methods <code>drive</code> and <code>pop_tire</code>. We call
+  methods using <strong>dot notation</strong>:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>my_car = Car(<span class="hljs-string">'red'</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>my_car.drive()
+<span class="hljs-string">'red car goes vroom!'</span></code></pre></li>
+  <li><p><strong>constructor</strong>: Constructors
+  build an instance of the class. The constructor for car objects
+  is <code>Car(color)</code>. When Python calls that constructor,
+  it immediately calls the <code>__init__</code> method. That's where we initialize
+  the data attributes:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, color)</span>:</span>
+    self.wheels = Car.num_wheels
+    self.color = color</code></pre>
+
+  <p>The constructor takes in one argument, <code>color</code>. As you can see, this
+  constructor also creates the <code>self.wheels</code> and <code>self.color</code> attributes.</p></li>
+  <li><p><code>self</code>: in Python, <code>self</code> is the first parameter for many methods
+  (in this class, we will only use methods whose first parameter is
+  <code>self</code>). When a method is called, <code>self</code> is bound to an instance of
+  the class. For example:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>my_car = Car(<span class="hljs-string">'red'</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>car.drive()</code></pre>
+
+  <p>Notice that the <code>drive</code> method takes in <code>self</code> as an argument, but it
+  looks like we didn't pass one in! This is because the dot notation
+  <em>implicitly</em> passes in <code>car</code> as <code>self</code> for us.
+  </p></li></ul></div>
+  <br><p></p>
+
+
+<br>
+
+        <button id="toggle-2" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Inheritance<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+
+<h2 id="inheritance">Inheritance</h2>
+
+<!-- This is the long version of inheritance introduction. A shorter version can be found in inheritance-intro.md
+-->
+Python classes can implement a useful abstraction technique known as
+<strong>inheritance</strong>. To illustrate this concept, consider the following
+<code>Dog</code> and <code>Cat</code> classes.
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner)</span>:</span>
+        self.is_alive = <span class="hljs-literal">True</span>
+        self.name = name
+        self.owner = owner
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span><span class="hljs-params">(self, thing)</span>:</span>
+        print(self.name + <span class="hljs-string">" ate a "</span> + str(thing) + <span class="hljs-string">"!"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        print(self.name + <span class="hljs-string">" says woof!"</span>)
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Cat</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner, lives=<span class="hljs-number">9</span>)</span>:</span>
+        self.is_alive = <span class="hljs-literal">True</span>
+        self.name = name
+        self.owner = owner
+        self.lives = lives
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span><span class="hljs-params">(self, thing)</span>:</span>
+        print(self.name + <span class="hljs-string">" ate a "</span> + str(thing) + <span class="hljs-string">"!"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        print(self.name + <span class="hljs-string">" says meow!"</span>)</code></pre>
+
+
+
+<p>Notice that because dogs and cats share a lot of similar qualities, there is a
+lot of repeated code! To avoid redefining attributes and methods for similar
+classes, we can write a single <strong>base class</strong> from which the similar
+classes <strong>inherit</strong>. For example, we can write a class called <strong>Pet</strong>
+and redefine <strong>Dog</strong> as a <strong>subclass</strong> of <strong>Pet</strong>:</p>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pet</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner)</span>:</span>
+        self.is_alive = <span class="hljs-literal">True</span>    <span class="hljs-comment"># It's alive!!!</span>
+        self.name = name
+        self.owner = owner
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eat</span><span class="hljs-params">(self, thing)</span>:</span>
+        print(self.name + <span class="hljs-string">" ate a "</span> + str(thing) + <span class="hljs-string">"!"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        print(self.name)
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span><span class="hljs-params">(Pet)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        print(self.name + <span class="hljs-string">' says woof!'</span>)</code></pre>
+
+
+
+<p>Inheritance represents a hierarchical relationship between two or more
+classes where one class <strong>is a</strong> (no relation to the Python <code>is</code> operator)
+more specific version of the other, e.g.
+a dog <strong>is a</strong> pet. Because <code>Dog</code> inherits from <code>Pet</code>, we
+didn't have to redefine <code>__init__</code> or <code>eat</code>.  However, since
+we want <code>Dog</code> to <code>talk</code> in a way that is unique to dogs, we did
+<strong>override</strong> the <code>talk</code> method.</p>
+
+<p>We can use the <code>super()</code> function to refer to a class's superclass. For example, calling <code>super()</code> within the class definition of <code>Dog</code> allows us to access the same object but as if it were an instance of its superclass, in this case <code>Pet</code>. This is a little bit of a simplification, and if you're interested you can read more at https://docs.python.org/3/library/functions.html#super.</p>
+
+<p>Here's an example of an alternate equivalent definition of <code>Dog</code> that uses <code>super()</code> to explicitly call the <code>__init__</code> method of the parent class:</p>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span><span class="hljs-params">(Pet)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner)</span>:</span>
+        super().__init__(name, owner)
+        <span class="hljs-comment"># this is equivalent to calling Pet.__init__(self, name, owner)</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        print(self.name + <span class="hljs-string">' says woof!'</span>)</code></pre>
+
+
+<p>Keep in mind that creating the <code>__init__</code> function shown above is actually not necessary, because creating a <code>Dog</code> instance will automatically call the <code>__init__</code> method of <code>Pet</code>. Normally when defining an <code>__init__</code> method in a subclass, we take some additional action to calling <code>super().__init__</code>. For example, we could add a new instance variable like the following:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner, has_floppy_ears)</span>:</span>
+    super().__init__(name, owner)
+    self.has_floppy_ears = has_floppy_ears</code></pre>
+
+
+</div>
+<br>
+
+
+<h1 id="required-questions">Required Questions</h1>
+
+
+
+<h2 id="what-would-python-do">What Would Python Do?</h2>
+
+
+<p>These questions use inheritance.
+For an overview of inheritance,
+see the <a href="http://composingprograms.com/pages/25-object-oriented-programming.html#inheritance">inheritance portion</a> of Composing Programs.</p>
+
+
+<h3 id="q1-wwpd-classy-cars">Q1: WWPD: Classy Cars</h3>
+
+
+<p>Below is the definition of a <code>Car</code> class that we will be using in the following WWPD questions.</p>
+
+<blockquote><p><strong>Note:</strong> The <code>Car</code> class definition can also be found in <code>car.py</code>.</p></blockquote>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Car</span>:</span>
+    num_wheels = <span class="hljs-number">4</span>
+    gas = <span class="hljs-number">30</span>
+    headlights = <span class="hljs-number">2</span>
+    size = <span class="hljs-string">'Tiny'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, make, model)</span>:</span>
+        self.make = make
+        self.model = model
+        self.color = <span class="hljs-string">'No color yet. You need to paint me.'</span>
+        self.wheels = Car.num_wheels
+        self.gas = Car.gas
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">paint</span><span class="hljs-params">(self, color)</span>:</span>
+        self.color = color
+        <span class="hljs-keyword">return</span> self.make + <span class="hljs-string">' '</span> + self.model + <span class="hljs-string">' is now '</span> + color
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">drive</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">if</span> self.wheels &lt; Car.num_wheels <span class="hljs-keyword">or</span> self.gas &lt;= <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">'Cannot drive!'</span>
+        self.gas -= <span class="hljs-number">10</span>
+        <span class="hljs-keyword">return</span> self.make + <span class="hljs-string">' '</span> + self.model + <span class="hljs-string">' goes vroom!'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pop_tire</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">if</span> self.wheels &gt; <span class="hljs-number">0</span>:
+            self.wheels -= <span class="hljs-number">1</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fill_gas</span><span class="hljs-params">(self)</span>:</span>
+        self.gas += <span class="hljs-number">20</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'Gas level: '</span> + str(self.gas)</code></pre>
+
+<p>For the later unlocking questions, we will be referencing the <code>MonsterTruck</code>
+class below.</p>
+
+<blockquote><p><strong>Note</strong>: The <code>MonsterTruck</code> class definition can also be found in <code>car.py</code>.</p></blockquote>
+
+<pre><code class="hljs python"> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MonsterTruck</span><span class="hljs-params">(Car)</span>:</span>
+     size = <span class="hljs-string">'Monster'</span>
+
+     <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">rev</span><span class="hljs-params">(self)</span>:</span>
+         print(<span class="hljs-string">'Vroom! This Monster Truck is huge!'</span>)
+
+     <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">drive</span><span class="hljs-params">(self)</span>:</span>
+         self.rev()
+         <span class="hljs-keyword">return</span> super().drive()</code></pre>
+
+<p>You can find the unlocking questions below.</p>
+
+<blockquote><p>Use Ok to test your knowledge with the following "What Would Python Display?" questions:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q wwpd-car -u</code><button id="copy-code-python3ok-qwwpd-car-u" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qwwpd-car-u").onclick = () => copyCode('python3 ok -q wwpd-car -u', "copy-code-python3ok-qwwpd-car-u");
+        </script>
+        <br>
+
+<p><strong>Important:</strong>
+For all WWPD questions, type <code>Function</code> if you believe the answer is
+<code>&lt;function...&gt;</code>, <code>Error</code> if it errors, and <code>Nothing</code> if nothing is displayed.</p></blockquote>
+
+<!--
+
+<blockquote><pre><code>python3 ok &#x2d;q food_truck &#x2d;u</code></pre>
+
+<p>--><p></p>
+
+<!-- <pre><code>&gt;&gt;&gt; garcias_car = Car(&#x27;Tesla&#x27;, &#x27;Model S&#x27;)
+&gt;&gt;&gt; garcias_car.color
+<div class="alt prompt-1">______</div><div class="solution prompt-1">&#x27;&#x4e;&#x6f;&#x20;&#x63;&#x6f;&#x6c;&#x6f;&#x72;&#x20;&#x79;&#x65;&#x74;&#x2e;&#x20;&#x59;&#x6f;&#x75;&#x20;&#x6e;&#x65;&#x65;&#x64;&#x20;&#x74;&#x6f;&#x20;&#x70;&#x61;&#x69;&#x6e;&#x74;&#x20;&#x6d;&#x65;&#x2e;&#x27;</div>
+&gt;&gt;&gt; garcias_car.paint(&#x27;black&#x27;)
+<div class="alt prompt-1">______</div><div class="solution prompt-1">&#x27;&#x54;&#x65;&#x73;&#x6c;&#x61;&#x20;&#x4d;&#x6f;&#x64;&#x65;&#x6c;&#x20;&#x53;&#x20;&#x69;&#x73;&#x20;&#x6e;&#x6f;&#x77;&#x20;&#x62;&#x6c;&#x61;&#x63;&#x6b;&#x27;</div>
+&gt;&gt;&gt; garcias_car.color
+<div class="alt prompt-1">______</div><div class="solution prompt-1">&#x27;&#x62;&#x6c;&#x61;&#x63;&#x6b;&#x27;</div></code></pre>
+        <button id='prompt-1' class='btn btn-outline btn-lg solutiontoggle prompt'>
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+         -->
+<!--
+<pre><code>&gt;&gt;&gt; garcias_car = Car(&#x27;Tesla&#x27;, &#x27;Model S&#x27;)
+&gt;&gt;&gt; garcias_truck = MonsterTruck(&#x27;Monster Truck&#x27;, &#x27;XXL&#x27;)
+&gt;&gt;&gt; garcias_car.size
+<div class="alt prompt-2">______</div><div class="solution prompt-2">&#x27;&#x54;&#x69;&#x6e;&#x79;&#x27;</div>
+&gt;&gt;&gt; garcias_truck.size
+<div class="alt prompt-2">______</div><div class="solution prompt-2">&#x27;&#x4d;&#x6f;&#x6e;&#x73;&#x74;&#x65;&#x72;&#x27;</div></code></pre>
+        <button id='prompt-2' class='btn btn-outline btn-lg solutiontoggle prompt'>
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+-->
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car = Car(<span class="hljs-string">'Tesla'</span>, <span class="hljs-string">'Model S'</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.model
+<div class="alt prompt-3">______</div><div class="solution prompt-3"><span class="hljs-string">'Model S'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.gas = <span class="hljs-number">10</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.drive()
+<div class="alt prompt-3">______</div><div class="solution prompt-3"><span class="hljs-string">'Tesla Model S goes vroom!'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.drive()
+<div class="alt prompt-3">______</div><div class="solution prompt-3"><span class="hljs-string">'Cannot drive!'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.fill_gas()
+<div class="alt prompt-3">______</div><div class="solution prompt-3"><span class="hljs-string">'Gas level: 20'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.gas
+<div class="alt prompt-3">______</div><div class="solution prompt-3">20</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>Car.gas
+<div class="alt prompt-3">______</div><div class="solution prompt-3">30</div></code></pre>
+        <button id="prompt-3" class="btn btn-outline btn-lg solutiontoggle prompt">
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+
+<!-- <pre><code>&gt;&gt;&gt; Car.headlights
+<div class="alt prompt-4">______</div><div class="solution prompt-4">&#x32;</div>
+&gt;&gt;&gt; garcias_car.headlights
+<div class="alt prompt-4">______</div><div class="solution prompt-4">&#x32;</div>
+&gt;&gt;&gt; Car.headlights = 3
+&gt;&gt;&gt; garcias_car.headlights
+<div class="alt prompt-4">______</div><div class="solution prompt-4">&#x33;</div>
+&gt;&gt;&gt; garcias_car.headlights = 2
+&gt;&gt;&gt; Car.headlights
+<div class="alt prompt-4">______</div><div class="solution prompt-4">&#x33;</div></code></pre>
+        <button id='prompt-4' class='btn btn-outline btn-lg solutiontoggle prompt'>
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+         -->
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car = Car(<span class="hljs-string">'Tesla'</span>, <span class="hljs-string">'Model S'</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.wheels = <span class="hljs-number">2</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.wheels
+<div class="alt prompt-5">______</div><div class="solution prompt-5">2</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>Car.num_wheels
+<div class="alt prompt-5">______</div><div class="solution prompt-5">4</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.drive()
+<div class="alt prompt-5">______</div><div class="solution prompt-5"><span class="hljs-string">'Cannot drive!'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>Car.drive()
+<div class="alt prompt-5">______</div><div class="solution prompt-5">Error (TypeError)</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>Car.drive(deneros_car)
+<div class="alt prompt-5">______</div><div class="solution prompt-5"><span class="hljs-string">'Cannot drive!'</span></div></code></pre>
+        <button id="prompt-5" class="btn btn-outline btn-lg solutiontoggle prompt">
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+<!--
+
+<pre><code>&gt;&gt;&gt; MonsterTruck.drive(garcias_car)
+Error (AttributeError)</code></pre>
+
+-->
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car = MonsterTruck(<span class="hljs-string">'Monster'</span>, <span class="hljs-string">'Batmobile'</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>deneros_car.drive()
+<div class="alt prompt-6">______</div><div class="solution prompt-6">Vroom! This Monster Truck <span class="hljs-keyword">is</span> huge!
+<span class="hljs-string">'Monster Batmobile goes vroom!'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>Car.drive(deneros_car)
+<div class="alt prompt-6">______</div><div class="solution prompt-6"><span class="hljs-string">'Monster Batmobile goes vroom!'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>MonsterTruck.drive(deneros_car)
+<div class="alt prompt-6">______</div><div class="solution prompt-6">Vroom! This Monster Truck <span class="hljs-keyword">is</span> huge!
+<span class="hljs-string">'Monster Batmobile goes vroom!'</span></div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>Car.rev(deneros_car)
+<div class="alt prompt-6">______</div><div class="solution prompt-6">Error (AttributeError)</div></code></pre>
+        <button id="prompt-6" class="btn btn-outline btn-lg solutiontoggle prompt">
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+<!--
+<pre><code>&gt;&gt;&gt; class FoodTruck(MonsterTruck):
+...    delicious = &#x27;meh&#x27;
+...    def serve(self):
+...        if FoodTruck.size == &#x27;delicious&#x27;:
+...            print(&#x27;Yum!&#x27;)
+...        if self.food != &#x27;Tacos&#x27;:
+...            return &#x27;But no tacos...&#x27;
+...        else:
+...            return &#x27;Mmm!&#x27;
+&gt;&gt;&gt; taco_truck = FoodTruck(&#x27;Tacos&#x27;, &#x27;Truck&#x27;)
+&gt;&gt;&gt; taco_truck.food = &#x27;Guacamole&#x27;
+&gt;&gt;&gt; taco_truck.serve()
+<div class="alt prompt-7">______</div><div class="solution prompt-7">&#x27;&#x42;&#x75;&#x74;&#x20;&#x6e;&#x6f;&#x20;&#x74;&#x61;&#x63;&#x6f;&#x73;&#x2e;&#x2e;&#x2e;&#x27;</div>
+&gt;&gt;&gt; taco_truck.food = taco_truck.make
+&gt;&gt;&gt; FoodTruck.size = taco_truck.delicious
+&gt;&gt;&gt; taco_truck.serve()
+<div class="alt prompt-7">______</div><div class="solution prompt-7">&#x27;&#x4d;&#x6d;&#x6d;&#x21;&#x27;</div>
+&gt;&gt;&gt; taco_truck.size = &#x27;delicious&#x27;
+&gt;&gt;&gt; taco_truck.serve()
+<div class="alt prompt-7">______</div><div class="solution prompt-7">&#x27;&#x4d;&#x6d;&#x6d;&#x21;&#x27;</div>
+&gt;&gt;&gt; FoodTruck.pop_tire()
+<div class="alt prompt-7">______</div><div class="solution prompt-7">&#x45;&#x72;&#x72;&#x6f;&#x72;</div>
+&gt;&gt;&gt; FoodTruck.pop_tire(taco_truck)
+<div class="alt prompt-7">______</div><div class="solution prompt-7">&#x4e;&#x6f;&#x74;&#x68;&#x69;&#x6e;&#x67;</div>
+&gt;&gt;&gt; taco_truck.drive()
+<div class="alt prompt-7">______</div><div class="solution prompt-7">&#x56;&#x72;&#x6f;&#x6f;&#x6d;&#x21;&#x20;&#x54;&#x68;&#x69;&#x73;&#x20;&#x4d;&#x6f;&#x6e;&#x73;&#x74;&#x65;&#x72;&#x20;&#x54;&#x72;&#x75;&#x63;&#x6b;&#x20;&#x69;&#x73;&#x20;&#x68;&#x75;&#x67;&#x65;&#x21;&#xa;&#x27;&#x54;&#x61;&#x63;&#x6f;&#x73;&#x20;&#x54;&#x72;&#x75;&#x63;&#x6b;&#x20;&#x63;&#x61;&#x6e;&#x6e;&#x6f;&#x74;&#x20;&#x64;&#x72;&#x69;&#x76;&#x65;&#x21;&#x27;</div></code></pre>
+        <button id='prompt-7' class='btn btn-outline btn-lg solutiontoggle prompt'>
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+-->
+
+
+<h2 id="parsons-problems">Parsons Problems</h2>
+
+
+<p>To work on these problems, open the Parsons editor:</p>
+
+<pre><code class="py hljs python">python3 parsons</code></pre>
+
+
+
+
+<h3 id="q2-cool-cats">Q2: Cool Cats</h3>
+
+
+<p>The <code>Cat</code> class models a cat: you can find the implementation below. Now, you will implement
+<code>NoisyCat</code>; <code>NoisyCat</code>s are very similar to <code>Cat</code>s, but <code>talk</code>s twice as much. However, in exchange for such great powers,
+it gives up one of its initial <code>lives</code>.</p>
+
+<p>Use superclass methods wherever possible.</p>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Cat</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner, lives=<span class="hljs-number">9</span>)</span>:</span>
+        self.is_alive = <span class="hljs-literal">True</span>
+        self.name = name
+        self.owner = owner
+        self.lives = lives
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.name + <span class="hljs-string">' says meow!'</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NoisyCat</span><span class="hljs-params">(Cat)</span>:</span>
+    <span class="hljs-string">"""
+    &gt;&gt;&gt; my_cat = NoisyCat("Furball", "James")
+    &gt;&gt;&gt; my_cat.name
+    'Furball'
+    &gt;&gt;&gt; my_cat.is_alive
+    True
+    &gt;&gt;&gt; my_cat.lives
+    8
+    &gt;&gt;&gt; my_cat.talk()
+    'Furball says meow! Furball says meow!'
+    &gt;&gt;&gt; friend_cat = NoisyCat("Tabby", "James", 2)
+    &gt;&gt;&gt; friend_cat.talk()
+    'Tabby says meow! Tabby says meow!'
+    &gt;&gt;&gt; friend_cat.lives
+    1
+    """</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner, lives=<span class="hljs-number">9</span>)</span>:</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+
+<h2 id="coding-practice">Coding Practice</h2>
+
+
+
+<h3 id="q3-cat-adoption">Q3: Cat Adoption</h3>
+
+
+<p>So far, you've implemented the <code>NoisyCat</code> based off of the <code>Cat</code> class.
+However, you now want to be able to create lots of different <code>Cat</code>s!</p>
+
+<p>Build on the <code>Cat</code> class from the earlier problem by adding
+a <strong>class method</strong> called <code>adopt_a_cat</code>.
+This class method allows you to create <code>Cat</code>s that can then be adopted.</p>
+
+<p>Specifically, <code>adopt_a_cat</code> should return a new instance of a <code>Cat</code>
+whose owner is <code>owner</code>.</p>
+
+<p>This <code>Cat</code> instance's name and number of lives depends on the <code>owner</code>.
+Its name should be chosen from <code>cat_names</code> (provided in the skeleton code),
+and should correspond to the name at the index <code>len(owner)</code> <code>%</code> (modulo)
+the number of possible cat names.
+Its number of lives should be equal to <code>len(owner)</code> + the
+length of the chosen name.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Cat</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, name, owner, lives=<span class="hljs-number">9</span>)</span>:</span>
+        self.is_alive = <span class="hljs-literal">True</span>
+        self.name = name
+        self.owner = owner
+        self.lives = lives
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">talk</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.name + <span class="hljs-string">' says meow!'</span>
+
+<span class="hljs-meta">    @classmethod</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">adopt_a_cat</span><span class="hljs-params">(cls, owner)</span>:</span>
+        <span class="hljs-string">"""
+        Returns a new instance of a Cat.
+
+        This instance's owner is the given owner.
+        Its name and its number of lives is chosen programatically
+        based on the spec's noted behavior.
+
+        &gt;&gt;&gt; cat1 = Cat.adopt_a_cat("Ifeoma")
+        &gt;&gt;&gt; isinstance(cat1, Cat)
+        True
+        &gt;&gt;&gt; cat1.owner
+        'Ifeoma'
+        &gt;&gt;&gt; cat1.name
+        'Felix'
+        &gt;&gt;&gt; cat1.lives
+        11
+        &gt;&gt;&gt; cat2 = Cat.adopt_a_cat("Ay")
+        &gt;&gt;&gt; cat2.owner
+        'Ay'
+        &gt;&gt;&gt; cat2.name
+        'Grumpy'
+        &gt;&gt;&gt; cat2.lives
+        8
+        """</span>
+        cat_names = [<span class="hljs-string">"Felix"</span>, <span class="hljs-string">"Bugs"</span>, <span class="hljs-string">"Grumpy"</span>]
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+        <span class="hljs-keyword">return</span> cls(____, ____, ____)
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q Cat.adopt_a_cat</code><button id="copy-code-python3ok-qCat.adopt_a_cat" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qCat.adopt_a_cat").onclick = () => copyCode('python3 ok -q Cat.adopt_a_cat', "copy-code-python3ok-qCat.adopt_a_cat");
+        </script>
+        <br>
+
+
+<h3 id="accounts">Accounts</h3>
+
+
+<p>Let's say we'd like to model a bank account that can handle interactions
+such as depositing funds or gaining interest on current funds.
+In the following questions, we will be building off of the <code>Account</code> class.
+Here's our current definition of the class:</p>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>:</span>
+    <span class="hljs-string">"""An account has a balance and a holder.
+    &gt;&gt;&gt; a = Account('John')
+    &gt;&gt;&gt; a.deposit(10)
+    10
+    &gt;&gt;&gt; a.balance
+    10
+    &gt;&gt;&gt; a.interest
+    0.02
+    &gt;&gt;&gt; a.time_to_retire(10.25) # 10 -&gt; 10.2 -&gt; 10.404
+    2
+    &gt;&gt;&gt; a.balance               # balance should not change
+    10
+    &gt;&gt;&gt; a.time_to_retire(11)    # 10 -&gt; 10.2 -&gt; ... -&gt; 11.040808032
+    5
+    &gt;&gt;&gt; a.time_to_retire(100)
+    117
+    """</span>
+    max_withdrawal = <span class="hljs-number">10</span>
+    interest = <span class="hljs-number">0.02</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, account_holder)</span>:</span>
+        self.balance = <span class="hljs-number">0</span>
+        self.holder = account_holder
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">deposit</span><span class="hljs-params">(self, amount)</span>:</span>
+        self.balance = self.balance + amount
+        <span class="hljs-keyword">return</span> self.balance
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">withdraw</span><span class="hljs-params">(self, amount)</span>:</span>
+        <span class="hljs-keyword">if</span> amount &gt; self.balance:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Insufficient funds"</span>
+        <span class="hljs-keyword">if</span> amount &gt; self.max_withdrawal:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Can't withdraw that amount"</span>
+        self.balance = self.balance - amount
+        <span class="hljs-keyword">return</span> self.balance</code></pre>
+
+
+<h3 id="q4-retirement">Q4: Retirement</h3>
+
+
+<p>Add a <code>time_to_retire</code> method to the <code>Account</code> class.
+This method takes in an <code>amount</code> and returns how many years the holder would
+need to wait in order for the current <code>balance</code> to grow to at least <code>amount</code>,
+assuming that the bank adds <code>balance</code> times the <code>interest</code> rate to the total
+balance at the end of every year.</p>
+
+<pre><code class="hljs python">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">time_to_retire</span><span class="hljs-params">(self, amount)</span>:</span>
+        <span class="hljs-string">"""Return the number of years until balance would grow to amount."""</span>
+        <span class="hljs-keyword">assert</span> self.balance &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> amount &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> self.interest &gt; <span class="hljs-number">0</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q Account</code><button id="copy-code-python3ok-qAccount" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qAccount").onclick = () => copyCode('python3 ok -q Account', "copy-code-python3ok-qAccount");
+        </script>
+        <br>
+
+
+
+
+<h3 id="q5-freechecking">Q5: FreeChecking</h3>
+
+
+<p>Implement the <code>FreeChecking</code> class, which is like the <code>Account</code> class from
+lecture except that it charges a withdraw fee after 2 withdrawals.
+If a withdrawal is unsuccessful, it still counts towards the number of free
+withdrawals remaining, but no fee for the withdrawal will be charged.</p>
+
+<blockquote><p><strong>Hint</strong>:
+Don't forget that <code>FreeChecking</code> inherits from <code>Account</code>! Check the Inheritance section in Topics for a refresher.</p></blockquote>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FreeChecking</span><span class="hljs-params">(Account)</span>:</span>
+    <span class="hljs-string">"""A bank account that charges for withdrawals, but the first two are free!
+    &gt;&gt;&gt; ch = FreeChecking('Jack')
+    &gt;&gt;&gt; ch.balance = 20
+    &gt;&gt;&gt; ch.withdraw(100)  # First one's free
+    'Insufficient funds'
+    &gt;&gt;&gt; ch.withdraw(3)    # And the second
+    17
+    &gt;&gt;&gt; ch.balance
+    17
+    &gt;&gt;&gt; ch.withdraw(3)    # Ok, two free withdrawals is enough
+    13
+    &gt;&gt;&gt; ch.withdraw(3)
+    9
+    &gt;&gt;&gt; ch2 = FreeChecking('John')
+    &gt;&gt;&gt; ch2.balance = 10
+    &gt;&gt;&gt; ch2.withdraw(3) # No fee
+    7
+    &gt;&gt;&gt; ch.withdraw(3)  # ch still charges a fee
+    5
+    &gt;&gt;&gt; ch.withdraw(5)  # Not enough to cover fee + withdraw
+    'Insufficient funds'
+    """</span>
+    withdraw_fee = <span class="hljs-number">1</span>
+    free_withdrawals = <span class="hljs-number">2</span>
+
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q FreeChecking</code><button id="copy-code-python3ok-qFreeChecking" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qFreeChecking").onclick = () => copyCode('python3 ok -q FreeChecking', "copy-code-python3ok-qFreeChecking");
+        </script>
+        <br>
+
+
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/lab/lab06/#topics">Topics</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/lab06/#object-oriented-programming">Object-Oriented Programming</a></li>
+    <li><a href="https://cs61a.org/lab/lab06/#inheritance">Inheritance</a></li>
+  </ul>
+  <li><a href="https://cs61a.org/lab/lab06/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/lab06/#what-would-python-do">What Would Python Do?</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab06/#q1-wwpd-classy-cars">Q1: WWPD: Classy Cars</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab06/#parsons-problems">Parsons Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab06/#q2-cool-cats">Q2: Cool Cats</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab06/#coding-practice">Coding Practice</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab06/#q3-cat-adoption">Q3: Cat Adoption</a></li>
+      <li><a href="https://cs61a.org/lab/lab06/#accounts">Accounts</a></li>
+      <li><a href="https://cs61a.org/lab/lab06/#q4-retirement">Q4: Retirement</a></li>
+      <li><a href="https://cs61a.org/lab/lab06/#q5-freechecking">Q5: FreeChecking</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab06/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Lab 6_ Object-Oriented Programming _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

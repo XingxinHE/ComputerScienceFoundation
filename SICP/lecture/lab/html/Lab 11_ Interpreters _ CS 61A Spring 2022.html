@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)https://cs61a.org/lab/lab11/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+    <title>
+Lab 11: Interpreters | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab11/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab11/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab11/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Lab 11: Interpreters
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/lab/lab11/lab11.zip" class="label label-outline">lab11.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><i>Due by 11:59pm on Wednesday, April 6.</i></p>
+
+
+
+
+
+
+<h2 id="starter-files">Starter Files</h2>
+
+<p>Download <a href="https://cs61a.org/lab/lab11/lab11.zip">lab11.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="https://cs61a.org/lab/lab11/ok">Ok</a> autograder.</p>
+
+
+
+
+
+
+
+
+    
+<h1 id="introduction">Introduction</h1>
+
+
+<p>In the <a href="https://cs61a.org/proj/scheme/">Scheme project</a>,
+you'll be implementing a Python interpreter for Scheme.</p>
+
+<p>Part of the process of interpreting Scheme expressions is being able to
+<strong>parse</strong> a string of Scheme code as our input
+into our interpreter's internal Python representation of Scheme expressions.
+As all Scheme expressions are Scheme lists (and therefore linked lists),
+we represent all Scheme expressions using the <code>Pair</code> class,
+which behaves as a linked list. <strong>This class is defined in <code>pair.py</code>.</strong></p>
+
+<p>When given an input such as <code>(+ 1 2)</code>,
+there are two main steps we want to take.</p>
+
+<p>The first part of interpreting expressions is taking the input
+and breaking it down into each component.
+In our example, we want to treat each of <code>(</code>, <code>+</code>, <code>1</code>, <code>2</code>, and <code>)</code>
+as a separate token that we can then figure out how to represent.
+This is called <strong>lexical analysis</strong>, and has been implemented for you
+in the <code>tokenize_lines</code> function in <code>scheme_tokens.py</code>.</p>
+
+<p>Now that we've broken down the input into its component parts,
+we want to turn these Scheme tokens into our interpreter's internal
+representations of them.
+This is called <strong>syntactic analysis</strong>,
+which happens in <code>scheme_reader.py</code> in the <code>scheme_read</code> and <code>read_tail</code>
+functions.</p>
+
+<ul>
+  <li><code>(</code> tells us we are starting a call expression.</li>
+  <li><code>+</code> will be the operator, as it's the first element in the call expression.</li>
+  <li><code>1</code> is our first operand.</li>
+  <li><code>2</code> is our second operand.</li>
+  <li><code>)</code> tells us that we are ending the call expression.</li>
+</ul>
+
+<p>The main idea is that we'd like to first recognize what the input
+represents, before we do any of the evaluating, or calling the operator
+on the operands, and so on.</p>
+
+<p>The goal of this lab is to work with the various parts that go into parsing;
+while in this lab and in the project, we're focusing on the Scheme language,
+the general ideas of how we're setting up the Scheme interpreter
+can be applicable to other languages -- such as Python itself!</p>
+
+
+<h1 id="required-questions">Required Questions</h1>
+
+
+<blockquote><p>Check out the <a href="https://cs61a.org/lab/lab11/#introduction">introduction</a> for the context of this lab.</p></blockquote>
+
+
+<h2 id="part-1">Part 1</h2>
+
+
+
+<h3 id="context">Context</h3>
+
+
+<p>We store tokens ready to be parsed in <code>Buffer</code> instances.
+For example, a buffer containing the input <code>(+ (2 3))</code> would have
+the tokens <code>'('</code>, <code>'+'</code>, <code>'('</code>, <code>2</code>, <code>3</code>, <code>')'</code>, and <code>')'</code>.</p>
+
+<p>In this part, we will implement the <code>Buffer</code> class.</p>
+
+<p>A <code>Buffer</code> provides a way of accessing a sequence of tokens across lines.</p>
+
+<p>Its constructor takes an iterator, called "the <code>source</code>", that returns the
+next line of tokens as a list each time it is queried, until it runs out of
+lines.</p>
+
+<p>For example, <code>source</code> could be defined as follows:</p>
+
+<pre><code class="python hljs">line1 = [<span class="hljs-string">'('</span>, <span class="hljs-string">'+'</span>, <span class="hljs-number">6</span>, <span class="hljs-number">1</span>, <span class="hljs-string">')'</span>]      <span class="hljs-comment"># (+ 6 1)</span>
+line2 = [<span class="hljs-string">'('</span>, <span class="hljs-string">'quote'</span>, <span class="hljs-string">'A'</span>, <span class="hljs-string">')'</span>]  <span class="hljs-comment"># (quote A)</span>
+line3 = [<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>]                 <span class="hljs-comment"># 2 1 0</span>
+input_lines = [line1, line2, line3]
+source = iter(input_lines)</code></pre>
+
+
+
+<p>In effect, the <code>Buffer</code> combines the sequences returned from its source
+and then supplies the items from them one at a time through its <code>pop_first</code>
+method, calling the <code>source</code> for more sequences of items only when needed.</p>
+
+<p>In addition, <code>Buffer</code> provides a <code>current</code> instance attribute to look at the
+next item to be supplied, without moving past it.</p>
+
+
+<h3 id="problem-1">Problem 1</h3>
+
+
+<blockquote><p><strong>Important:</strong>
+Your code for this part should go in <code>buffer.py</code>.</p></blockquote>
+
+<p>Your job in this part is to implement the <code>create_generator</code>, <code>__init__</code>,
+and <code>pop_first</code> methods of the <code>Buffer</code> class.</p>
+
+<blockquote><p><strong>Note:</strong>
+For this question, you may want to use the built-in function <code>next</code> with its
+<code>default</code> argument. Here's an example:</p>
+
+<pre><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>iterator = iter([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>])
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(iterator) <span class="hljs-comment"># Here, there is no default arg given.</span>
+<span class="hljs-number">1</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(iterator, <span class="hljs-number">5</span>) <span class="hljs-comment"># Here, there is a default arg given, but not used.</span>
+<span class="hljs-number">2</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(iterator, <span class="hljs-number">5</span>) <span class="hljs-comment"># The iterator is exhausted, so next returns default.</span>
+<span class="hljs-number">5</span></code></pre>
+
+
+<p>For more about <code>next</code>, feel free to read through the
+<a href="https://docs.python.org/3/library/functions.html#next"><code>next</code> Python documentation</a>.</p></blockquote>
+
+
+<h4 id="create_generator"><code>create_generator</code></h4>
+
+
+<p>Implement <code>create_generator</code>, a generator function which takes in <code>source</code>,
+an iterator over line(s), each of which is a list that contains token(s).</p>
+
+<p>This function should yield a single token from a line of the source at a time.
+If there are no more tokens on a line, then it should yield <code>EOL_TOKEN</code>
+(an object that represents an end-of-line token).</p>
+
+<p>If there are no more tokens in the entire source, it should have no more yields.
+If you were to call <code>next</code> on a generator of this function in this case,
+a <code>StopIteration</code> would be raised, as there would be no more applicable yields.</p>
+
+<p>You can reference this function in your implementations for <code>__init__</code> and
+<code>pop_first</code>.</p>
+
+<blockquote><p>Remember that generator functions can be used as follows:</p>
+
+<pre><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>gen = some_generator_function()
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(gen)
+<span class="hljs-comment"># Returns the first yield from some_generator_function</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(gen)
+<span class="hljs-comment"># Returns the next yield from some_generator_function</span></code></pre></blockquote>
+
+
+<h4 id="__init__"><code>__init__</code></h4>
+
+
+<p><code>__init__</code> takes in the input source <code>source</code>.
+You should define the following instance attributes:</p>
+
+<ul>
+  <li>An instance attribute that holds a generator created by <code>create_generator</code>
+  based off of the <code>source</code>, and</li>
+  <li><code>self.current</code> to represent the current token of the generator that the
+  <code>Buffer</code> instance is on. In <code>__init__</code>, the current token should be the very
+  first token that the generator yields.</li>
+</ul>
+
+<p>If you wish, you may define more instance attributes as you see fit.</p>
+
+
+<h4 id="pop_first"><code>pop_first</code></h4>
+
+
+<p>Implement <code>pop_first</code>, which does the following:</p>
+
+<ul>
+  <li>Saves the current token of the <code>Buffer</code> instance, to be returned later.</li>
+  <li>Updates the current token of the <code>Buffer</code> instance to the next token from
+  its generator instance.</li>
+  <li>If there are no more tokens after the initial current token, then update
+  the current token to be <code>None</code>.
+  (Hint: see the note on the default argument to <code>next</code> at the beginning
+  of this problem.)</li>
+  <li>Returns the initial current token (<em>not</em> the updated current token!).</li>
+</ul>
+
+
+<h4 id="testing-your-code">Testing your code</h4>
+
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q buffer</code><button id="copy-code-python3ok-qbuffer" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qbuffer").onclick = () => copyCode('python3 ok -q buffer', "copy-code-python3ok-qbuffer");
+        </script>
+        <br>
+
+
+<h2 id="part-2">Part 2</h2>
+
+
+
+<h3 id="internal-representations">Internal Representations</h3>
+
+
+<p>The reader will parse Scheme code into Python values with the following
+representations:</p>
+
+<table align="center" class="table table-bordered table-striped">
+  <tbody><tr>
+    <th>Input Example</th>
+    <th>Scheme Expression Type</th>
+    <th>Our Internal Representation</th>
+  </tr>
+
+  <tr>
+    <td><code>scm&gt; 1</code>
+    </td><td>Numbers</td>
+    <td>Python's built-in <code>int</code> and <code>float</code> values</td>
+  </tr>
+
+  <tr>
+    <td><code>scm&gt; x</code>
+    </td><td>Symbols</td>
+    <td>Python's built-in <code>string</code> values</td>
+  </tr>
+
+  <tr>
+     <td><code>scm&gt; #t</code>
+     </td><td>Booleans (<code>#t</code>, <code>#f</code>)</td>
+     <td>Python's built-in <code>True</code>, <code>False</code> values</td>
+  </tr>
+
+  <tr>
+     <td><code>scm&gt; (+ 2 3)</code>
+     </td><td>Combinations</td>
+     <td>Instances of the <code>Pair</code> class, defined in
+     <code>scheme_reader.py</code>. This example is represented as:
+     <code>Pair('+', Pair(2, Pair(3, nil)))</code>.</td>
+  </tr>
+
+  <tr>
+     <td><code>scm&gt; nil</code>
+     </td><td><code>nil</code></td>
+     <td>The <code>nil</code> object, defined in
+     <code>scheme_reader.py</code></td>
+  </tr>
+</tbody></table>
+
+<p>When we refer to combinations here,
+we are referring to both call expressions and special forms.</p>
+
+
+<h3 id="problem-2">Problem 2</h3>
+
+
+<blockquote><p><strong>Important:</strong>
+Your code for this part should go in <code>scheme_reader.py</code>.</p></blockquote>
+
+<!-- hack for separate block quotes -->
+
+<blockquote><p><strong>Important:</strong>
+While unlocking this problem, if the token yielded from the <code>Buffer</code> instance
+should be <code>EOL_TOKEN</code>, it will be displayed according to the <code>__repr__</code>
+function of the <code>EOL_TOKEN</code> class. Specifically, you would get:</p>
+
+<pre><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>EOL_TOKEN
+This <span class="hljs-keyword">is</span> a token representing the end of a line.</code></pre></blockquote>
+
+<p>Your job in this part is to write the parsing functionality,
+which consists of two mutually recursive functions:
+<code>scheme_read</code> and <code>read_tail</code>.
+Each function takes in a single <code>src</code> parameter, which is a <code>Buffer</code> instance.</p>
+
+<ul>
+  <li><code>scheme_read</code> removes enough tokens from <code>src</code> to form a single expression
+  and returns that expression in the correct
+  <a href="https://cs61a.org/lab/lab11/#internal-representations">internal representation</a>.</li>
+  <li><code>read_tail</code> expects to read the rest of a list or <code>Pair</code>, assuming the
+  open parenthesis of that list or <code>Pair</code> has already been removed by
+  <code>scheme_read</code>. It will read expressions (and thus remove tokens) until the
+  matching closing parenthesis <code>)</code> is seen. This list of expressions is
+  returned as a linked list of <code>Pair</code> instances.</li>
+</ul>
+
+<p>In short, <code>scheme_read</code> returns the next single complete expression in the
+buffer and <code>read_tail</code> returns the rest of a list or <code>Pair</code> in the buffer.
+Both functions mutate the buffer,
+removing the tokens that have already been processed.</p>
+
+<p>The behavior of both functions depends on the first token currently in <code>src</code>.
+They should be implemented as follows:</p>
+
+<p><code>scheme_read</code>:</p>
+
+<ul>
+  <li>If the current token is the string <code>"nil"</code>, return the <code>nil</code> object.</li>
+  <li>If the current token is <code>(</code>, the expression is a pair or list. Call
+  <code>read_tail</code> on the rest of <code>src</code> and return its result.</li>
+  <li>If the current token is <code>'</code>,  the rest of the buffer should be
+  processed as a <code>quote</code> expression.
+  You will implement this portion in the next problem.</li>
+  <li>If the next token is not a delimiter,
+  then it must be a primitive expression (i.e. a number, boolean). Return
+  it. <strong>Provided</strong></li>
+  <li>If none of the above cases apply, raise an error. <strong>Provided</strong></li>
+</ul>
+
+<p><code>read_tail</code>:</p>
+
+<ul>
+  <li>If there are no more tokens,
+  then the list is missing a close parenthesis
+  and we should raise an error. <strong>Provided</strong></li>
+  <li>If the token is <code>)</code>, then we've reached the end of the list or pair.
+  <strong>Remove this token from the buffer</strong> and return the <code>nil</code> object.</li>
+  <li><p>If none of the above cases apply, the next token is the operator
+  in a combination. For example, <code>src</code> could contain <code>+ 2 3)</code>. To parse this:</p>
+
+  <ol>
+    <li><code>scheme_read</code> the next complete expression in the buffer.</li>
+    <li>Call <code>read_tail</code> to read the rest of the combination until the matching closing
+    parenthesis.</li>
+    <li>Return the results as a <code>Pair</code> instance,
+    where the first element is the next complete expression from (1)
+    and the second element is the rest of the combination from (2).</li>
+  </ol></li>
+</ul>
+
+<p>Use Ok to unlock and test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q scheme_read -u
+python3 ok -q scheme_read</code><button id="copy-code-python3ok-qscheme_read-upython3ok-qscheme_read" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qscheme_read-upython3ok-qscheme_read").onclick = () => copyCode('python3 ok -q scheme_read -u\npython3 ok -q scheme_read', "copy-code-python3ok-qscheme_read-upython3ok-qscheme_read");
+        </script>
+        <br>
+
+
+<h3 id="problem-3">Problem 3</h3>
+
+
+<blockquote><p><strong>Important:</strong>
+Your code for this part should go in <code>scheme_reader.py</code>.</p></blockquote>
+
+<p>Your task in this problem is to complete the implementation of <code>scheme_read</code>
+by allowing the function to now be able to handle quoted expressions.</p>
+
+<p>In Scheme,
+quoted expressions such as <code>'&lt;expr&gt;</code> are equivalent to <code>(quote &lt;expr&gt;)</code>.
+That means that we need to wrap the expression following <code>'</code>
+(which you can get by recursively calling <code>scheme_read</code>)
+into the <code>quote</code> special form, which is a Scheme list
+(as with all special forms).</p>
+
+<p>In our representation,
+a <code>Pair</code> represents a Scheme list.
+You should therefore wrap the expression following <code>'</code> in a <code>Pair</code>.</p>
+
+<p>For example,
+<code>'bagel</code>, or <code>["'", "bagel"]</code> after being tokenized,
+should be represented as <code>Pair('quote', Pair('bagel', nil))</code>.
+<code>'(1 2)</code> (or <code>["'", "(", 1, 2, ")"]</code>)
+should be represented as <code>Pair('quote', Pair(Pair(1, Pair(2, nil)), nil))</code>.</p>
+
+<p>Use Ok to unlock and test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q quote -u
+python3 ok -q quote</code><button id="copy-code-python3ok-qquote-upython3ok-qquote" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qquote-upython3ok-qquote").onclick = () => copyCode('python3 ok -q quote -u\npython3 ok -q quote', "copy-code-python3ok-qquote-upython3ok-qquote");
+        </script>
+        <br>
+
+
+<h2 id="running-your-parser">Running your parser</h2>
+
+
+<p>Now that your parser is complete,
+you can test the read-eval-print loop by running:</p>
+
+<pre><code class="hljs sql">python3 scheme_reader.py <span class="hljs-comment">--repl</span></code></pre>
+
+
+
+<p>Every time you type in a value into the prompt,
+both the <code>str</code> and <code>repr</code> values of the parsed expression are printed.
+You can try the following inputs:</p>
+
+<pre><code class="hljs">read&gt; 42
+str : 42
+repr: 42
+read&gt; nil
+str : ()
+repr: nil
+read&gt; (1 (2 3) (4 (5)))
+str : (1 (2 3) (4 (5)))
+repr: Pair(1, Pair(Pair(2, Pair(3, nil)), Pair(Pair(4, Pair(Pair(5, nil), nil)), nil)))</code></pre>
+
+<p>To exit the interpreter, you can type <code>exit</code>.</p>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/lab/lab11/#introduction">Introduction</a></li>
+  <li><a href="https://cs61a.org/lab/lab11/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/lab11/#part-1">Part 1</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab11/#context">Context</a></li>
+      <li><a href="https://cs61a.org/lab/lab11/#problem-1">Problem 1</a></li>
+      <ul class="nav nav-stacked noselect">
+        <li><a href="https://cs61a.org/lab/lab11/#create_generator"><code>create_generator</code></a></li>
+        <li><a href="https://cs61a.org/lab/lab11/#__init__"><code>__init__</code></a></li>
+        <li><a href="https://cs61a.org/lab/lab11/#pop_first"><code>pop_first</code></a></li>
+        <li><a href="https://cs61a.org/lab/lab11/#testing-your-code">Testing your code</a></li>
+      </ul>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab11/#part-2">Part 2</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab11/#internal-representations">Internal Representations</a></li>
+      <li><a href="https://cs61a.org/lab/lab11/#problem-2">Problem 2</a></li>
+      <li><a href="https://cs61a.org/lab/lab11/#problem-3">Problem 3</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab11/#running-your-parser">Running your parser</a></li>
+    <li><a href="https://cs61a.org/lab/lab11/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Lab 11_ Interpreters _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

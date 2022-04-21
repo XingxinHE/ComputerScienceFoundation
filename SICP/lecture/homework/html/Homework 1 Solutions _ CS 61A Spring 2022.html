@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)https://cs61a.org/hw/sol-hw01/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Homework 1 Solutions _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Homework 1 Solutions _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Homework 1 Solutions _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Homework 1 Solutions _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Homework 1 Solutions _ CS 61A Spring 2022_files/hw.css">
+
+
+    <title>
+Homework 1 Solutions | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Homework 1 Solutions _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/sol-hw01/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/sol-hw01/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/sol-hw01/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Homework 1 Solutions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/hw/sol-hw01/hw01.zip" class="label label-outline">hw01.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<h2>Solution Files</h2>
+<p>You can find the solutions in <a href="https://cs61a.org/hw/sol-hw01/hw01.py">hw01.py</a>.</p>
+
+    
+<h1 id="required-questions">Required Questions</h1>
+
+
+
+<h2 id="welcome-forms">Welcome Forms</h2>
+
+
+
+<h3 id="q1-welcome-forms">Q1: Welcome Forms</h3>
+
+
+<p>Please fill out both the <a href="https://go.cs61a.org/syllabus-quiz">Syllabus Quiz</a>,
+which is based off of our policies found on the course
+<a href="https://cs61a.org/articles/about/">syllabus</a>, as well as the optional
+<a href="https://go.cs61a.org/welcome-survey">Welcome Survey</a>.</p>
+
+
+<h2 id="parsons-problems">Parsons Problems</h2>
+
+
+<p>To work on these problems, open the Parsons editor:</p>
+
+<pre><code class="py hljs python">python3 parsons</code></pre>
+
+
+
+
+<h3 id="q2-k-in-num">Q2: k in Num</h3>
+
+
+<p>Write a function <code>k_in_num</code> which takes in two integers, <code>k</code> and <code>num</code>. <code>k_in_num</code> returns <code>True</code> if <code>num</code> has the digit <code>k</code> and
+returns <code>False</code> if <code>num</code> does not have the digit <code>k</code>. <code>0</code> is considered to have no digits.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">k_in_num</span><span class="hljs-params">(k, num)</span>:</span>
+    <span class="hljs-string">"""
+    Complete k_in_num, a function which returns True if num has the digit k and
+    returns False if num does not have the digit k. 0 is considered to have no
+    digits.
+
+    &gt;&gt;&gt; k_in_num(3, 123) # .Case 1
+    True
+    &gt;&gt;&gt; k_in_num(2, 123) # .Case 2
+    True
+    &gt;&gt;&gt; k_in_num(5, 123) # .Case 3
+    False
+    &gt;&gt;&gt; k_in_num(0, 0) # .Case 4
+    False
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">while</span> num:
+        <span class="hljs-keyword">if</span> k == num % <span class="hljs-number">10</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+        num = num // <span class="hljs-number">10</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span></div></code></pre>
+
+
+<h2 id="code-writing-problems">Code Writing Problems</h2>
+
+
+
+<h3 id="q3-a-plus-abs-b">Q3: A Plus Abs B</h3>
+
+<p>Python's <code>operator</code> module defines <em>binary functions</em> for Python's intrinsic arithmetic operators. For example, calling <code>operator.add(2,3)</code> is equivalent to calling the expression <code>2 + 3</code>; both will return <code>5</code>.</p>
+
+<p>Fill in the blanks in the following function for adding <code>a</code> to the
+absolute value of <code>b</code>, without calling <code>abs</code>. You may <strong>not</strong> modify any
+of the provided code other than the two blanks.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">a_plus_abs_b</span><span class="hljs-params">(a, b)</span>:</span>
+    <span class="hljs-string">"""Return a+abs(b), but without calling abs.
+
+    &gt;&gt;&gt; a_plus_abs_b(2, 3)
+    5
+    &gt;&gt;&gt; a_plus_abs_b(2, -3)
+    5
+    &gt;&gt;&gt; a_plus_abs_b(-1, 4)
+    3
+    &gt;&gt;&gt; a_plus_abs_b(-1, -4)
+    3
+    """</span>
+    <span class="hljs-keyword">if</span> b &lt; <span class="hljs-number">0</span>:
+<div class="sol-highlight">        f = sub</div>    <span class="hljs-keyword">else</span>:
+<div class="sol-highlight">        f = add</div>    <span class="hljs-keyword">return</span> f(a, b)</code></pre>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q a_plus_abs_b</code><button id="copy-code-python3ok-qa_plus_abs_b" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qa_plus_abs_b").onclick = () => copyCode('python3 ok -q a_plus_abs_b', "copy-code-python3ok-qa_plus_abs_b");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+
+<p>If <code>b</code> is positive, we add the numbers together. If <code>b</code> is negative, we
+subtract the numbers. Therefore, we choose the operator <code>add</code> or <code>sub</code>
+based on the sign of <code>b</code>.</p>
+
+</div>
+
+
+<h3 id="q4-two-of-three">Q4: Two of Three</h3>
+
+
+<p>Write a function that takes three <em>positive</em> numbers as arguments and returns
+the sum of the squares of the two smallest numbers. <strong>Use only a single line
+for the body of the function.</strong></p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">two_of_three</span><span class="hljs-params">(i, j, k)</span>:</span>
+    <span class="hljs-string">"""Return m*m + n*n, where m and n are the two smallest members of the
+    positive numbers i, j, and k.
+
+    &gt;&gt;&gt; two_of_three(1, 2, 3)
+    5
+    &gt;&gt;&gt; two_of_three(5, 3, 1)
+    10
+    &gt;&gt;&gt; two_of_three(10, 2, 8)
+    68
+    &gt;&gt;&gt; two_of_three(5, 5, 5)
+    50
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">return</span> min(i*i+j*j, i*i+k*k, j*j+k*k)
+    <span class="hljs-comment"># Alternate solution</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">two_of_three_alternate</span><span class="hljs-params">(i, j, k)</span>:</span>
+    <span class="hljs-keyword">return</span> i**<span class="hljs-number">2</span> + j**<span class="hljs-number">2</span> + k**<span class="hljs-number">2</span> - max(i, j, k)**<span class="hljs-number">2</span></div></code></pre>
+
+<blockquote><p><strong>Hint:</strong> Consider using the <code>max</code> or <code>min</code> function:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>max(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-number">3</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>min(<span class="hljs-number">-1</span>, <span class="hljs-number">-2</span>, <span class="hljs-number">-3</span>)
+<span class="hljs-number">-3</span></code></pre></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q two_of_three</code><button id="copy-code-python3ok-qtwo_of_three" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qtwo_of_three").onclick = () => copyCode('python3 ok -q two_of_three', "copy-code-python3ok-qtwo_of_three");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+
+<p>We use the fact that if <code>x&gt;y</code> and <code>y&gt;0</code>, then <code>square(x)&gt;square(y)</code>.
+So, we can take the <code>min</code> of the sum of squares of all pairs. The
+<code>min</code> function can take an arbitrary number of arguments.</p>
+
+<p>Alternatively, we can do the sum of squares of all the numbers. Then we
+pick the largest value, and subtract the square of that.</p>
+
+</div>
+
+
+<h3 id="q5-largest-factor">Q5: Largest Factor</h3>
+
+
+<p>Write a function that takes an integer <code>n</code> that is <strong>greater than 1</strong> and
+returns the largest integer that is smaller than <code>n</code> and evenly divides <code>n</code>.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">largest_factor</span><span class="hljs-params">(n)</span>:</span>
+    <span class="hljs-string">"""Return the largest factor of n that is smaller than n.
+
+    &gt;&gt;&gt; largest_factor(15) # factors are 1, 3, 5
+    5
+    &gt;&gt;&gt; largest_factor(80) # factors are 1, 2, 4, 5, 8, 10, 16, 20, 40
+    40
+    &gt;&gt;&gt; largest_factor(13) # factor is 1 since 13 is prime
+    1
+    """</span>
+<div class="sol-highlight">    factor = n - <span class="hljs-number">1</span>
+    <span class="hljs-keyword">while</span> factor &gt; <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">if</span> n % factor == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> factor
+        factor -= <span class="hljs-number">1</span></div></code></pre>
+
+<blockquote><p><strong>Hint:</strong> To check if <code>b</code> evenly divides <code>a</code>,
+you can use the expression <code>a % b == 0</code>, which can be read as,
+"the remainder of dividing <code>a</code> by <code>b</code> is 0."</p></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q largest_factor</code><button id="copy-code-python3ok-qlargest_factor" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qlargest_factor").onclick = () => copyCode('python3 ok -q largest_factor', "copy-code-python3ok-qlargest_factor");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+
+<p>Iterating from <code>n-1</code> to 1, we return the first integer that evenly divides
+<code>n</code>. This is guaranteed to be the largest factor of <code>n</code>.</p>
+
+</div>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/hw/sol-hw01/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li class=""><a href="https://cs61a.org/hw/sol-hw01/#welcome-forms">Welcome Forms</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/sol-hw01/#q1-welcome-forms">Q1: Welcome Forms</a></li>
+    </ul>
+    <li class=""><a href="https://cs61a.org/hw/sol-hw01/#parsons-problems">Parsons Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class=""><a href="https://cs61a.org/hw/sol-hw01/#q2-k-in-num">Q2: k in Num</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/sol-hw01/#code-writing-problems">Code Writing Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class=""><a href="https://cs61a.org/hw/sol-hw01/#q3-a-plus-abs-b">Q3: A Plus Abs B</a></li>
+      <li class=""><a href="https://cs61a.org/hw/sol-hw01/#q4-two-of-three">Q4: Two of Three</a></li>
+      <li class=""><a href="https://cs61a.org/hw/sol-hw01/#q5-largest-factor">Q5: Largest Factor</a></li>
+    </ul>
+    <li class=""><a href="https://cs61a.org/hw/sol-hw01/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Homework 1 Solutions _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Homework 1 Solutions _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

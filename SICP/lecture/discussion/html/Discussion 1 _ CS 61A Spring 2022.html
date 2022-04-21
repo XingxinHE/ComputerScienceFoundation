@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)https://cs61a.org/disc/disc01/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Discussion 1 _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Discussion 1 _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Discussion 1 _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Discussion 1 _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Discussion 1 _ CS 61A Spring 2022_files/disc.css">
+
+
+    <title>
+Discussion 1 | CS 61A Spring 2022
+</title>
+  <script async="async" type="text/javascript" src="./Discussion 1 _ CS 61A Spring 2022_files/editor.main.js.下载"></script><script async="async" type="text/javascript" src="./Discussion 1 _ CS 61A Spring 2022_files/editor.main.nls.js.下载"></script><style type="text/css" media="screen" class="monaco-colors">.monaco-editor .minimap-slider, .monaco-editor .minimap-slider .minimap-slider-horizontal { background: rgba(121, 121, 121, 0.2); }
+.monaco-editor .minimap-slider:hover, .monaco-editor .minimap-slider:hover .minimap-slider-horizontal { background: rgba(100, 100, 100, 0.35); }
+.monaco-editor .minimap-slider.active, .monaco-editor .minimap-slider.active .minimap-slider-horizontal { background: rgba(191, 191, 191, 0.2); }
+.monaco-editor .minimap-shadow-visible { box-shadow: #000000 -6px 0 6px -6px inset; }
+.monaco-editor .scroll-decoration { box-shadow: #000000 0 6px 6px -6px inset; }
+.monaco-editor .focused .selected-text { background-color: #264f78; }
+.monaco-editor .selected-text { background-color: #3a3d41; }
+.monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input { background-color: #1e1e1e; }
+.monaco-editor, .monaco-editor .inputarea.ime-input { color: #d4d4d4; }
+.monaco-editor .margin { background-color: #1e1e1e; }
+.monaco-editor .rangeHighlight { background-color: rgba(255, 255, 255, 0.04); }
+.monaco-editor .symbolHighlight { background-color: rgba(234, 92, 0, 0.33); }
+.vs-whitespace { color: rgba(227, 228, 226, 0.16) !important; }
+.monaco-editor .view-overlays .current-line { border: 2px solid #282828; }
+.monaco-editor .margin-view-overlays .current-line-margin { border: 2px solid #282828; }
+.monaco-editor .lines-content .cigr { box-shadow: 1px 0 0 0 #404040 inset; }
+.monaco-editor .lines-content .cigra { box-shadow: 1px 0 0 0 #707070 inset; }
+.monaco-editor .line-numbers { color: #858585; }
+.monaco-editor .current-line ~ .line-numbers { color: #c6c6c6; }
+.monaco-editor .view-ruler { box-shadow: 1px 0 0 0 #5a5a5a inset; }
+.monaco-editor .cursor { background-color: #aeafad; border-color: #aeafad; color: #515052; }
+.monaco-editor.vs .valueSetReplacement { outline: solid 2px #888888; }
+.monaco-editor .squiggly-error { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%206%203'%20enable-background%3D'new%200%200%206%203'%20height%3D'3'%20width%3D'6'%3E%3Cg%20fill%3D'%23f48771'%3E%3Cpolygon%20points%3D'5.5%2C0%202.5%2C3%201.1%2C3%204.1%2C0'%2F%3E%3Cpolygon%20points%3D'4%2C0%206%2C2%206%2C0.6%205.4%2C0'%2F%3E%3Cpolygon%20points%3D'0%2C2%201%2C3%202.4%2C3%200%2C0.6'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x bottom left; }
+.monaco-editor .squiggly-warning { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%206%203'%20enable-background%3D'new%200%200%206%203'%20height%3D'3'%20width%3D'6'%3E%3Cg%20fill%3D'%23cca700'%3E%3Cpolygon%20points%3D'5.5%2C0%202.5%2C3%201.1%2C3%204.1%2C0'%2F%3E%3Cpolygon%20points%3D'4%2C0%206%2C2%206%2C0.6%205.4%2C0'%2F%3E%3Cpolygon%20points%3D'0%2C2%201%2C3%202.4%2C3%200%2C0.6'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x bottom left; }
+.monaco-editor .squiggly-info { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%206%203'%20enable-background%3D'new%200%200%206%203'%20height%3D'3'%20width%3D'6'%3E%3Cg%20fill%3D'%2375beff'%3E%3Cpolygon%20points%3D'5.5%2C0%202.5%2C3%201.1%2C3%204.1%2C0'%2F%3E%3Cpolygon%20points%3D'4%2C0%206%2C2%206%2C0.6%205.4%2C0'%2F%3E%3Cpolygon%20points%3D'0%2C2%201%2C3%202.4%2C3%200%2C0.6'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") repeat-x bottom left; }
+.monaco-editor .squiggly-hint { background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%223%22%20width%3D%2212%22%3E%3Cg%20fill%3D%22rgba(238%2C%20238%2C%20238%2C%200.7)%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%2F%3E%3Ccircle%20cx%3D%225%22%20cy%3D%221%22%20r%3D%221%22%2F%3E%3Ccircle%20cx%3D%229%22%20cy%3D%221%22%20r%3D%221%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat bottom left; }
+.monaco-editor.showUnused .squiggly-inline-unnecessary { opacity: 0.667; }
+.monaco-editor .squiggly-inline-deprecated { text-decoration: line-through; text-decoration-color: #d4d4d4}
+.monaco-diff-editor .diff-review-line-number { color: #858585; }
+.monaco-diff-editor .diff-review-shadow { box-shadow: #000000 0 -6px 6px -6px inset; }
+.monaco-editor .line-insert, .monaco-editor .char-insert { background-color: rgba(155, 185, 85, 0.2); }
+.monaco-diff-editor .line-insert, .monaco-diff-editor .char-insert { background-color: rgba(155, 185, 85, 0.2); }
+.monaco-editor .inline-added-margin-view-zone { background-color: rgba(155, 185, 85, 0.2); }
+.monaco-editor .line-delete, .monaco-editor .char-delete { background-color: rgba(255, 0, 0, 0.2); }
+.monaco-diff-editor .line-delete, .monaco-diff-editor .char-delete { background-color: rgba(255, 0, 0, 0.2); }
+.monaco-editor .inline-deleted-margin-view-zone { background-color: rgba(255, 0, 0, 0.2); }
+.monaco-diff-editor.side-by-side .editor.modified { box-shadow: -6px 0 5px -5px #000000; }
+.monaco-editor .bracket-match { background-color: rgba(0, 100, 0, 0.1); }
+.monaco-editor .bracket-match { border: 1px solid #888888; }
+
+		.monaco-editor .contentWidgets .codicon-lightbulb {
+			color: #ffcc00;
+		}
+
+		.monaco-editor .contentWidgets .codicon-lightbulb-autofix {
+			color: #75beff;
+		}
+.monaco-editor .codelens-decoration { color: #999999; }
+.monaco-editor .codelens-decoration .codicon { color: #999999; }
+.monaco-editor .codelens-decoration > a:hover { color: #4e94ce !important; }
+.monaco-editor .codelens-decoration > a:hover .codicon { color: #4e94ce !important; }
+.codicon-symbol-array { color: #cccccc !important; }
+.codicon-symbol-boolean { color: #cccccc !important; }
+.codicon-symbol-class { color: #ee9d28 !important; }
+.codicon-symbol-method { color: #b180d7 !important; }
+.codicon-symbol-color { color: #cccccc !important; }
+.codicon-symbol-constant { color: #cccccc !important; }
+.codicon-symbol-constructor { color: #b180d7 !important; }
+
+			.codicon-symbol-value,.codicon-symbol-enum { color: #ee9d28 !important; }
+.codicon-symbol-enum-member { color: #75beff !important; }
+.codicon-symbol-event { color: #ee9d28 !important; }
+.codicon-symbol-field { color: #75beff !important; }
+.codicon-symbol-file { color: #cccccc !important; }
+.codicon-symbol-folder { color: #cccccc !important; }
+.codicon-symbol-function { color: #b180d7 !important; }
+.codicon-symbol-interface { color: #75beff !important; }
+.codicon-symbol-key { color: #cccccc !important; }
+.codicon-symbol-keyword { color: #cccccc !important; }
+.codicon-symbol-module { color: #cccccc !important; }
+.codicon-symbol-namespace { color: #cccccc !important; }
+.codicon-symbol-null { color: #cccccc !important; }
+.codicon-symbol-number { color: #cccccc !important; }
+.codicon-symbol-object { color: #cccccc !important; }
+.codicon-symbol-operator { color: #cccccc !important; }
+.codicon-symbol-package { color: #cccccc !important; }
+.codicon-symbol-property { color: #cccccc !important; }
+.codicon-symbol-reference { color: #cccccc !important; }
+.codicon-symbol-snippet { color: #cccccc !important; }
+.codicon-symbol-string { color: #cccccc !important; }
+.codicon-symbol-struct { color: #cccccc !important; }
+.codicon-symbol-text { color: #cccccc !important; }
+.codicon-symbol-type-parameter { color: #cccccc !important; }
+.codicon-symbol-unit { color: #cccccc !important; }
+.codicon-symbol-variable { color: #75beff !important; }
+.monaco-editor .findOptionsWidget { background-color: #252526; }
+.monaco-editor .findOptionsWidget { color: #cccccc; }
+.monaco-editor .findOptionsWidget { box-shadow: 0 2px 8px #000000; }
+.monaco-editor .findMatch { background-color: rgba(234, 92, 0, 0.33); }
+.monaco-editor .currentFindMatch { background-color: #515c6a; }
+.monaco-editor .findScope { background-color: rgba(58, 61, 65, 0.4); }
+.monaco-editor .find-widget { background-color: #252526; }
+.monaco-editor .find-widget { box-shadow: 0 2px 8px #000000; }
+.monaco-editor .find-widget { color: #cccccc; }
+.monaco-editor .find-widget.no-results .matchesCount { color: #f48771; }
+.monaco-editor .find-widget .monaco-sash { background-color: #454545; width: 3px !important; margin-left: -4px;}
+.monaco-editor .find-widget .monaco-inputbox.synthetic-focus { outline-color: rgba(14, 99, 156, 0.8); }
+.monaco-editor .folded-background { background-color: rgba(38, 79, 120, 0.3); }
+.monaco-editor .detected-link-active { color: #4e94ce !important; }
+.monaco-editor .monaco-editor-overlaymessage .anchor { border-top-color: #007acc; }
+.monaco-editor .monaco-editor-overlaymessage .message { border: 1px solid #007acc; }
+.monaco-editor .monaco-editor-overlaymessage .message { background-color: #063b49; }
+.monaco-editor .parameter-hints-widget { border: 1px solid #454545; }
+.monaco-editor .parameter-hints-widget.multiple .body { border-left: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .parameter-hints-widget .signature.has-docs { border-bottom: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .parameter-hints-widget { background-color: #252526; }
+.monaco-editor .parameter-hints-widget a { color: #3794ff; }
+.monaco-editor .parameter-hints-widget { color: #cccccc; }
+.monaco-editor .parameter-hints-widget code { background-color: rgba(10, 10, 10, 0.4); }
+.monaco-editor .suggest-widget .monaco-list .monaco-list-row .monaco-highlighted-label .highlight { color: #0097fb; }
+.monaco-editor .suggest-widget { color: #d4d4d4; }
+.monaco-editor .suggest-widget a { color: #3794ff; }
+.monaco-editor .suggest-widget code { background-color: rgba(10, 10, 10, 0.4); }
+.monaco-editor .focused .selectionHighlight { background-color: rgba(173, 214, 255, 0.15); }
+.monaco-editor .selectionHighlight { background-color: rgba(173, 214, 255, 0.07); }
+.monaco-editor .wordHighlight { background-color: rgba(87, 87, 87, 0.72); }
+.monaco-editor .wordHighlightStrong { background-color: rgba(0, 73, 114, 0.72); }
+.monaco-editor .accessibilityHelpWidget { background-color: #252526; }
+.monaco-editor .accessibilityHelpWidget { color: #cccccc; }
+.monaco-editor .accessibilityHelpWidget { box-shadow: 0 2px 8px #000000; }
+.monaco-editor .tokens-inspect-widget { border: 1px solid #454545; }
+.monaco-editor .tokens-inspect-widget .tokens-inspect-separator { background-color: #454545; }
+.monaco-editor .tokens-inspect-widget { background-color: #252526; }
+.monaco-editor .tokens-inspect-widget { color: #cccccc; }
+.monaco-editor .reference-zone-widget .ref-tree .referenceMatch .highlight { background-color: rgba(234, 92, 0, 0.3); }
+.monaco-editor .reference-zone-widget .preview .reference-decoration { background-color: rgba(255, 143, 0, 0.6); }
+.monaco-editor .reference-zone-widget .ref-tree { background-color: #252526; }
+.monaco-editor .reference-zone-widget .ref-tree { color: #bbbbbb; }
+.monaco-editor .reference-zone-widget .ref-tree .reference-file { color: #ffffff; }
+.monaco-editor .reference-zone-widget .ref-tree .monaco-list:focus .monaco-list-rows > .monaco-list-row.selected:not(.highlighted) { background-color: rgba(51, 153, 255, 0.2); }
+.monaco-editor .reference-zone-widget .ref-tree .monaco-list:focus .monaco-list-rows > .monaco-list-row.selected:not(.highlighted) { color: #ffffff !important; }
+.monaco-editor .reference-zone-widget .preview .monaco-editor .monaco-editor-background,.monaco-editor .reference-zone-widget .preview .monaco-editor .inputarea.ime-input {	background-color: #001f33;}
+.monaco-editor .reference-zone-widget .preview .monaco-editor .margin {	background-color: #001f33;}
+.monaco-editor .goto-definition-link { color: #4e94ce !important; }
+
+			.monaco-editor .zone-widget .codicon-error,
+			.markers-panel .marker-icon.codicon-error,
+			.extensions-viewlet > .extensions .codicon-error,
+			.monaco-dialog-box .dialog-message-row .codicon-error {
+				color: #f48771;
+			}
+		
+
+			.monaco-editor .zone-widget .codicon-warning,
+			.markers-panel .marker-icon.codicon-warning,
+			.extensions-viewlet > .extensions .codicon-warning,
+			.extension-editor .codicon-warning,
+			.monaco-dialog-box .dialog-message-row .codicon-warning {
+				color: #cca700;
+			}
+		
+
+			.monaco-editor .zone-widget .codicon-info,
+			.markers-panel .marker-icon.codicon-info,
+			.extensions-viewlet > .extensions .codicon-info,
+			.extension-editor .codicon-info,
+			.monaco-dialog-box .dialog-message-row .codicon-info {
+				color: #75beff;
+			}
+		
+.monaco-editor .marker-widget a { color: #3794ff; }
+.monaco-editor .marker-widget a.code-link span:hover { color: #3794ff; }
+.monaco-editor-hover .hover-contents a.code-link span:hover { color: #3794ff; }
+.monaco-editor .hoverHighlight { background-color: rgba(38, 79, 120, 0.25); }
+.monaco-editor .monaco-editor-hover { background-color: #252526; }
+.monaco-editor .monaco-editor-hover { border: 1px solid #454545; }
+.monaco-editor .monaco-editor-hover .hover-row:not(:first-child):not(:empty) { border-top: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .monaco-editor-hover hr { border-top: 1px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .monaco-editor-hover hr { border-bottom: 0px solid rgba(69, 69, 69, 0.5); }
+.monaco-editor .monaco-editor-hover a { color: #3794ff; }
+.monaco-editor .monaco-editor-hover { color: #cccccc; }
+.monaco-editor .monaco-editor-hover .hover-row .actions { background-color: #2c2c2d; }
+.monaco-editor .monaco-editor-hover code { background-color: rgba(10, 10, 10, 0.4); }
+.monaco-editor .snippet-placeholder { background-color: rgba(124, 124, 124, 0.3); outline-color: transparent; }
+.monaco-editor .finish-snippet-placeholder { background-color: transparent; outline-color: #525252; }
+
+.mtk1 { color: #d4d4d4; }
+.mtk2 { color: #1e1e1e; }
+.mtk3 { color: #cc6666; }
+.mtk4 { color: #9cdcfe; }
+.mtk5 { color: #ce9178; }
+.mtk6 { color: #b5cea8; }
+.mtk7 { color: #608b4e; }
+.mtk8 { color: #569cd6; }
+.mtk9 { color: #dcdcdc; }
+.mtk10 { color: #808080; }
+.mtk11 { color: #f44747; }
+.mtk12 { color: #c586c0; }
+.mtk13 { color: #a79873; }
+.mtk14 { color: #dd6a6f; }
+.mtk15 { color: #5bb498; }
+.mtk16 { color: #909090; }
+.mtk17 { color: #778899; }
+.mtk18 { color: #ff00ff; }
+.mtk19 { color: #b46695; }
+.mtk20 { color: #ff0000; }
+.mtk21 { color: #4f76ac; }
+.mtk22 { color: #3dc9b0; }
+.mtk23 { color: #74b0df; }
+.mtk24 { color: #4864aa; }
+.mtki { font-style: italic; }
+.mtkb { font-weight: bold; }
+.mtku { text-decoration: underline; text-underline-position: under; }</style><style type="text/css" media="screen">
+		.monaco-editor .codelens-decoration.ee1f61 { height: 21px; line-height: 19px; font-size: 13px; padding-right: 6px;}
+		.monaco-editor .codelens-decoration.ee1f61 > a > .codicon { line-height: 19px; font-size: 13px; }
+		</style><script async="async" type="text/javascript" src="./Discussion 1 _ CS 61A Spring 2022_files/scheme.js.下载"></script><style type="text/css" media="screen">
+		.monaco-editor .codelens-decoration.ee1f62 { height: 21px; line-height: 19px; font-size: 13px; padding-right: 6px;}
+		.monaco-editor .codelens-decoration.ee1f62 > a > .codicon { line-height: 19px; font-size: 13px; }
+		</style><style type="text/css" media="screen">
+		.monaco-editor .codelens-decoration.ee1f63 { height: 21px; line-height: 19px; font-size: 13px; padding-right: 6px;}
+		.monaco-editor .codelens-decoration.ee1f63 > a > .codicon { line-height: 19px; font-size: 13px; }
+		</style><style type="text/css" media="screen">
+		.monaco-editor .codelens-decoration.ee1f64 { height: 21px; line-height: 19px; font-size: 13px; padding-right: 6px;}
+		.monaco-editor .codelens-decoration.ee1f64 > a > .codicon { line-height: 19px; font-size: 13px; }
+		</style></head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Discussion 1 _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/disc/disc01/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/disc/disc01/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/disc/disc01/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Discussion 1: Control, Environment Diagrams
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/disc/disc01/disc01.pdf" class="label label-outline">disc01.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<div class="alert storable-login-status alert-danger">To be able to save your progress on this online worksheet,
+            please <a href="https://disc.cs61a.org/oauth/login" target="_blank">log in</a>.</div>
+
+This is an online worksheet that you can work on during discussions.
+Your work is not graded and you do not need to submit anything.
+
+
+    
+
+
+
+<h1 id="control-structures">Control structures</h1>
+
+
+<p><strong>Control structures</strong> direct the flow of a program using logical statements.
+For example, conditionals (<code>if-elif-else</code>) allow a program to skip sections of
+code, and iteration (<code>while</code>), allows a program to repeat a section.</p>
+
+
+<h2 id="conditional-statements">Conditional statements</h2>
+
+
+
+
+<p><strong>Conditional statements</strong> let programs execute different lines of code
+depending on certain conditions. Let’s review the <code>if-elif-else</code> syntax:</p>
+
+<ul>
+  <li>The <code>elif</code> and <code>else</code> clauses are optional, and you can have any number of
+  <code>elif</code> clauses.</li>
+  <li>A <strong>conditional expression</strong> is an expression that evaluates to either a
+  truthy value (<code>True</code>, a non-zero integer, etc.) or a falsy value (<code>False</code>, <code>0</code>,
+  <code>None</code>, <code>""</code>, <code>[]</code>, etc.).</li>
+  <li>Only the first <code>if</code>/<code>elif</code> expression that evaluates to a <strong>truthy</strong> value
+  will have its corresponding indented suite be executed.</li>
+  <li>If none of the conditional expressions evaluate to a true value, then the
+  <code>else</code> suite is executed. There can only be one <code>else</code> clause in a conditional
+  statement.</li>
+</ul>
+
+<p>Here's the general form:</p>
+
+<pre><code class="hljs python"><span class="hljs-keyword">if</span> &lt;conditional expression&gt;:
+    &lt;suite of statements&gt;
+<span class="hljs-keyword">elif</span> &lt;conditional expression&gt;:
+    &lt;suite of statements&gt;
+<span class="hljs-keyword">else</span>:
+    &lt;suite of statements&gt;</code></pre>
+
+
+<h2 id="boolean-operators">Boolean Operators</h2>
+
+
+<p></p>
+
+<p>Python also includes the <strong>boolean operators</strong> <code>and</code>, <code>or</code>, and <code>not</code>. These
+operators are used to combine and manipulate boolean values.</p>
+
+<ul>
+  <li><code>not</code> returns the opposite boolean value of the following expression, and
+  will always return either <code>True</code> or <code>False</code>.</li>
+  <li><code>and</code> evaluates expressions in order and stops evaluating (short-circuits)
+  once it reaches the first falsy value, and then returns it. If all values
+  evaluate to a truthy value, the last value is returned.</li>
+  <li><code>or</code> evalutes expressions in order and short-circuits at the first truthy
+  value and returns it. If all values evaluate to a falsy value, the last value
+  is returned.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<p>For example:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>
+<span class="hljs-literal">True</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">not</span> <span class="hljs-literal">True</span>
+<span class="hljs-literal">False</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-number">-1</span> <span class="hljs-keyword">and</span> <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span>
+<span class="hljs-number">0</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-literal">False</span> <span class="hljs-keyword">or</span> <span class="hljs-number">9999</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span>/<span class="hljs-number">0</span>
+<span class="hljs-number">9999</span></code></pre>
+
+
+<h3 id="q1-case-conundrum">Q1: Case Conundrum</h3>
+
+
+<p>In this question, we will explore the difference between <code>if</code> and <code>elif</code>.</p>
+
+<p>What is the result of evaluating the following code?</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">special_case</span><span class="hljs-params">()</span>:</span>
+    x = <span class="hljs-number">10</span>
+    <span class="hljs-keyword">if</span> x &gt; <span class="hljs-number">0</span>:
+        x += <span class="hljs-number">2</span>
+    <span class="hljs-keyword">elif</span> x &lt; <span class="hljs-number">13</span>:
+        x += <span class="hljs-number">3</span>
+    <span class="hljs-keyword">elif</span> x % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>:
+        x += <span class="hljs-number">4</span>
+    <span class="hljs-keyword">return</span> x
+
+special_case()</code></pre>
+
+
+            <label class="sr-only" for="special-case-input">Your Answer:</label>
+            <input class="form-control storable" id="special-case-input" type="text">
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+        
+
+<p>What is the result of evaluating this piece of code?</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">just_in_case</span><span class="hljs-params">()</span>:</span>
+    x = <span class="hljs-number">10</span>
+    <span class="hljs-keyword">if</span> x &gt; <span class="hljs-number">0</span>:
+        x += <span class="hljs-number">2</span>
+    <span class="hljs-keyword">if</span> x &lt; <span class="hljs-number">13</span>:
+        x += <span class="hljs-number">3</span>
+    <span class="hljs-keyword">if</span> x % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>:
+        x += <span class="hljs-number">4</span>
+    <span class="hljs-keyword">return</span> x
+
+just_in_case()</code></pre>
+
+
+            <label class="sr-only" for="just-in-case-input">Your Answer:</label>
+            <input class="form-control storable" id="just-in-case-input" type="text">
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+        
+
+<p>How about this piece of code?</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">case_in_point</span><span class="hljs-params">()</span>:</span>
+    x = <span class="hljs-number">10</span>
+    <span class="hljs-keyword">if</span> x &gt; <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> x + <span class="hljs-number">2</span>
+    <span class="hljs-keyword">if</span> x &lt; <span class="hljs-number">13</span>:
+        <span class="hljs-keyword">return</span> x + <span class="hljs-number">3</span>
+    <span class="hljs-keyword">if</span> x % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> x + <span class="hljs-number">4</span>
+    <span class="hljs-keyword">return</span> x
+
+case_in_point()</code></pre>
+
+
+            <label class="sr-only" for="case-in-point-input">Your Answer:</label>
+            <input class="form-control storable" id="case-in-point-input" type="text">
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+        
+
+<p>Which of these code snippets result in the same output, and why? Based on your
+findings, when do you think using a series of <code>if</code> statements has the same
+effect as using both <code>if</code> and <code>elif</code> cases?</p>
+
+
+            <label class="sr-only" for="case-reasoning-input">Your Answer:</label>
+            <input class="form-control storable" id="case-reasoning-input" type="text">
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+        
+
+
+
+
+
+<div class="page-break"></div>
+
+
+<h3 id="q2-jacket-weather">Q2: Jacket Weather?</h3>
+
+
+<p>Alfonso will only wear a jacket outside if it is below 60 degrees or it is
+raining.</p>
+
+<p>Write a function that takes in the current temperature and a boolean value
+telling if it is raining. This function should return <code>True</code> if Alfonso will
+wear a jacket and <code>False</code> otherwise.</p>
+
+<p>Try solving this problem using an <code>if</code> statement.</p>
+
+<blockquote><p><strong>Note:</strong>
+Since we'll either return <code>True</code> or <code>False</code> based on a single condition,
+whose truthiness value will also be either <code>True</code> or <code>False</code>.
+Knowing this, try to write this function using a single line.</p></blockquote>
+
+
+            <div class="monaco-storable" id="disc01-q6-input" style="height:288px;" data-keybinding-context="1" data-mode-id="scheme"><div class="monaco-editor no-user-select  showUnused vs-dark" data-uri="inmemory://model/1" style="width: 892px; height: 288px;"><div data-mprt="3" class="overflow-guard" style="width: 892px; height: 288px;"><div class="margin" role="presentation" aria-hidden="true" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; height: 288px; width: 64px;"><div class="glyph-margin" style="left: 0px; width: 0px; height: 288px;"></div><div class="margin-view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="margin-view-overlays" role="presentation" aria-hidden="true" style="position: absolute; width: 64px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; height: 288px;"><div style="position:absolute;top:0px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">1</div></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">2</div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">3</div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">4</div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">5</div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">6</div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">7</div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">8</div></div><div style="position:absolute;top:152px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">9</div></div><div style="position:absolute;top:171px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">10</div></div><div style="position:absolute;top:190px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">11</div></div><div style="position:absolute;top:209px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">12</div></div></div></div><div class="monaco-scrollable-element editor-scrollable vs-dark" role="presentation" data-mprt="5" style="position: absolute; overflow: hidden; left: 64px; width: 828px; height: 288px;"><div class="lines-content monaco-editor-background" style="position: absolute; overflow: hidden; width: 1e+06px; height: 1e+06px; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; left: 0px;"><div class="view-overlays" role="presentation" aria-hidden="true" style="position: absolute; height: 0px; width: 828px;"><div style="position:absolute;top:0px;width:100%;height:19px;"></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:152px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:171px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:190px;width:100%;height:19px;"></div><div style="position:absolute;top:209px;width:100%;height:19px;"></div></div><div role="presentation" aria-hidden="true" class="view-rulers"></div><div class="view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="view-lines" role="presentation" aria-hidden="true" data-mprt="7" style="position: absolute; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; width: 828px; height: 288px;"><div style="top:0px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;wears_jacket_with_if(temp,&nbsp;raining):</span></span></div><div style="top:19px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:38px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;wears_jacket_with_if(</span><span class="mtk6">90</span><span class="mtk1">,&nbsp;False)</span></span></div><div style="top:57px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;False</span></span></div><div style="top:76px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;wears_jacket_with_if(</span><span class="mtk6">40</span><span class="mtk1">,&nbsp;False)</span></span></div><div style="top:95px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;True</span></span></div><div style="top:114px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;wears_jacket_with_if(</span><span class="mtk6">100</span><span class="mtk1">,&nbsp;True)</span></span></div><div style="top:133px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;True</span></span></div><div style="top:152px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:171px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"***&nbsp;YOUR&nbsp;CODE&nbsp;HERE&nbsp;***"</span></span></div><div style="top:190px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:209px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div></div><div data-mprt="1" class="contentWidgets" style="position: absolute; top: 0px;"></div><div role="presentation" aria-hidden="true" class="cursors-layer cursor-line-style cursor-solid"><div class="cursor " style="height: 19px; top: 0px; left: 0px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; display: block; visibility: hidden; width: 1.6px;"></div></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute; width: 814px; height: 10px; left: 0px; bottom: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict; width: 814px;"></div></div><canvas class="decorationsOverviewRuler" aria-hidden="true" width="17" height="360" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; right: 0px; width: 14px; height: 288px;"></canvas><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute; width: 14px; height: 288px; right: 0px; top: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 14px; transform: translate3d(0px, 0px, 0px); contain: strict; height: 288px;"></div></div></div><div role="presentation" aria-hidden="true" style="width: 892px;"></div><textarea data-mprt="6" class="inputarea" wrap="off" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" aria-label="Editor content;Press Alt+F1 for Accessibility Options." role="textbox" aria-multiline="true" aria-haspopup="false" aria-autocomplete="both" style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; top: 0px; left: 64px; width: 1px; height: 1px;"></textarea><div style="position: absolute; top: 0px; left: 0px; width: 0px; height: 0px;"></div><div data-mprt="4" class="overlayWidgets" style="width: 892px;"><div class="accessibilityHelpWidget" role="dialog" aria-hidden="true" widgetid="editor.contrib.accessibilityHelpWidget" style="display: none; position: absolute;"><div role="document"></div></div><div class="monaco-editor-hover hidden" aria-hidden="true" role="presentation" widgetid="editor.contrib.modesGlyphHoverWidget" style="position: absolute;"></div></div><div data-mprt="8" class="minimap slider-mouseover" role="presentation" aria-hidden="true" style="position: absolute; left: 0px; width: 0px; height: 288px;"><div class="minimap-shadow-hidden" style="height: 288px;"></div><canvas width="0" height="360" style="position: absolute; left: 0px; width: 0px; height: 288px;"></canvas><canvas class="minimap-decorations-layer" width="0" height="360" style="position: absolute; left: 0px; width: 0px; height: 288px;"></canvas><div class="minimap-slider" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; width: 0px;"><div class="minimap-slider-horizontal" style="position: absolute; width: 0px; height: 0px;"></div></div></div></div><div data-mprt="2" class="overflowingContentWidgets"><div class="monaco-editor rename-box" widgetid="__renameInputWidget" style="background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; color: rgb(204, 204, 204); position: absolute; visibility: hidden; max-width: 1536px;"><input class="rename-input" type="text" aria-label="Rename input. Type new name and press Enter to commit." style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; background-color: rgb(60, 60, 60); border-width: 0px; border-style: none;"><div class="rename-label" style="font-size: 11.2px;">Enter to Rename, Shift+Enter to Preview</div></div><div class="editor-widget suggest-widget" widgetid="editor.widget.suggestWidget" style="position: absolute; visibility: inherit; max-width: 1536px; top: 22px; left: 64px;" monaco-visible-content-widget="true"><div class="message" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"></div><div class="tree" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-list list_id_1" tabindex="0" role="tree"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-list-rows" style="transform: translate3d(0px, 0px, 0px); overflow: hidden;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div></div><style type="text/css" media="screen">.monaco-list.list_id_1:focus .monaco-list-row.focused { background-color: #062f4a; }
+.monaco-list.list_id_1:focus .monaco-list-row.focused:hover { background-color: #062f4a; }
+.monaco-list.list_id_1:focus .monaco-list-row.selected { background-color: #084066; }
+.monaco-list.list_id_1:focus .monaco-list-row.selected:hover { background-color: #084066; }
+.monaco-list.list_id_1:focus .monaco-list-row.selected { color: #ffffff; }
+
+				.monaco-drag-image,
+				.monaco-list.list_id_1:focus .monaco-list-row.selected.focused { background-color: #094771; }
+			
+
+				.monaco-drag-image,
+				.monaco-list.list_id_1:focus .monaco-list-row.selected.focused { color: #ffffff; }
+			
+.monaco-list.list_id_1 .monaco-list-row.focused { background-color:  #062f4a; }
+.monaco-list.list_id_1 .monaco-list-row.focused:hover { background-color:  #062f4a; }
+.monaco-list.list_id_1 .monaco-list-row.selected { background-color:  #37373d; }
+.monaco-list.list_id_1 .monaco-list-row.selected:hover { background-color:  #37373d; }
+.monaco-list.list_id_1:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) { background-color:  #2a2d2e; }
+
+				.monaco-list.list_id_1.drop-target,
+				.monaco-list.list_id_1 .monaco-list-rows.drop-target,
+				.monaco-list.list_id_1 .monaco-list-row.drop-target { background-color: #062f4a !important; color: inherit !important; }
+			
+.monaco-list-type-filter { background-color: #653723 }
+.monaco-list-type-filter { border: 1px solid rgba(0, 0, 0, 0); }
+.monaco-list-type-filter.no-matches { border: 1px solid #be1100; }
+.monaco-list-type-filter { box-shadow: 1px 1px 1px #000000; }</style></div></div><div class="suggest-status-bar" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><span></span><span></span></div><div class="details" aria-hidden="true" style="font-size: 14px; font-weight: normal; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="body" style="overflow: hidden;"><div class="header"><span class="codicon codicon-close" title="Read less...Ctrl+Space" style="height: 19px; width: 19px;"></span><p class="type" style="font-family: Consolas, &quot;Courier New&quot;, monospace;"></p></div><p class="docs"></p></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="monaco-editor-hover hidden" tabindex="0" widgetid="editor.contrib.modesContentHoverWidget" style="position: absolute; visibility: hidden; max-width: 1536px;"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-editor-hover-content" style="overflow: hidden; font-size: 14px; line-height: 19px; max-height: 250px; max-width: 588.72px;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="context-view" aria-hidden="true" style="display: none;"></div></div></div>
+            <a href="javascript:void" id="modal-link-disc01-q6-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-disc01-q6-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe id="code-iframe-disc01-q6-input" width="100%" height="700px" style="border: none; display:block;" src="./Discussion 1 _ CS 61A Spring 2022_files/saved_resource.html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+            <script>
+                $(() => activateEditor('def wears_jacket_with_if(temp, raining):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; wears_jacket_with_if(90, False)\n    False\n    &gt;&gt;&gt; wears_jacket_with_if(40, False)\n    True\n    &gt;&gt;&gt; wears_jacket_with_if(100, True)\n    True\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "scheme", "disc01-q6-input"));
+            </script>
+        
+
+
+
+
+<h3 id="q3-if-function-vs-statement">Q3: If Function vs Statement</h3>
+
+
+<p>Now that we've learned about how <code>if</code> statements work, let's see if we
+can write a function that behaves the same as an <code>if</code> statement.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">if_function</span><span class="hljs-params">(condition, true_result, false_result)</span>:</span>
+    <span class="hljs-string">"""Return true_result if condition is a true value, and
+    false_result otherwise.
+
+    &gt;&gt;&gt; if_function(True, 2, 3)
+    2
+    &gt;&gt;&gt; if_function(False, 2, 3)
+    3
+    &gt;&gt;&gt; if_function(3==2, 'equal', 'not equal')
+    'not equal'
+    &gt;&gt;&gt; if_function(3&gt;2, 'bigger', 'smaller')
+    'bigger'
+    """</span>
+    <span class="hljs-keyword">if</span> condition:
+        <span class="hljs-keyword">return</span> true_result
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> false_result</code></pre>
+
+<p>Despite the doctests above, this function actually does <em>not</em> always
+do the same thing as an <code>if</code> statement.</p>
+
+<p>We want to find a case where this <code>if_function</code> will
+behave differently from an <code>if</code> statement.
+To do so, implement the following functions,</p>
+
+<ul>
+  <li><code>cond</code>: Calling <code>cond</code> should act as the <code>if</code> condition.</li>
+  <li><code>true_func</code>: Calling <code>true_func</code> should represent the result of the
+  truthy case.</li>
+  <li><code>false_func</code>: Calling <code>false_func</code> should represent the result of the
+  falsey case.</li>
+</ul>
+
+<p>so that <code>with_if_function</code> does <em>not</em> behave the same as
+<code>with_if_statement</code>, written in the doctests and here below:</p>
+
+<ul>
+  <li>When <code>with_if_statement</code> is called, we print out <code>61A</code>.</li>
+  <li>When <code>with_if_function</code> is called, we print out both <code>Welcome to</code> and <code>61A</code>
+  on separate lines.</li>
+</ul>
+
+<p>Implement <code>cond</code>, <code>true_func</code>, and <code>false_func</code> below.</p>
+
+<blockquote><p><strong>Hint</strong>: If you are having a hard time identifying how <code>with_if_statement</code>
+and <code>with_if_function</code> would differ in behavior, consider the
+<a href="http://composingprograms.com/pages/15-control.html#conditional-statements">rules of evaluation for <code>if</code> statements</a>
+and <a href="http://composingprograms.com/pages/12-elements-of-programming.html#call-expressions">call expressions</a>.</p></blockquote>
+
+
+            <div class="monaco-storable" id="disc01-q7-input" style="height:918px;" data-keybinding-context="1" data-mode-id="scheme"><div class="monaco-editor no-user-select  showUnused vs-dark" data-uri="inmemory://model/2" style="width: 892px; height: 918px;"><div data-mprt="3" class="overflow-guard" style="width: 892px; height: 918px;"><div class="margin" role="presentation" aria-hidden="true" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; height: 950px; width: 64px;"><div class="glyph-margin" style="left: 0px; width: 0px; height: 950px;"></div><div class="margin-view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="margin-view-overlays" role="presentation" aria-hidden="true" style="position: absolute; width: 64px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; height: 950px;"><div style="position:absolute;top:0px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">1</div></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">2</div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">3</div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">4</div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">5</div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">6</div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">7</div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">8</div></div><div style="position:absolute;top:152px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">9</div></div><div style="position:absolute;top:171px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">10</div></div><div style="position:absolute;top:190px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">11</div></div><div style="position:absolute;top:209px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">12</div></div><div style="position:absolute;top:228px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">13</div></div><div style="position:absolute;top:247px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">14</div></div><div style="position:absolute;top:266px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">15</div></div><div style="position:absolute;top:285px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">16</div></div><div style="position:absolute;top:304px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">17</div></div><div style="position:absolute;top:323px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">18</div></div><div style="position:absolute;top:342px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">19</div></div><div style="position:absolute;top:361px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">20</div></div><div style="position:absolute;top:380px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">21</div></div><div style="position:absolute;top:399px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">22</div></div><div style="position:absolute;top:418px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">23</div></div><div style="position:absolute;top:437px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">24</div></div><div style="position:absolute;top:456px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">25</div></div><div style="position:absolute;top:475px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">26</div></div><div style="position:absolute;top:494px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">27</div></div><div style="position:absolute;top:513px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">28</div></div><div style="position:absolute;top:532px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">29</div></div><div style="position:absolute;top:551px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">30</div></div><div style="position:absolute;top:570px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">31</div></div><div style="position:absolute;top:589px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">32</div></div><div style="position:absolute;top:608px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">33</div></div><div style="position:absolute;top:627px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">34</div></div><div style="position:absolute;top:646px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">35</div></div><div style="position:absolute;top:665px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">36</div></div><div style="position:absolute;top:684px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">37</div></div><div style="position:absolute;top:703px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">38</div></div><div style="position:absolute;top:722px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">39</div></div><div style="position:absolute;top:741px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">40</div></div><div style="position:absolute;top:760px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">41</div></div><div style="position:absolute;top:779px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">42</div></div><div style="position:absolute;top:798px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">43</div></div><div style="position:absolute;top:817px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">44</div></div><div style="position:absolute;top:836px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">45</div></div><div style="position:absolute;top:855px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">46</div></div><div style="position:absolute;top:874px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">47</div></div><div style="position:absolute;top:893px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">48</div></div><div style="position:absolute;top:912px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">49</div></div></div></div><div class="monaco-scrollable-element editor-scrollable vs-dark" role="presentation" data-mprt="5" style="position: absolute; overflow: hidden; left: 64px; width: 828px; height: 918px;"><div class="lines-content monaco-editor-background" style="position: absolute; overflow: hidden; width: 1e+06px; height: 1e+06px; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; left: 0px;"><div class="view-overlays" role="presentation" aria-hidden="true" style="position: absolute; height: 0px; width: 828px;"><div style="position:absolute;top:0px;width:100%;height:19px;"></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:152px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:171px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:190px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:209px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:228px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:247px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:266px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div><div class="cigr" style="left:30.78125px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:285px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:304px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div><div class="cigr" style="left:30.78125px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:323px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:342px;width:100%;height:19px;"></div><div style="position:absolute;top:361px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:380px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:399px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:418px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:437px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:456px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:475px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:494px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div><div class="cigr" style="left:30.78125px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:513px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:532px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div><div class="cigr" style="left:30.78125px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:551px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:570px;width:100%;height:19px;"></div><div style="position:absolute;top:589px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:608px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:627px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:646px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:665px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:684px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:703px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:722px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:741px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:760px;width:100%;height:19px;"></div><div style="position:absolute;top:779px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:798px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:817px;width:100%;height:19px;"></div><div style="position:absolute;top:836px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:855px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:874px;width:100%;height:19px;"></div><div style="position:absolute;top:893px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:912px;width:100%;height:19px;"></div></div><div role="presentation" aria-hidden="true" class="view-rulers"></div><div class="view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="view-lines" role="presentation" aria-hidden="true" data-mprt="7" style="position: absolute; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; width: 828px; height: 950px;"><div style="top:0px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;if_function(condition,&nbsp;true_result,&nbsp;false_resu</span><span class="mtk1">lt):</span></span></div><div style="top:19px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""Return&nbsp;true_result&nbsp;if&nbsp;condition&nbsp;is&nbsp;a&nbsp;true&nbsp;value</span><span class="mtk5">,&nbsp;and</span></span></div><div style="top:38px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;false_result&nbsp;otherwise.</span></span></div><div style="top:57px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:76px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;if_function(True,&nbsp;</span><span class="mtk6">2</span><span class="mtk1">,&nbsp;</span><span class="mtk6">3</span><span class="mtk1">)</span></span></div><div style="top:95px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">2</span></span></div><div style="top:114px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;if_function(False,&nbsp;</span><span class="mtk6">2</span><span class="mtk1">,&nbsp;</span><span class="mtk6">3</span><span class="mtk1">)</span></span></div><div style="top:133px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">3</span></span></div><div style="top:152px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;if_function(</span><span class="mtk6">3</span><span class="mtk1">==</span><span class="mtk6">2</span><span class="mtk1">,&nbsp;'equal',&nbsp;'not&nbsp;equal')</span></span></div><div style="top:171px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;'not&nbsp;equal'</span></span></div><div style="top:190px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;if_function(</span><span class="mtk6">3</span><span class="mtk1">&gt;</span><span class="mtk6">2</span><span class="mtk1">,&nbsp;'bigger',&nbsp;'smaller')</span></span></div><div style="top:209px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;'bigger'</span></span></div><div style="top:228px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:247px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk8">if</span><span class="mtk1">&nbsp;condition:</span></span></div><div style="top:266px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true_result</span></span></div><div style="top:285px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk8">else</span><span class="mtk1">:</span></span></div><div style="top:304px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;false_result</span></span></div><div style="top:323px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:342px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;with_if_statement():</span></span></div><div style="top:361px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:380px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;result&nbsp;=&nbsp;with_if_statement()</span></span></div><div style="top:399px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">61</span><span class="mtk1">A</span></span></div><div style="top:418px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print(result)</span></span></div><div style="top:437px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;None</span></span></div><div style="top:456px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:475px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk8">if</span><span class="mtk1">&nbsp;</span><span class="mtk8">cond</span><span class="mtk1">():</span></span></div><div style="top:494px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true_func()</span></span></div><div style="top:513px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk8">else</span><span class="mtk1">:</span></span></div><div style="top:532px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;false_func()</span></span></div><div style="top:551px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:570px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;with_if_function():</span></span></div><div style="top:589px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:608px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;result&nbsp;=&nbsp;with_if_function()</span></span></div><div style="top:627px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;Welcome&nbsp;to</span></span></div><div style="top:646px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">61</span><span class="mtk1">A</span></span></div><div style="top:665px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;print(result)</span></span></div><div style="top:684px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;None</span></span></div><div style="top:703px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:722px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;if_function(</span><span class="mtk8">cond</span><span class="mtk1">(),&nbsp;true_func(),&nbsp;false_func())</span></span></div><div style="top:741px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:760px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;</span><span class="mtk8">cond</span><span class="mtk1">():</span></span></div><div style="top:779px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"***&nbsp;YOUR&nbsp;CODE&nbsp;HERE&nbsp;***"</span></span></div><div style="top:798px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:817px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;true_func():</span></span></div><div style="top:836px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"***&nbsp;YOUR&nbsp;CODE&nbsp;HERE&nbsp;***"</span></span></div><div style="top:855px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:874px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;false_func():</span></span></div><div style="top:893px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"***&nbsp;YOUR&nbsp;CODE&nbsp;HERE&nbsp;***"</span></span></div><div style="top:912px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div></div><div data-mprt="1" class="contentWidgets" style="position: absolute; top: 0px;"></div><div role="presentation" aria-hidden="true" class="cursors-layer cursor-line-style cursor-solid"><div class="cursor " style="height: 19px; top: 0px; left: 0px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; display: block; visibility: hidden; width: 1.6px;"></div></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute; width: 814px; height: 10px; left: 0px; bottom: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict; width: 814px;"></div></div><canvas class="decorationsOverviewRuler" aria-hidden="true" width="17" height="1147" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; right: 0px; width: 14px; height: 918px;"></canvas><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute; width: 14px; height: 918px; right: 0px; top: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 14px; transform: translate3d(0px, 0px, 0px); contain: strict; height: 887px;"></div></div></div><div role="presentation" aria-hidden="true" style="width: 892px;"></div><textarea data-mprt="6" class="inputarea" wrap="off" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" aria-label="Editor content;Press Alt+F1 for Accessibility Options." role="textbox" aria-multiline="true" aria-haspopup="false" aria-autocomplete="both" style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; top: 0px; left: 64px; width: 1px; height: 1px;"></textarea><div style="position: absolute; top: 0px; left: 0px; width: 0px; height: 0px;"></div><div data-mprt="4" class="overlayWidgets" style="width: 892px;"><div class="accessibilityHelpWidget" role="dialog" aria-hidden="true" widgetid="editor.contrib.accessibilityHelpWidget" style="display: none; position: absolute;"><div role="document"></div></div><div class="monaco-editor-hover hidden" aria-hidden="true" role="presentation" widgetid="editor.contrib.modesGlyphHoverWidget" style="position: absolute;"></div></div><div data-mprt="8" class="minimap slider-mouseover" role="presentation" aria-hidden="true" style="position: absolute; left: 0px; width: 0px; height: 918px;"><div class="minimap-shadow-hidden" style="height: 918px;"></div><canvas width="0" height="1147" style="position: absolute; left: 0px; width: 0px; height: 917.6px;"></canvas><canvas class="minimap-decorations-layer" width="0" height="1147" style="position: absolute; left: 0px; width: 0px; height: 917.6px;"></canvas><div class="minimap-slider" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; width: 0px;"><div class="minimap-slider-horizontal" style="position: absolute; width: 0px; height: 0px;"></div></div></div></div><div data-mprt="2" class="overflowingContentWidgets"><div class="monaco-editor rename-box" widgetid="__renameInputWidget" style="background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; color: rgb(204, 204, 204); position: absolute; visibility: hidden; max-width: 1536px;"><input class="rename-input" type="text" aria-label="Rename input. Type new name and press Enter to commit." style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; background-color: rgb(60, 60, 60); border-width: 0px; border-style: none;"><div class="rename-label" style="font-size: 11.2px;">Enter to Rename, Shift+Enter to Preview</div></div><div class="editor-widget suggest-widget" widgetid="editor.widget.suggestWidget" style="position: absolute; visibility: inherit; max-width: 1536px; top: 22px; left: 64px;" monaco-visible-content-widget="true"><div class="message" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"></div><div class="tree" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-list list_id_2" tabindex="0" role="tree"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-list-rows" style="transform: translate3d(0px, 0px, 0px); overflow: hidden;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div></div><style type="text/css" media="screen">.monaco-list.list_id_2:focus .monaco-list-row.focused { background-color: #062f4a; }
+.monaco-list.list_id_2:focus .monaco-list-row.focused:hover { background-color: #062f4a; }
+.monaco-list.list_id_2:focus .monaco-list-row.selected { background-color: #084066; }
+.monaco-list.list_id_2:focus .monaco-list-row.selected:hover { background-color: #084066; }
+.monaco-list.list_id_2:focus .monaco-list-row.selected { color: #ffffff; }
+
+				.monaco-drag-image,
+				.monaco-list.list_id_2:focus .monaco-list-row.selected.focused { background-color: #094771; }
+			
+
+				.monaco-drag-image,
+				.monaco-list.list_id_2:focus .monaco-list-row.selected.focused { color: #ffffff; }
+			
+.monaco-list.list_id_2 .monaco-list-row.focused { background-color:  #062f4a; }
+.monaco-list.list_id_2 .monaco-list-row.focused:hover { background-color:  #062f4a; }
+.monaco-list.list_id_2 .monaco-list-row.selected { background-color:  #37373d; }
+.monaco-list.list_id_2 .monaco-list-row.selected:hover { background-color:  #37373d; }
+.monaco-list.list_id_2:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) { background-color:  #2a2d2e; }
+
+				.monaco-list.list_id_2.drop-target,
+				.monaco-list.list_id_2 .monaco-list-rows.drop-target,
+				.monaco-list.list_id_2 .monaco-list-row.drop-target { background-color: #062f4a !important; color: inherit !important; }
+			
+.monaco-list-type-filter { background-color: #653723 }
+.monaco-list-type-filter { border: 1px solid rgba(0, 0, 0, 0); }
+.monaco-list-type-filter.no-matches { border: 1px solid #be1100; }
+.monaco-list-type-filter { box-shadow: 1px 1px 1px #000000; }</style></div></div><div class="suggest-status-bar" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><span></span><span></span></div><div class="details" aria-hidden="true" style="font-size: 14px; font-weight: normal; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="body" style="overflow: hidden;"><div class="header"><span class="codicon codicon-close" title="Read less...Ctrl+Space" style="height: 19px; width: 19px;"></span><p class="type" style="font-family: Consolas, &quot;Courier New&quot;, monospace;"></p></div><p class="docs"></p></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="monaco-editor-hover hidden" tabindex="0" widgetid="editor.contrib.modesContentHoverWidget" style="position: absolute; visibility: hidden; max-width: 1536px;"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-editor-hover-content" style="overflow: hidden; font-size: 14px; line-height: 19px; max-height: 250px; max-width: 588.72px;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="context-view" aria-hidden="true" style="display: none;"></div></div></div>
+            <a href="javascript:void" id="modal-link-disc01-q7-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-disc01-q7-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe id="code-iframe-disc01-q7-input" width="100%" height="700px" style="border: none; display:block;" src="./Discussion 1 _ CS 61A Spring 2022_files/saved_resource(1).html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+            <script>
+                $(() => activateEditor('def if_function(condition, true_result, false_result):\n    &quot;&quot;&quot;Return true_result if condition is a true value, and\n    false_result otherwise.\n\n    &gt;&gt;&gt; if_function(True, 2, 3)\n    2\n    &gt;&gt;&gt; if_function(False, 2, 3)\n    3\n    &gt;&gt;&gt; if_function(3==2, &#x27;equal&#x27;, &#x27;not equal&#x27;)\n    &#x27;not equal&#x27;\n    &gt;&gt;&gt; if_function(3&gt;2, &#x27;bigger&#x27;, &#x27;smaller&#x27;)\n    &#x27;bigger&#x27;\n    &quot;&quot;&quot;\n    if condition:\n        return true_result\n    else:\n        return false_result\n\ndef with_if_statement():\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; result = with_if_statement()\n    61A\n    &gt;&gt;&gt; print(result)\n    None\n    &quot;&quot;&quot;\n    if cond():\n        return true_func()\n    else:\n        return false_func()\n\ndef with_if_function():\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; result = with_if_function()\n    Welcome to\n    61A\n    &gt;&gt;&gt; print(result)\n    None\n    &quot;&quot;&quot;\n    return if_function(cond(), true_func(), false_func())\n\ndef cond():\n    "*** YOUR CODE HERE ***"\n\ndef true_func():\n    "*** YOUR CODE HERE ***"\n\ndef false_func():\n    "*** YOUR CODE HERE ***"\n\n', "scheme", "disc01-q7-input"));
+            </script>
+        
+
+
+
+
+
+
+<h2 id="while-loops">While loops</h2>
+
+
+<p>To repeat the same statements multiple times in a program, we can use
+iteration. In Python, one way we can do this is with a <strong>while loop</strong>.</p>
+
+<pre><code class="hljs python"><span class="hljs-keyword">while</span> &lt;conditional clause&gt;:
+    &lt;statements body&gt;</code></pre>
+
+<p>As long as <code>&lt;conditional clause&gt;</code> evaluates to a true value,
+<code>&lt;statements body&gt;</code> will continue to be executed. The conditional clause
+gets evaluated each time the body finishes executing.</p>
+
+<div class="page-break"></div>
+
+
+<h3 id="q4-square-so-slow">Q4: Square So Slow</h3>
+
+
+<p>What is the result of evaluating the following code?</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">square</span><span class="hljs-params">(x)</span>:</span>
+    print(<span class="hljs-string">"here!"</span>)
+    <span class="hljs-keyword">return</span> x * x
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">so_slow</span><span class="hljs-params">(num)</span>:</span>
+    x = num
+    <span class="hljs-keyword">while</span> x &gt; <span class="hljs-number">0</span>:
+        x = x + <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> x / <span class="hljs-number">0</span>
+
+square(so_slow(<span class="hljs-number">5</span>))</code></pre>
+
+<blockquote><p><strong>Hint:</strong>
+What happens to <code>x</code> over time?</p></blockquote>
+
+
+            <label class="sr-only" for="square-so-slow-input">Your Answer:</label>
+            <input class="form-control storable" id="square-so-slow-input" type="text">
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+        
+
+
+
+
+
+
+<h3 id="q5-is-prime">Q5: Is Prime?</h3>
+
+
+<p>Write a function that returns <code>True</code> if a positive integer <code>n</code> is a prime
+number and <code>False</code> otherwise.</p>
+
+<p>A prime number n is a number that is not divisible by any numbers other than
+1 and n itself. For example, 13 is prime, since it is only divisible by 1 and
+13, but 14 is not, since it is divisible by 1, 2, 7, and 14.</p>
+
+<blockquote><p><strong>Hint:</strong>
+Use the <code>%</code> operator:
+<code>x % y</code> returns the remainder of <code>x</code> when divided by <code>y</code>.</p></blockquote>
+
+
+            <div class="monaco-storable" id="disc01-q8-input" style="height:324px;" data-keybinding-context="1" data-mode-id="scheme"><div class="monaco-editor no-user-select  showUnused vs-dark" data-uri="inmemory://model/3" style="width: 892px; height: 324px;"><div data-mprt="3" class="overflow-guard" style="width: 892px; height: 324px;"><div class="margin" role="presentation" aria-hidden="true" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; height: 324px; width: 64px;"><div class="glyph-margin" style="left: 0px; width: 0px; height: 324px;"></div><div class="margin-view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="margin-view-overlays" role="presentation" aria-hidden="true" style="position: absolute; width: 64px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; height: 324px;"><div style="position:absolute;top:0px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">1</div></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">2</div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">3</div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">4</div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">5</div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">6</div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">7</div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">8</div></div><div style="position:absolute;top:152px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">9</div></div><div style="position:absolute;top:171px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">10</div></div></div></div><div class="monaco-scrollable-element editor-scrollable vs-dark" role="presentation" data-mprt="5" style="position: absolute; overflow: hidden; left: 64px; width: 828px; height: 324px;"><div class="lines-content monaco-editor-background" style="position: absolute; overflow: hidden; width: 1e+06px; height: 1e+06px; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; left: 0px;"><div class="view-overlays" role="presentation" aria-hidden="true" style="position: absolute; height: 0px; width: 828px;"><div style="position:absolute;top:0px;width:100%;height:19px;"></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:152px;width:100%;height:19px;"></div><div style="position:absolute;top:171px;width:100%;height:19px;"></div></div><div role="presentation" aria-hidden="true" class="view-rulers"></div><div class="view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="view-lines" role="presentation" aria-hidden="true" data-mprt="7" style="position: absolute; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; width: 828px; height: 324px;"><div style="top:0px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;is_prime(n):</span></span></div><div style="top:19px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:38px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;is_prime(</span><span class="mtk6">10</span><span class="mtk1">)</span></span></div><div style="top:57px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;False</span></span></div><div style="top:76px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;is_prime(</span><span class="mtk6">7</span><span class="mtk1">)</span></span></div><div style="top:95px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;True</span></span></div><div style="top:114px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:133px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"***&nbsp;YOUR&nbsp;CODE&nbsp;HERE&nbsp;***"</span></span></div><div style="top:152px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:171px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div></div><div data-mprt="1" class="contentWidgets" style="position: absolute; top: 0px;"></div><div role="presentation" aria-hidden="true" class="cursors-layer cursor-line-style cursor-solid"><div class="cursor " style="height: 19px; top: 0px; left: 0px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; display: block; visibility: hidden; width: 1.6px;"></div></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute; width: 814px; height: 10px; left: 0px; bottom: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict; width: 814px;"></div></div><canvas class="decorationsOverviewRuler" aria-hidden="true" width="17" height="405" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; right: 0px; width: 14px; height: 324px;"></canvas><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute; width: 14px; height: 324px; right: 0px; top: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 14px; transform: translate3d(0px, 0px, 0px); contain: strict; height: 324px;"></div></div></div><div role="presentation" aria-hidden="true" style="width: 892px;"></div><textarea data-mprt="6" class="inputarea" wrap="off" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" aria-label="Editor content;Press Alt+F1 for Accessibility Options." role="textbox" aria-multiline="true" aria-haspopup="false" aria-autocomplete="both" style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; top: 0px; left: 64px; width: 1px; height: 1px;"></textarea><div style="position: absolute; top: 0px; left: 0px; width: 0px; height: 0px;"></div><div data-mprt="4" class="overlayWidgets" style="width: 892px;"><div class="accessibilityHelpWidget" role="dialog" aria-hidden="true" widgetid="editor.contrib.accessibilityHelpWidget" style="display: none; position: absolute;"><div role="document"></div></div><div class="monaco-editor-hover hidden" aria-hidden="true" role="presentation" widgetid="editor.contrib.modesGlyphHoverWidget" style="position: absolute;"></div></div><div data-mprt="8" class="minimap slider-mouseover" role="presentation" aria-hidden="true" style="position: absolute; left: 0px; width: 0px; height: 324px;"><div class="minimap-shadow-hidden" style="height: 324px;"></div><canvas width="0" height="405" style="position: absolute; left: 0px; width: 0px; height: 324px;"></canvas><canvas class="minimap-decorations-layer" width="0" height="405" style="position: absolute; left: 0px; width: 0px; height: 324px;"></canvas><div class="minimap-slider" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; width: 0px;"><div class="minimap-slider-horizontal" style="position: absolute; width: 0px; height: 0px;"></div></div></div></div><div data-mprt="2" class="overflowingContentWidgets"><div class="monaco-editor rename-box" widgetid="__renameInputWidget" style="background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; color: rgb(204, 204, 204); position: absolute; visibility: hidden; max-width: 1536px;"><input class="rename-input" type="text" aria-label="Rename input. Type new name and press Enter to commit." style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; background-color: rgb(60, 60, 60); border-width: 0px; border-style: none;"><div class="rename-label" style="font-size: 11.2px;">Enter to Rename, Shift+Enter to Preview</div></div><div class="editor-widget suggest-widget" widgetid="editor.widget.suggestWidget" style="position: absolute; visibility: inherit; max-width: 1536px; top: 22px; left: 64px;" monaco-visible-content-widget="true"><div class="message" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"></div><div class="tree" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-list list_id_3" tabindex="0" role="tree"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-list-rows" style="transform: translate3d(0px, 0px, 0px); overflow: hidden;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div></div><style type="text/css" media="screen">.monaco-list.list_id_3:focus .monaco-list-row.focused { background-color: #062f4a; }
+.monaco-list.list_id_3:focus .monaco-list-row.focused:hover { background-color: #062f4a; }
+.monaco-list.list_id_3:focus .monaco-list-row.selected { background-color: #084066; }
+.monaco-list.list_id_3:focus .monaco-list-row.selected:hover { background-color: #084066; }
+.monaco-list.list_id_3:focus .monaco-list-row.selected { color: #ffffff; }
+
+				.monaco-drag-image,
+				.monaco-list.list_id_3:focus .monaco-list-row.selected.focused { background-color: #094771; }
+			
+
+				.monaco-drag-image,
+				.monaco-list.list_id_3:focus .monaco-list-row.selected.focused { color: #ffffff; }
+			
+.monaco-list.list_id_3 .monaco-list-row.focused { background-color:  #062f4a; }
+.monaco-list.list_id_3 .monaco-list-row.focused:hover { background-color:  #062f4a; }
+.monaco-list.list_id_3 .monaco-list-row.selected { background-color:  #37373d; }
+.monaco-list.list_id_3 .monaco-list-row.selected:hover { background-color:  #37373d; }
+.monaco-list.list_id_3:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) { background-color:  #2a2d2e; }
+
+				.monaco-list.list_id_3.drop-target,
+				.monaco-list.list_id_3 .monaco-list-rows.drop-target,
+				.monaco-list.list_id_3 .monaco-list-row.drop-target { background-color: #062f4a !important; color: inherit !important; }
+			
+.monaco-list-type-filter { background-color: #653723 }
+.monaco-list-type-filter { border: 1px solid rgba(0, 0, 0, 0); }
+.monaco-list-type-filter.no-matches { border: 1px solid #be1100; }
+.monaco-list-type-filter { box-shadow: 1px 1px 1px #000000; }</style></div></div><div class="suggest-status-bar" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><span></span><span></span></div><div class="details" aria-hidden="true" style="font-size: 14px; font-weight: normal; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="body" style="overflow: hidden;"><div class="header"><span class="codicon codicon-close" title="Read less...Ctrl+Space" style="height: 19px; width: 19px;"></span><p class="type" style="font-family: Consolas, &quot;Courier New&quot;, monospace;"></p></div><p class="docs"></p></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="monaco-editor-hover hidden" tabindex="0" widgetid="editor.contrib.modesContentHoverWidget" style="position: absolute; visibility: hidden; max-width: 1536px;"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-editor-hover-content" style="overflow: hidden; font-size: 14px; line-height: 19px; max-height: 250px; max-width: 588.72px;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="context-view" aria-hidden="true" style="display: none;"></div></div></div>
+            <a href="javascript:void" id="modal-link-disc01-q8-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-disc01-q8-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe id="code-iframe-disc01-q8-input" width="100%" height="700px" style="border: none; display:block;" src="./Discussion 1 _ CS 61A Spring 2022_files/saved_resource(2).html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+            <script>
+                $(() => activateEditor('def is_prime(n):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; is_prime(10)\n    False\n    &gt;&gt;&gt; is_prime(7)\n    True\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "scheme", "disc01-q8-input"));
+            </script>
+        
+
+
+
+<div class="page-break"></div>
+
+
+<h3 id="q6-fizzbuzz">Q6: Fizzbuzz</h3>
+
+
+<p>Implement the fizzbuzz sequence, which prints out a <em>single statement</em> for each
+number from 1 to <code>n</code>. For a number <code>i</code>,</p>
+
+<ul>
+  <li>If <code>i</code> is divisible by 3 only, then we print "fizz".</li>
+  <li>If <code>i</code> is divisible by 5 only, then we print "buzz".</li>
+  <li>If <code>i</code> is divisible by both 3 and 5, then we print "fizzbuzz".</li>
+  <li>Otherwise, we print the number <code>i</code> by itself.</li>
+</ul>
+
+<p>Implement <code>fizzbuzz(n)</code> here:</p>
+
+
+            <div class="monaco-storable" id="disc01-q9-input" style="height:648px;" data-keybinding-context="1" data-mode-id="scheme"><div class="monaco-editor no-user-select  showUnused vs-dark" data-uri="inmemory://model/4" style="width: 892px; height: 648px;"><div data-mprt="3" class="overflow-guard" style="width: 892px; height: 648px;"><div class="margin" role="presentation" aria-hidden="true" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; height: 648px; width: 64px;"><div class="glyph-margin" style="left: 0px; width: 0px; height: 648px;"></div><div class="margin-view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="margin-view-overlays" role="presentation" aria-hidden="true" style="position: absolute; width: 64px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; height: 648px;"><div style="position:absolute;top:0px;width:100%;height:19px;"><div class="cldr codicon codicon-chevron-down" style="left:38px;width:26px;"></div><div class="line-numbers" style="left:0px;width:38px;">1</div></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">2</div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">3</div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">4</div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">5</div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">6</div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">7</div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">8</div></div><div style="position:absolute;top:152px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">9</div></div><div style="position:absolute;top:171px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">10</div></div><div style="position:absolute;top:190px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">11</div></div><div style="position:absolute;top:209px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">12</div></div><div style="position:absolute;top:228px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">13</div></div><div style="position:absolute;top:247px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">14</div></div><div style="position:absolute;top:266px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">15</div></div><div style="position:absolute;top:285px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">16</div></div><div style="position:absolute;top:304px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">17</div></div><div style="position:absolute;top:323px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">18</div></div><div style="position:absolute;top:342px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">19</div></div><div style="position:absolute;top:361px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">20</div></div><div style="position:absolute;top:380px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">21</div></div><div style="position:absolute;top:399px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">22</div></div><div style="position:absolute;top:418px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">23</div></div><div style="position:absolute;top:437px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">24</div></div><div style="position:absolute;top:456px;width:100%;height:19px;"><div class="line-numbers" style="left:0px;width:38px;">25</div></div></div></div><div class="monaco-scrollable-element editor-scrollable vs-dark" role="presentation" data-mprt="5" style="position: absolute; overflow: hidden; left: 64px; width: 828px; height: 648px;"><div class="lines-content monaco-editor-background" style="position: absolute; overflow: hidden; width: 1e+06px; height: 1e+06px; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; left: 0px;"><div class="view-overlays" role="presentation" aria-hidden="true" style="position: absolute; height: 0px; width: 828px;"><div style="position:absolute;top:0px;width:100%;height:19px;"></div><div style="position:absolute;top:19px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:38px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:57px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:76px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:95px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:114px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:133px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:152px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:171px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:190px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:209px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:228px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:247px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:266px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:285px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:304px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:323px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:342px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:361px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:380px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:399px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:418px;width:100%;height:19px;"><div class="cigr" style="left:0px;height:19px;width:30.78125px"></div></div><div style="position:absolute;top:437px;width:100%;height:19px;"></div><div style="position:absolute;top:456px;width:100%;height:19px;"></div></div><div role="presentation" aria-hidden="true" class="view-rulers"></div><div class="view-zones" role="presentation" aria-hidden="true" style="position: absolute;"></div><div class="view-lines" role="presentation" aria-hidden="true" data-mprt="7" style="position: absolute; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; width: 828px; height: 648px;"><div style="top:0px;height:19px;" class="view-line"><span><span class="mtk1">def&nbsp;fizzbuzz(n):</span></span></div><div style="top:19px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:38px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;result&nbsp;=&nbsp;fizzbuzz(</span><span class="mtk6">16</span><span class="mtk1">)</span></span></div><div style="top:57px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">1</span></span></div><div style="top:76px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">2</span></span></div><div style="top:95px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;fizz</span></span></div><div style="top:114px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">4</span></span></div><div style="top:133px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;buzz</span></span></div><div style="top:152px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;fizz</span></span></div><div style="top:171px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">7</span></span></div><div style="top:190px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">8</span></span></div><div style="top:209px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;fizz</span></span></div><div style="top:228px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;buzz</span></span></div><div style="top:247px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">11</span></span></div><div style="top:266px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;fizz</span></span></div><div style="top:285px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">13</span></span></div><div style="top:304px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">14</span></span></div><div style="top:323px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;fizzbuzz</span></span></div><div style="top:342px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk6">16</span></span></div><div style="top:361px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;result&nbsp;is&nbsp;None&nbsp;&nbsp;#&nbsp;No&nbsp;return&nbsp;value</span></span></div><div style="top:380px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;True</span></span></div><div style="top:399px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"""</span></span></div><div style="top:418px;height:19px;" class="view-line"><span><span class="mtk1">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mtk5">"***&nbsp;YOUR&nbsp;CODE&nbsp;HERE&nbsp;***"</span></span></div><div style="top:437px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div><div style="top:456px;height:19px;" class="view-line"><span><span>&nbsp;</span></span></div></div><div data-mprt="1" class="contentWidgets" style="position: absolute; top: 0px;"></div><div role="presentation" aria-hidden="true" class="cursors-layer cursor-line-style cursor-solid"><div class="cursor " style="height: 19px; top: 0px; left: 0px; font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; display: block; visibility: hidden; width: 1.6px;"></div></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute; width: 814px; height: 10px; left: 0px; bottom: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict; width: 814px;"></div></div><canvas class="decorationsOverviewRuler" aria-hidden="true" width="17" height="810" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; top: 0px; right: 0px; width: 14px; height: 648px;"></canvas><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute; width: 14px; height: 648px; right: 0px; top: 0px;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 14px; transform: translate3d(0px, 0px, 0px); contain: strict; height: 648px;"></div></div></div><div role="presentation" aria-hidden="true" style="width: 892px;"></div><textarea data-mprt="6" class="inputarea" wrap="off" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false" aria-label="Editor content;Press Alt+F1 for Accessibility Options." role="textbox" aria-multiline="true" aria-haspopup="false" aria-autocomplete="both" style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; line-height: 19px; letter-spacing: 0px; top: 0px; left: 64px; width: 1px; height: 1px;"></textarea><div style="position: absolute; top: 0px; left: 0px; width: 0px; height: 0px;"></div><div data-mprt="4" class="overlayWidgets" style="width: 892px;"><div class="accessibilityHelpWidget" role="dialog" aria-hidden="true" widgetid="editor.contrib.accessibilityHelpWidget" style="display: none; position: absolute;"><div role="document"></div></div><div class="monaco-editor-hover hidden" aria-hidden="true" role="presentation" widgetid="editor.contrib.modesGlyphHoverWidget" style="position: absolute;"></div></div><div data-mprt="8" class="minimap slider-mouseover" role="presentation" aria-hidden="true" style="position: absolute; left: 0px; width: 0px; height: 648px;"><div class="minimap-shadow-hidden" style="height: 648px;"></div><canvas width="0" height="810" style="position: absolute; left: 0px; width: 0px; height: 648px;"></canvas><canvas class="minimap-decorations-layer" width="0" height="810" style="position: absolute; left: 0px; width: 0px; height: 648px;"></canvas><div class="minimap-slider" style="position: absolute; transform: translate3d(0px, 0px, 0px); contain: strict; width: 0px;"><div class="minimap-slider-horizontal" style="position: absolute; width: 0px; height: 0px;"></div></div></div></div><div data-mprt="2" class="overflowingContentWidgets"><div class="monaco-editor rename-box" widgetid="__renameInputWidget" style="background-color: rgb(37, 37, 38); box-shadow: rgb(0, 0, 0) 0px 2px 8px; color: rgb(204, 204, 204); position: absolute; visibility: hidden; max-width: 1536px;"><input class="rename-input" type="text" aria-label="Rename input. Type new name and press Enter to commit." style="font-family: Consolas, &quot;Courier New&quot;, monospace; font-weight: normal; font-size: 14px; background-color: rgb(60, 60, 60); border-width: 0px; border-style: none;"><div class="rename-label" style="font-size: 11.2px;">Enter to Rename, Shift+Enter to Preview</div></div><div class="editor-widget suggest-widget" widgetid="editor.widget.suggestWidget" style="position: absolute; visibility: inherit; max-width: 1536px; top: 22px; left: 64px;" monaco-visible-content-widget="true"><div class="message" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"></div><div class="tree" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-list list_id_4" tabindex="0" role="tree"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-list-rows" style="transform: translate3d(0px, 0px, 0px); overflow: hidden;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div></div><style type="text/css" media="screen">.monaco-list.list_id_4:focus .monaco-list-row.focused { background-color: #062f4a; }
+.monaco-list.list_id_4:focus .monaco-list-row.focused:hover { background-color: #062f4a; }
+.monaco-list.list_id_4:focus .monaco-list-row.selected { background-color: #084066; }
+.monaco-list.list_id_4:focus .monaco-list-row.selected:hover { background-color: #084066; }
+.monaco-list.list_id_4:focus .monaco-list-row.selected { color: #ffffff; }
+
+				.monaco-drag-image,
+				.monaco-list.list_id_4:focus .monaco-list-row.selected.focused { background-color: #094771; }
+			
+
+				.monaco-drag-image,
+				.monaco-list.list_id_4:focus .monaco-list-row.selected.focused { color: #ffffff; }
+			
+.monaco-list.list_id_4 .monaco-list-row.focused { background-color:  #062f4a; }
+.monaco-list.list_id_4 .monaco-list-row.focused:hover { background-color:  #062f4a; }
+.monaco-list.list_id_4 .monaco-list-row.selected { background-color:  #37373d; }
+.monaco-list.list_id_4 .monaco-list-row.selected:hover { background-color:  #37373d; }
+.monaco-list.list_id_4:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) { background-color:  #2a2d2e; }
+
+				.monaco-list.list_id_4.drop-target,
+				.monaco-list.list_id_4 .monaco-list-rows.drop-target,
+				.monaco-list.list_id_4 .monaco-list-row.drop-target { background-color: #062f4a !important; color: inherit !important; }
+			
+.monaco-list-type-filter { background-color: #653723 }
+.monaco-list-type-filter { border: 1px solid rgba(0, 0, 0, 0); }
+.monaco-list-type-filter.no-matches { border: 1px solid #be1100; }
+.monaco-list-type-filter { box-shadow: 1px 1px 1px #000000; }</style></div></div><div class="suggest-status-bar" aria-hidden="true" style="display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><span></span><span></span></div><div class="details" aria-hidden="true" style="font-size: 14px; font-weight: normal; font-feature-settings: &quot;liga&quot; 0, &quot;calt&quot; 0; display: none; background-color: rgb(37, 37, 38); border-color: rgb(69, 69, 69);"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="body" style="overflow: hidden;"><div class="header"><span class="codicon codicon-close" title="Read less...Ctrl+Space" style="height: 19px; width: 19px;"></span><p class="type" style="font-family: Consolas, &quot;Courier New&quot;, monospace;"></p></div><p class="docs"></p></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="monaco-editor-hover hidden" tabindex="0" widgetid="editor.contrib.modesContentHoverWidget" style="position: absolute; visibility: hidden; max-width: 1536px;"><div class="monaco-scrollable-element " role="presentation" style="position: relative; overflow: hidden;"><div class="monaco-editor-hover-content" style="overflow: hidden; font-size: 14px; line-height: 19px; max-height: 250px; max-width: 588.72px;"></div><div role="presentation" aria-hidden="true" class="invisible scrollbar horizontal" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; height: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div role="presentation" aria-hidden="true" class="invisible scrollbar vertical" style="position: absolute;"><div class="slider" style="position: absolute; top: 0px; left: 0px; width: 10px; transform: translate3d(0px, 0px, 0px); contain: strict;"></div></div><div class="shadow"></div><div class="shadow"></div><div class="shadow top-left-corner"></div></div></div></div><div class="context-view" aria-hidden="true" style="display: none;"></div></div></div>
+            <a href="javascript:void" id="modal-link-disc01-q9-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-disc01-q9-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe id="code-iframe-disc01-q9-input" width="100%" height="700px" style="border: none; display:block;" src="./Discussion 1 _ CS 61A Spring 2022_files/saved_resource(3).html"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+            <script>
+                $(() => activateEditor('def fizzbuzz(n):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; result = fizzbuzz(16)\n    1\n    2\n    fizz\n    4\n    buzz\n    fizz\n    7\n    8\n    fizz\n    buzz\n    11\n    fizz\n    13\n    14\n    fizzbuzz\n    16\n    &gt;&gt;&gt; result is None  # No return value\n    True\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "scheme", "disc01-q9-input"));
+            </script>
+        
+
+
+
+
+<h2 id="environment-diagrams">Environment Diagrams</h2>
+
+
+
+
+<p>An <strong>environment diagram</strong> is a model we use to keep track of all the
+variables that have been defined and the values they are bound to. We will be
+using this tool throughout the course to understand complex programs involving
+several different assignments and function calls.</p>
+
+<p>One key idea in environment diagrams is the <strong>frame</strong>.
+A frame helps us keep track of what variables have been defined in
+the current execution environment, and what values they hold.
+The frame we start off with when executing a program from scratch
+is what we call the <strong>Global frame</strong>.
+Later, we'll get into how new frames are created
+and how they may depend on their parent frame.</p>
+
+<p>Here's a short program and its corresponding diagram:</p>
+
+
+            <iframe width="800" height="380" frameborder="0" src="./Discussion 1 _ CS 61A Spring 2022_files/iframe-embed.html">
+            </iframe>
+        
+
+<p>Remember that programs are mainly just a set of statements or instructions—
+so drawing diagrams that represent these programs also involves following sets
+of instructions! Let’s dive in...</p>
+
+
+<h2 id="assignment-statements">Assignment Statements</h2>
+
+
+<p>Assignment statements, such as <code>x = 3</code>, define variables in programs. To
+execute one in an environment diagram, record the variable name and the value:</p>
+
+<ol>
+  <li>Evaluate the expression on the right side of the <code>=</code> sign.</li>
+  <li>Write the variable name and the expression’s value in the current frame.</li>
+</ol>
+
+
+<h3 id="q7-assignment-diagram">Q7: Assignment Diagram</h3>
+
+
+<p>Use these rules to draw an environment diagram for the assignment statements
+below:</p>
+
+
+<pre><code class="hljs">x = 11 % 4
+y = x
+x **= 2</code></pre>
+
+        <div class="env-diagram" id="env-diagram-assignment-diagram">
+          
+          <div class="env-diagram-frame">
+                <div>Global frame</div>
+                <table class="table">
+                    <tbody>
+                    
+                <tr>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-assignment-diagram-frame0-binding0-name"></td>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-assignment-diagram-frame0-binding0-value"></td>
+                </tr>
+            
+                <tr>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-assignment-diagram-frame0-binding1-name"></td>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-assignment-diagram-frame0-binding1-value"></td>
+                </tr>
+            
+                <tr>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-assignment-diagram-frame0-binding2-name"></td>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-assignment-diagram-frame0-binding2-value"></td>
+                </tr>
+            
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+        
+
+
+
+
+<h2 id="def-statements">def Statements</h2>
+
+
+<p>A <code>def</code> statement creates ("defines") a function object and binds it to a name.
+To diagram <code>def</code> statements, record the function name and bind the function
+object to the name. It’s also important to write the <strong>parent frame</strong> of the
+function, which is where the function is defined.</p>
+
+<p><strong>A very important note:</strong>
+Assignments for <code>def</code> statements use pointers to functions, which can have
+different behavior than primitive assignments (such as variables bound
+to numbers).</p>
+
+<ol>
+  <li>Draw the function object to the right-hand-side of the frames, denoting
+  the intrinsic name of the function, its parameters, and the parent frame (e.g.
+  <code>func square(x) [parent = Global]</code>.</li>
+  <li>Write the function name in the current frame and draw an arrow from the
+  name to the function object.</li>
+</ol>
+
+
+<h3 id="q8-def-diagram">Q8: def Diagram</h3>
+
+
+<p>Use these rules for defining functions and the rules for assignment
+statements to draw a diagram for the code below.</p>
+
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">double</span><span class="hljs-params">(x)</span>:</span>
+    <span class="hljs-keyword">return</span> x * <span class="hljs-number">2</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">triple</span><span class="hljs-params">(x)</span>:</span>
+    <span class="hljs-keyword">return</span> x * <span class="hljs-number">3</span>
+
+hat = double
+double = triple</code></pre>
+
+        <div class="env-diagram" id="env-diagram-def-diagram">
+          <div class="env-diagram-objects">
+            <div>Objects</div>
+            <ul><li>
+            <button class="env-diagram-connector" id="env-diagram-def-diagram-object0-connector">▶</button>
+            <input class="env-text-storable" id="env-diagram-def-diagram-object0-value" type="text">
+            </li><li>
+            <button class="env-diagram-connector" id="env-diagram-def-diagram-object1-connector">▶</button>
+            <input class="env-text-storable" id="env-diagram-def-diagram-object1-value" type="text">
+            </li><li>
+            <button class="env-diagram-connector" id="env-diagram-def-diagram-object2-connector">▶</button>
+            <input class="env-text-storable" id="env-diagram-def-diagram-object2-value" type="text">
+            </li>
+            <li><button class="env-diagram-trash" title="Click here to remove a binding">🗑️</button></li>
+            </ul>
+        </div>
+          <div class="env-diagram-frame">
+                <div>Global frame</div>
+                <table class="table">
+                    <tbody>
+                    
+                <tr>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-def-diagram-frame0-binding0-name"></td>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-def-diagram-frame0-binding0-value">
+                <button class="env-diagram-connector" id="env-diagram-def-diagram-frame0-binding0-connector">⬤
+                </button>
+            </td>
+                </tr>
+            
+                <tr>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-def-diagram-frame0-binding1-name"></td>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-def-diagram-frame0-binding1-value">
+                <button class="env-diagram-connector" id="env-diagram-def-diagram-frame0-binding1-connector">⬤
+                </button>
+            </td>
+                </tr>
+            
+                <tr>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-def-diagram-frame0-binding2-name"></td>
+                    <td><input type="text" class="env-text-storable" id="env-diagram-def-diagram-frame0-binding2-value">
+                <button class="env-diagram-connector" id="env-diagram-def-diagram-frame0-binding2-connector">⬤
+                </button>
+            </td>
+                </tr>
+            
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="storable-status"><a href="https://disc.cs61a.org/oauth/login" target="_blank">Log in to save your work!</a></div>
+        
+
+
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li class=""><a href="https://cs61a.org/disc/disc01/#control-structures">Control structures</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li class=""><a href="https://cs61a.org/disc/disc01/#conditional-statements">Conditional statements</a></li>
+    <li class=""><a href="https://cs61a.org/disc/disc01/#boolean-operators">Boolean Operators</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class="active"><a href="https://cs61a.org/disc/disc01/#q1-case-conundrum">Q1: Case Conundrum</a></li>
+      <li><a href="https://cs61a.org/disc/disc01/#q2-jacket-weather">Q2: Jacket Weather?</a></li>
+      <li><a href="https://cs61a.org/disc/disc01/#q3-if-function-vs-statement">Q3: If Function vs Statement</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/disc/disc01/#while-loops">While loops</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/disc/disc01/#q4-square-so-slow">Q4: Square So Slow</a></li>
+      <li><a href="https://cs61a.org/disc/disc01/#q5-is-prime">Q5: Is Prime?</a></li>
+      <li><a href="https://cs61a.org/disc/disc01/#q6-fizzbuzz">Q6: Fizzbuzz</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/disc/disc01/#environment-diagrams">Environment Diagrams</a></li>
+    <li><a href="https://cs61a.org/disc/disc01/#assignment-statements">Assignment Statements</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/disc/disc01/#q7-assignment-diagram">Q7: Assignment Diagram</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/disc/disc01/#def-statements">def Statements</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/disc/disc01/#q8-def-diagram">Q8: def Diagram</a></li>
+    </ul>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Discussion 1 _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Discussion 1 _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Discussion 1 _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+<div class="monaco-aria-container"><div class="monaco-alert" role="alert" aria-atomic="true"></div><div class="monaco-status" role="status" aria-atomic="true"></div></div></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

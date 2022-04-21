@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)https://cs61a.org/lab/lab05/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+    <title>
+Lab 5: Python Lists, Mutability | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab05/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab05/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab05/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Lab 5: Python Lists, Mutability
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/lab/lab05/lab05.zip" class="label label-outline">lab05.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><i>Due by 11:59pm on Wednesday, February 23.</i></p>
+
+
+
+
+
+
+<h2 id="starter-files">Starter Files</h2>
+
+<p>Download <a href="https://cs61a.org/lab/lab05/lab05.zip">lab05.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="https://cs61a.org/lab/lab05/ok">Ok</a> autograder.</p>
+
+
+
+
+
+
+
+
+    
+<h1 id="topics">Topics</h1>
+
+
+<p>Consult this section if you need a refresher on the material for this lab. It's
+okay to skip directly to <a href="https://cs61a.org/lab/lab05/#required-questions">the questions</a> and refer back
+here should you get stuck.</p>
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Lists<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+
+<h2 id="lists">Lists</h2>
+
+
+<p>A list is a data structure that can store multiple elements.
+Each element can be any type, even a list itself.
+We write a list as a comma-separated list of expressions in square brackets:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>list_of_ints = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>list_of_bools = [<span class="hljs-literal">True</span>, <span class="hljs-literal">True</span>, <span class="hljs-literal">False</span>, <span class="hljs-literal">False</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>nested_lists = [<span class="hljs-number">1</span>, [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">4</span>, [<span class="hljs-number">5</span>]]]</code></pre>
+
+<p>Each element in the list has an index, with the index of the first element
+starting at <code>0</code>. We say that lists are therefore "zero-indexed."</p>
+
+<p>With list indexing, we can specify the index of the element we want to retrive.
+A negative index represents starting from the end of the list, so the
+negative index <code>-i</code> is equivalent to the positive index <code>len(lst)-i</code>.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>lst = [<span class="hljs-number">6</span>, <span class="hljs-number">5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst[<span class="hljs-number">0</span>]
+<span class="hljs-number">6</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst[<span class="hljs-number">3</span>]
+<span class="hljs-number">3</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst[<span class="hljs-number">-1</span>] <span class="hljs-comment"># Same as lst[6]</span>
+<span class="hljs-number">0</span></code></pre>
+
+<p>To create a copy of part or all of a list, we can use list slicing.
+The syntax to slice a list <code>lst</code> is:
+<code>lst[&lt;start index&gt;:&lt;end index&gt;:&lt;step size&gt;]</code>.</p>
+
+<p>This expression evaluates to a new list containing the elements of <code>lst</code>:</p>
+
+<ul>
+  <li>Starting at and including the element at <code>&lt;start index&gt;</code>.</li>
+  <li>Up to but not including the element at <code>&lt;end index&gt;</code>.</li>
+  <li>With <code>&lt;step size&gt;</code> as the difference between indices of elements to include.</li>
+</ul>
+
+<p>If the start, end, or step size are not explicitly specified, Python has
+default values for them. A negative step size indicates that we are stepping
+backwards through a list when including elements.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>lst[:<span class="hljs-number">3</span>]   <span class="hljs-comment"># Start index defaults to 0</span>
+[<span class="hljs-number">6</span>, <span class="hljs-number">5</span>, <span class="hljs-number">4</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst[<span class="hljs-number">3</span>:]   <span class="hljs-comment"># End index defaults to len(lst)</span>
+[<span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst[::<span class="hljs-number">-1</span>]   <span class="hljs-comment"># Make a reversed copy of the entire list</span>
+[<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst[::<span class="hljs-number">2</span>]  <span class="hljs-comment"># Skip every other; step size defaults to 1 otherwise</span>
+[<span class="hljs-number">6</span>, <span class="hljs-number">4</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>]</code></pre>
+
+</div>
+<br>
+
+<br>
+
+        <button id="toggle-2" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        List Comprehensions<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+
+
+<h2 id="list-comprehensions">List Comprehensions</h2>
+
+
+<p>List comprehensions are a compact and powerful way of creating new lists
+out of sequences.
+The general syntax for a list comprehension is the following:</p>
+
+<pre><code class="hljs scheme">[<span class="hljs-name">&lt;expression&gt;</span> for &lt;element&gt; in &lt;sequence&gt; if &lt;conditional&gt;]</code></pre>
+
+<p>where the <code>if &lt;conditional&gt;</code> section is optional.</p>
+
+<p>The syntax is designed to read like English:
+"Compute the expression for each element in the sequence
+(if the conditional is true for that element)."</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>[i**<span class="hljs-number">2</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>] <span class="hljs-keyword">if</span> i % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>]
+[<span class="hljs-number">4</span>, <span class="hljs-number">16</span>]</code></pre>
+
+<p>This list comprehension will:</p>
+
+<ul>
+  <li>Compute the expression <code>i**2</code></li>
+  <li>For each element <code>i</code> in the sequence <code>[1, 2, 3, 4]</code></li>
+  <li>Where <code>i % 2 == 0</code> (<code>i</code> is an even number),</li>
+</ul>
+
+<p>and then put the resulting values of the expressions into a new list.</p>
+
+<p>In other words, this list comprehension will create a new list that contains
+the square of every even element of the original list <code>[1, 2, 3, 4]</code>.</p>
+
+<p>We can also rewrite a list comprehension as an equivalent <code>for</code> statement,
+such as for the example above:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>lst = []
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]:
+<span class="hljs-meta">... </span>    <span class="hljs-keyword">if</span> i % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>:
+<span class="hljs-meta">... </span>        lst = lst + [i**<span class="hljs-number">2</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst
+[<span class="hljs-number">4</span>, <span class="hljs-number">16</span>]</code></pre>
+
+</div>
+<br>
+
+<br>
+
+        <button id="toggle-3" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Mutability<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+
+
+<h2 id="mutability">Mutability</h2>
+
+
+<p>We say that an object is <strong>mutable</strong> if its state can change as code is executed.
+The process of changing an object's state is called <strong>mutation</strong>. Examples of
+mutable objects include lists and dictionaries.  Examples of objects that are
+<em>not</em> mutable include tuples and functions.</p>
+
+</div>
+
+
+<h1 id="required-questions">Required Questions</h1>
+
+
+
+<h2 id="what-would-python-do">What Would Python Do?</h2>
+
+
+
+<h3 id="q1-wwpd-list-mutation">Q1: WWPD: List-Mutation</h3>
+
+
+<blockquote><p>Use Ok to test your knowledge with the following "What Would Python Display?" questions:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q list-mutation -u</code><button id="copy-code-python3ok-qlist-mutation-u" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qlist-mutation-u").onclick = () => copyCode('python3 ok -q list-mutation -u', "copy-code-python3ok-qlist-mutation-u");
+        </script>
+        <br>
+
+<p><strong>Important:</strong>
+For all WWPD questions, type <code>Function</code> if you believe the answer is
+<code>&lt;function...&gt;</code>, <code>Error</code> if it errors, and <code>Nothing</code> if nothing is displayed.</p></blockquote>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>lst = [<span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst.append(<span class="hljs-number">6</span>)
+<div class="alt prompt-1">______</div><div class="solution prompt-1">None</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">[<span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">6</span>]</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst.insert(<span class="hljs-number">0</span>, <span class="hljs-number">9</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">[<span class="hljs-number">9</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">6</span>]</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>x = lst.pop(<span class="hljs-number">2</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">[<span class="hljs-number">9</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">6</span>]</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst.remove(x)
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">[<span class="hljs-number">9</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>]</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>a, b = lst, lst[:]
+<span class="hljs-meta">&gt;&gt;&gt; </span>a <span class="hljs-keyword">is</span> lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">True</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>b == lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">True</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>b <span class="hljs-keyword">is</span> lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">False</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst.extend([<span class="hljs-number">4</span>,<span class="hljs-number">5</span>])
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]</div>
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst.extend([lst.append(<span class="hljs-number">9</span>), lst.append(<span class="hljs-number">10</span>)])
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst
+<div class="alt prompt-1">______</div><div class="solution prompt-1">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-literal">None</span>, <span class="hljs-literal">None</span>]</div></code></pre>
+        <button id="prompt-1" class="btn btn-outline btn-lg solutiontoggle prompt">
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+
+
+<h2 id="parsons-problems">Parsons Problems</h2>
+
+
+<p>To work on these problems, open the Parsons editor:</p>
+
+<pre><code class="py hljs python">python3 parsons</code></pre>
+
+
+
+
+<h3 id="q2-replace-elements">Q2: Replace Elements</h3>
+
+
+<p>Complete the function <code>replace_elements</code>, a function which takes in <code>source_list</code> and <code>dest_list</code> and mutates the elements of <code>dest_list</code> to be the elements at the corresponding index in <code>source_list</code>.</p>
+
+<p><code>dest_list</code> always has a length greater than or equal to the length of <code>source_list</code>.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">replace_elements</span><span class="hljs-params">(source_list, dest_list)</span>:</span>
+    <span class="hljs-string">"""
+    Complete the function replace_elements, a function which takes in source_list
+    and dest_list and mutates the elements of dest_list to be the elements at the
+    corresponding index in source_list.
+
+    dest_list always has a length greater than or equal to the length of
+    source_list.
+
+    &gt;&gt;&gt; s1 = [1, 2, 3]
+    &gt;&gt;&gt; s2 = [5, 4]
+    &gt;&gt;&gt; replace_elements(s2, s1)
+    &gt;&gt;&gt; s1
+    [5, 4, 3]
+    &gt;&gt;&gt; s3 = [0, 0, 0, 0, 0]
+    &gt;&gt;&gt; replace_elements(s1, s3)
+    &gt;&gt;&gt; s3
+    [5, 4, 3, 0, 0]
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+
+<h3 id="q3-flatten">Q3: Flatten</h3>
+
+
+<p>Write a function <code>flatten</code> that takes a list and "flattens" it. The
+list could be a deep list, meaning that there could be a multiple
+layers of nesting within the list.</p>
+
+<p>For example, one use case of <code>flatten</code> could be the following:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>lst = [<span class="hljs-number">1</span>, [[<span class="hljs-number">2</span>], <span class="hljs-number">3</span>], <span class="hljs-number">4</span>, [<span class="hljs-number">5</span>, <span class="hljs-number">6</span>]]
+<span class="hljs-meta">&gt;&gt;&gt; </span>flatten(lst)
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]</code></pre>
+
+<p>Make sure your solution does not mutate the input list.</p>
+
+<blockquote><p><strong>Hint</strong>: you can check if something is a list by using the built-in
+<code>type</code> function. For example:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>type(<span class="hljs-number">3</span>) == list
+<span class="hljs-literal">False</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>type([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]) == list
+<span class="hljs-literal">True</span></code></pre></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">flatten</span><span class="hljs-params">(s)</span>:</span>
+    <span class="hljs-string">"""Returns a flattened version of list s.
+
+    &gt;&gt;&gt; flatten([1, 2, 3])     # normal list
+    [1, 2, 3]
+    &gt;&gt;&gt; x = [1, [2, 3], 4]     # deep list
+    &gt;&gt;&gt; flatten(x)
+    [1, 2, 3, 4]
+    &gt;&gt;&gt; x # Ensure x is not mutated
+    [1, [2, 3], 4]
+    &gt;&gt;&gt; x = [[1, [1, 1]], 1, [1, 1]] # deep list
+    &gt;&gt;&gt; flatten(x)
+    [1, 1, 1, 1, 1, 1]
+    &gt;&gt;&gt; x
+    [[1, [1, 1]], 1, [1, 1]]
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q flatten</code><button id="copy-code-python3ok-qflatten" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qflatten").onclick = () => copyCode('python3 ok -q flatten', "copy-code-python3ok-qflatten");
+        </script>
+        <br>
+
+
+<h3 id="q4-couple">Q4: Couple</h3>
+
+
+<p>Implement the function <code>couple</code>, which takes in two lists and returns a list
+that contains lists with i-th elements of two sequences coupled together. You
+can assume the lengths of two sequences are the same. Try using a list
+comprehension.</p>
+
+<blockquote><p><em>Hint</em>: You may find the built in <a href="https://www.w3schools.com/python/ref_func_range.asp">range</a> function helpful.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">couple</span><span class="hljs-params">(s, t)</span>:</span>
+    <span class="hljs-string">"""Return a list of two-element lists in which the i-th element is [s[i], t[i]].
+
+    &gt;&gt;&gt; a = [1, 2, 3]
+    &gt;&gt;&gt; b = [4, 5, 6]
+    &gt;&gt;&gt; couple(a, b)
+    [[1, 4], [2, 5], [3, 6]]
+    &gt;&gt;&gt; c = ['c', 6]
+    &gt;&gt;&gt; d = ['s', '1']
+    &gt;&gt;&gt; couple(c, d)
+    [['c', 's'], [6, '1']]
+    """</span>
+    <span class="hljs-keyword">assert</span> len(s) == len(t)
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q couple</code><button id="copy-code-python3ok-qcouple" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcouple").onclick = () => copyCode('python3 ok -q couple', "copy-code-python3ok-qcouple");
+        </script>
+        <br>
+
+
+<h3 id="q5-insert-items">Q5: Insert Items</h3>
+
+
+<p>Write a function which takes in a list <code>lst</code>, an argument <code>entry</code>, and another argument <code>elem</code>.
+This function will check through each item in <code>lst</code> to see if it is equal to <code>entry</code>.
+Upon finding an item equal to <code>entry</code>,
+the function should modify the list by placing <code>elem</code> into <code>lst</code> right after the item.
+At the end of the function, the modified list should be returned.</p>
+
+<p>See the doctests for examples on how this function is utilized.</p>
+
+<p><strong>Important:</strong>
+Use list mutation to modify the original list.
+No new lists should be created or returned.</p>
+
+<blockquote><p><strong>Note:</strong>
+If the values passed into <code>entry</code> and <code>elem</code> are equivalent,
+make sure you're not creating an infinitely long list while iterating through it.
+If you find that your code is taking more than a few seconds to run,
+the function may be in a loop of inserting new values.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">insert_items</span><span class="hljs-params">(lst, entry, elem)</span>:</span>
+    <span class="hljs-string">"""Inserts elem into lst after each occurence of entry and then returns lst.
+
+    &gt;&gt;&gt; test_lst = [1, 5, 8, 5, 2, 3]
+    &gt;&gt;&gt; new_lst = insert_items(test_lst, 5, 7)
+    &gt;&gt;&gt; new_lst
+    [1, 5, 7, 8, 5, 7, 2, 3]
+    &gt;&gt;&gt; double_lst = [1, 2, 1, 2, 3, 3]
+    &gt;&gt;&gt; double_lst = insert_items(double_lst, 3, 4)
+    &gt;&gt;&gt; double_lst
+    [1, 2, 1, 2, 3, 4, 3, 4]
+    &gt;&gt;&gt; large_lst = [1, 4, 8]
+    &gt;&gt;&gt; large_lst2 = insert_items(large_lst, 4, 4)
+    &gt;&gt;&gt; large_lst2
+    [1, 4, 4, 8]
+    &gt;&gt;&gt; large_lst3 = insert_items(large_lst2, 4, 6)
+    &gt;&gt;&gt; large_lst3
+    [1, 4, 6, 4, 6, 8]
+    &gt;&gt;&gt; large_lst3 is large_lst
+    True
+    &gt;&gt;&gt; # Ban creating new lists
+    &gt;&gt;&gt; from construct_check import check
+    &gt;&gt;&gt; check(HW_SOURCE_FILE, 'insert_items',
+    ...       ['List', 'ListComp', 'Slice'])
+    True
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q insert_items</code><button id="copy-code-python3ok-qinsert_items" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qinsert_items").onclick = () => copyCode('python3 ok -q insert_items', "copy-code-python3ok-qinsert_items");
+        </script>
+        <br>
+
+
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/lab/lab05/#topics">Topics</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/lab05/#lists">Lists</a></li>
+    <li><a href="https://cs61a.org/lab/lab05/#list-comprehensions">List Comprehensions</a></li>
+    <li><a href="https://cs61a.org/lab/lab05/#mutability">Mutability</a></li>
+  </ul>
+  <li><a href="https://cs61a.org/lab/lab05/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/lab05/#what-would-python-do">What Would Python Do?</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab05/#q1-wwpd-list-mutation">Q1: WWPD: List-Mutation</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab05/#parsons-problems">Parsons Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab05/#q2-replace-elements">Q2: Replace Elements</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab05/#code-writing-questions">Code Writing Questions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab05/#q3-flatten">Q3: Flatten</a></li>
+      <li><a href="https://cs61a.org/lab/lab05/#q4-couple">Q4: Couple</a></li>
+      <li><a href="https://cs61a.org/lab/lab05/#q5-insert-items">Q5: Insert Items</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab05/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Lab 5_ Python Lists, Mutability _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://cs61a.org/lab/sol-lab12/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Lab 12 Solutions _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Lab 12 Solutions _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Lab 12 Solutions _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Lab 12 Solutions _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Lab 12 Solutions _ CS 61A Spring 2022_files/lab.css">
+
+
+    <title>
+Lab 12 Solutions | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Lab 12 Solutions _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/sol-lab12/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/sol-lab12/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/sol-lab12/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Lab 12 Solutions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/lab/sol-lab12/lab12.zip" class="label label-outline">lab12.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<h2>Solution Files</h2>
+
+
+    
+<h1 id="topics">Topics</h1>
+
+
+<p>Consult this section if you need a refresher on the material for this lab. It's
+okay to skip directly to <a href="https://cs61a.org/lab/sol-lab12/#required-questions">the questions</a> and refer back
+here should you get stuck.</p>
+
+
+<h2 id="data-abstractions">Data Abstractions</h2>
+
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle">
+        Data Abstractions<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<p>Data abstraction is a powerful concept in computer science that
+allows programmers to treat code as objects.
+For example, using code to represent cars, chairs, people, and so on.
+That way, programmers don't have to worry about <em>how</em> code is implemented;
+they just have to know <em>what</em> it does.</p>
+
+<p>Data abstraction mimics how we think about the world.
+If you want to drive a car, you don't need to know how the
+engine was built or what kind of material the tires are made of to do so.
+You just have to know how to use the car for driving itself,
+such as how to turn the wheel or press the gas pedal.</p>
+
+<p>A data abstraction consists of two types of functions:</p>
+
+<ul>
+  <li><strong>Constructors</strong>: functions that build the abstract data type.</li>
+  <li><strong>Selectors</strong>: functions that retrieve information from the data type.</li>
+</ul>
+
+<p>Programmers design data abstractions to abstract away how information is stored and
+calculated such that the end user does <em>not</em> need to know how constructors and
+selectors are implemented. The nature of <em>abstraction</em> allows whoever uses them to
+assume that the functions have been written correctly and
+work as described. Using this idea, developers are able to use a variety of powerful
+libraries for tasks such as data processing, security, visualization, and more
+without needing to write the code themselves!</p>
+
+<p>In Python, you primarily worked with data abstractions using Object Oriented Programming, which used
+Python <code>Object</code>s to store the data. Notably, this is not possible in Scheme, which is a functional
+programming language. Instead, we create and return new structures which represent the current state of the data.
+</p></div>
+<br><p></p>
+
+
+<h2 id="example-data-abstractions">Example Data Abstractions</h2>
+
+
+
+<h3 id="rational"><code>Rational</code></h3>
+
+<p>Recall that a <a href="https://en.wikipedia.org/wiki/Rational_number">rational number</a>
+is any number that can be expressed as <em>p / q</em>, where <em>p</em>
+and <em>q</em> are integers.</p>
+
+<pre><code class="scheme hljs"><span class="hljs-comment">; Creates the rational number n/d (Assume n, d are integers and d != 0)</span>
+<span class="hljs-comment">; Note that the constructor simplifies the numerator and denominator.</span>
+(<span class="hljs-name">rational</span> n d)
+
+<span class="hljs-comment">; Gets the numerator of rational number r</span>
+(<span class="hljs-name">numer</span> r) 
+
+<span class="hljs-comment">; Gets the denominator of rational number r</span>
+(<span class="hljs-name">denom</span> r)
+
+<span class="hljs-comment">; Adds two rational numbers x and y</span>
+(<span class="hljs-name">add-rational</span> x y)
+
+<span class="hljs-comment">; Multiplies two rational numbers x and y</span>
+(<span class="hljs-name">mul-rational</span> x y)</code></pre>
+
+
+
+
+<h3 id="trees"><code>Trees</code></h3>
+
+<p>Below is a Scheme-ified data abstraction of the Tree class we've
+been working with this semester.</p>
+
+<pre><code class="scheme hljs"><span class="hljs-comment">; Constructs tree given label and list of branches</span>
+(<span class="hljs-name">tree</span> label branches)
+
+<span class="hljs-comment">; Returns the label of the tree</span>
+(<span class="hljs-name">label</span> t)
+
+<span class="hljs-comment">; Returns the list of branches of the given tree</span>
+(<span class="hljs-name">branches</span> t)
+
+<span class="hljs-comment">; Returns #t if t is a leaf, #f otherwise</span>
+(<span class="hljs-name">is-leaf</span> t)</code></pre>
+
+
+
+
+<h1 id="questions">Questions</h1>
+
+
+
+<h2 id="what-would-scheme-do">What Would Scheme Do?</h2>
+
+
+
+<h3 id="q1-wwsd-data-abstractions">Q1: WWSD: Data Abstractions</h3>
+
+
+<p>Let's familiarize ourselves with some Scheme data abstractions!</p>
+
+<blockquote><p>If you need a refresher on the <code>tree</code> and <code>rational</code> abstractions, refer to this lab's introduction or <a href="https://cs61a.org/lecture/lec31/">Monday 04/11's lecture</a>.</p></blockquote>
+
+<p>Use Ok to test your knowledge with the following "What Would Python Display?" questions:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q abstractions -u</code><button id="copy-code-python3ok-qabstractions-u" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qabstractions-u").onclick = () => copyCode('python3 ok -q abstractions -u', "copy-code-python3ok-qabstractions-u");
+        </script>
+        <br>
+
+<prompt>
+
+<pre><code class="scheme hljs">scm&gt; (<span class="hljs-name">load</span> rational.scm)
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> x (<span class="hljs-name">rational</span> <span class="hljs-number">2</span> <span class="hljs-number">5</span>))
+
+scm&gt; (<span class="hljs-name">numer</span> x)
+
+scm&gt; (<span class="hljs-name">denom</span> x)
+
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> y (<span class="hljs-name">rational</span> <span class="hljs-number">1</span> <span class="hljs-number">4</span>))
+
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> z1 (<span class="hljs-name">add-rational</span> x y))
+
+scm&gt; (<span class="hljs-name">numer</span> z1)
+
+scm&gt; (<span class="hljs-name">denom</span> z1)
+
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> z2 (<span class="hljs-name">mul-rational</span> x y)) <span class="hljs-comment">; don't forget to reduce the rational!</span>
+
+scm&gt; (<span class="hljs-name">numer</span> z2)
+
+scm&gt; (<span class="hljs-name">denom</span> z2)</code></pre>
+
+
+</prompt>
+
+<prompt>
+
+<pre><code class="scheme hljs">scm&gt; (<span class="hljs-name">load</span> tree.scm)
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> t (<span class="hljs-name">tree</span> <span class="hljs-number">1</span> (<span class="hljs-name">list</span> (<span class="hljs-name">tree</span> <span class="hljs-number">2</span> nil)) ))
+
+scm&gt; (<span class="hljs-name">label</span> t)
+
+scm&gt; (<span class="hljs-name">length</span> (<span class="hljs-name">branches</span> t))
+
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> child (<span class="hljs-name">car</span> (<span class="hljs-name">branches</span> t)))
+
+scm&gt; (<span class="hljs-name">label</span> child)
+
+scm&gt; (<span class="hljs-name">is-leaf</span> child)
+
+scm&gt; (<span class="hljs-name">branches</span> child)</code></pre>
+
+
+</prompt>
+
+<prompt>
+
+<pre><code class="scheme hljs">scm&gt; (<span class="hljs-name">load</span> tree.scm)
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> b1 (<span class="hljs-name">tree</span> <span class="hljs-number">5</span> (<span class="hljs-name">list</span> (<span class="hljs-name">tree</span> <span class="hljs-number">6</span> nil) (<span class="hljs-name">tree</span> <span class="hljs-number">7</span> nil)) )) 
+
+scm&gt; (<span class="hljs-name">map</span> is-leaf (<span class="hljs-name">branches</span> b1))    <span class="hljs-comment">; draw the tree if you get stuck!</span>
+
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> b2 (<span class="hljs-name">tree</span> <span class="hljs-number">8</span> (<span class="hljs-name">list</span> (<span class="hljs-name">tree</span> <span class="hljs-number">9</span> (<span class="hljs-name">list</span> (<span class="hljs-name">tree</span> <span class="hljs-number">10</span> nil)) )) )) 
+
+scm&gt; (<span class="hljs-name">map</span> is-leaf (<span class="hljs-name">branches</span> b2))    <span class="hljs-comment">; draw the tree if you get stuck!</span>
+
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> t (<span class="hljs-name">tree</span> <span class="hljs-number">11</span> (<span class="hljs-name">list</span> b1 b2)))
+
+scm&gt; (<span class="hljs-name">label</span> t)
+
+scm&gt; (<span class="hljs-name">map</span> (<span class="hljs-name"><span class="hljs-keyword">lambda</span></span> (b) (<span class="hljs-name">label</span> b)) (<span class="hljs-name">branches</span> t)) <span class="hljs-comment">; draw the tree if you get stuck!</span></code></pre>
+
+
+</prompt>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+<blockquote><p>Remember that when working with data abstractions, you should <strong>not</strong> break the abstraction barrier if possible! Later questions will have <em>abstraction checks</em>, where the underlying representation of the abstraction will be changed; thus, attempting to refer to specifics of the implementation will break. Attempt to use the functions you are creating to interface with the classes whenever possible.</p></blockquote>
+
+
+<h3 id="cities">Cities</h3>
+
+
+<p>Say we have an abstract data type for cities. A city has a name, a latitude
+coordinate, and a longitude coordinate.</p>
+
+<p>Our data abstraction has one <strong>constructor</strong>:</p>
+
+<ul>
+  <li><code>(make-city name lat lon)</code>: Creates a city object with the given name,
+  latitude, and longitude.</li>
+</ul>
+
+<p>We also have the following <strong>selectors</strong> in order to get the information for
+each city:</p>
+
+<ul>
+  <li><code>(get-name city)</code>: Returns the city's name</li>
+  <li><code>(get-lat city)</code>: Returns the city's latitude</li>
+  <li><code>(get-lon city)</code>: Returns the city's longitude</li>
+</ul>
+
+<p>Here is how we would use the constructor and selectors to create cities and
+extract their information:</p>
+
+<pre><code class="scheme hljs">scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> berkeley (<span class="hljs-name">make-city</span> <span class="hljs-symbol">'Berkeley</span> <span class="hljs-number">122</span> <span class="hljs-number">37</span>))
+berkeley
+scm&gt; (<span class="hljs-name">get-name</span> berkeley)
+Berkeley
+scm&gt; (<span class="hljs-name">get-lat</span> berkeley)
+<span class="hljs-number">122</span>
+scm&gt; (<span class="hljs-name"><span class="hljs-keyword">define</span></span> new-york (<span class="hljs-name">make-city</span> <span class="hljs-symbol">'NYC</span> <span class="hljs-number">74</span> <span class="hljs-number">40</span>))
+new-york
+scm&gt; (<span class="hljs-name">get-lon</span> new-york)
+<span class="hljs-number">40</span></code></pre>
+
+
+
+<p>All of the selector and constructor functions can be found in the lab file,
+if you are curious to see how they are implemented. However, the point of data
+abstraction is that we do not need to know how an abstract data type is
+implemented, but rather just how we can interact with and use the data type.</p>
+
+
+<h3 id="q2-distance">Q2: Distance</h3>
+
+
+<p>We will now implement the function <code>distance</code>, which computes the
+<em>Euclidean distance</em> between two city objects; the Euclidean distance between two
+coordinate pairs <code>(x1, y1)</code> and <code>(x2, y2)</code> can be found by calculating
+the <code>sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)</code>. Use the latitude and longitude of a city as
+its coordinates; you'll need to use the selectors to access this info!</p>
+
+<blockquote><p>You may find the following methods useful:</p>
+
+<ul>
+  <li><code>(expt base exp)</code>: calculate <code>base ** exp</code></li>
+  <li><code>(sqrt x)</code> calculate <code>sqrt(x)</code></li>
+</ul></blockquote>
+
+<solution>
+
+<pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">distance</span> city-a city-b)
+<div class="sol-highlight">    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> lat-1 (<span class="hljs-name">get-lat</span> city-a))
+    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> lon-1 (<span class="hljs-name">get-lon</span> city-a))
+    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> lat-2 (<span class="hljs-name">get-lat</span> city-b))
+    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> lon-2 (<span class="hljs-name">get-lon</span> city-b))
+    (<span class="hljs-name">sqrt</span> (<span class="hljs-name">+</span> (<span class="hljs-name">expt</span> (<span class="hljs-name">-</span> lat-1 lat-2) <span class="hljs-number">2</span>) (<span class="hljs-name">expt</span> (<span class="hljs-name">-</span> lon-1 lon-2) <span class="hljs-number">2</span>)))</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q city_distance</code><button id="copy-code-python3ok-qcity_distance" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcity_distance").onclick = () => copyCode('python3 ok -q city_distance', "copy-code-python3ok-qcity_distance");
+        </script>
+        <br>
+
+
+<h3 id="q3-closer-city">Q3: Closer city</h3>
+
+
+<p>Next, implement <code>closer-city</code>, a function that takes a latitude,
+longitude, and two cities, and returns the name of the city that is
+relatively closer to the provided latitude and longitude.</p>
+
+<p>You may only use the selectors and constructors introduced above and the
+<code>distance</code> function you just defined for this question.</p>
+
+<blockquote><p><strong>Hint</strong>: How can you use your <code>distance</code> function to find the distance between
+the given location and each of the given cities?</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">closer-city</span> lat lon city-a city-b)
+<div class="sol-highlight">    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> new-city (<span class="hljs-name">make-city</span> <span class="hljs-symbol">'arb</span> lat lon))
+    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> dist1 (<span class="hljs-name">distance</span> city-a new-city))
+    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> dist2 (<span class="hljs-name">distance</span> city-b new-city))
+    (<span class="hljs-name"><span class="hljs-keyword">if</span></span> (<span class="hljs-name">&lt;</span> dist1 dist2) (<span class="hljs-name">get-name</span> city-a) (<span class="hljs-name">get-name</span> city-b))</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q city_closer</code><button id="copy-code-python3ok-qcity_closer" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcity_closer").onclick = () => copyCode('python3 ok -q city_closer', "copy-code-python3ok-qcity_closer");
+        </script>
+        <br>
+
+
+<h3 id="teachers-and-students">Teachers and Students</h3>
+
+
+<p>In the following questions, you'll be implementing data abstractions for students and teachers:</p>
+
+<ol>
+  <li>The <code>teacher</code> abstraction keeps track of the teacher's <code>name</code>, the <code>class</code> they teach, and the <code>students</code> enrolled in their class. Specifically, a <code>teacher</code>'s <code>name</code> and <code>class</code> are atomic symbols, and their <code>students</code> is a list of <code>student</code> objects.</li>
+  <li>The <code>student</code> abstraction keeps track of a student's <code>name</code> and number of <code>classes</code> attended. Specifically, a <code>student</code>'s <code>name</code> is an atomic symbol, and their <code>classes</code> is a list of atomic symbols representing all classes attended. For example, if a student had attended <code>cs61a</code> and <code>astronomy</code>, their <code>classes</code> list would be <code>(cs61a astronomy)</code>.</li>
+</ol>
+
+<p>You can find the constructors for these classes below:</p>
+
+<pre><code class="scheme hljs">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">student-create</span> name classes) (<span class="hljs-name">cons</span> name classes))
+(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">teacher-create</span> name class students) (<span class="hljs-name">cons</span> name (<span class="hljs-name">cons</span> class students)))</code></pre>
+
+
+
+
+<h3 id="q4-teachers-and-students-selectors">Q4: Teachers and Students: Selectors</h3>
+
+
+<p>Implement <code>student-get-name</code>, <code>student-get-classes</code>, <code>teacher-get-name</code>, <code>teacher-get-class</code>, and <code>teacher-get-students</code>. These functions take in a <code>student</code> or <code>teacher</code> abstraction, and return the relevant attribute; for example, <code>student-get-name</code> takes a <code>student</code> as input, and returns the <code>name</code>.</p>
+
+<solution>
+
+<pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">student-get-name</span> student)
+<div class="sol-highlight">    (<span class="hljs-name">car</span> student)</div>)
+
+(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">student-get-classes</span> student)
+<div class="sol-highlight">    (<span class="hljs-name">cdr</span> student)</div>)
+
+(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">teacher-get-name</span> teacher)
+<div class="sol-highlight">    (<span class="hljs-name">car</span> teacher)</div>)
+
+(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">teacher-get-class</span> teacher)
+<div class="sol-highlight">    (<span class="hljs-name">car</span> (<span class="hljs-name">cdr</span> teacher))</div>)
+
+(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">teacher-get-students</span> teacher)
+<div class="sol-highlight">    (<span class="hljs-name">cdr</span> (<span class="hljs-name">cdr</span> teacher))</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q teacher_student_selectors</code><button id="copy-code-python3ok-qteacher_student_selectors" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qteacher_student_selectors").onclick = () => copyCode('python3 ok -q teacher_student_selectors', "copy-code-python3ok-qteacher_student_selectors");
+        </script>
+        <br>
+
+
+<h3 id="q5-students-attend-class">Q5: Students: Attend Class</h3>
+
+
+<p>Implement <code>student-attend-class</code>. This method takes in a <code>student</code> and a <code>class</code> as input, and returns a <em>new</em> <code>student</code> abstraction with the <code>class</code> list updated to reflect the <code>class</code> attended.</p>
+
+<blockquote><p>Be sure to keep the abstraction barrier in mind!</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">student-attend-class</span> student class)
+<div class="sol-highlight">    (<span class="hljs-name">student-create</span> (<span class="hljs-name">student-get-name</span> student) (<span class="hljs-name">cons</span> class (<span class="hljs-name">student-get-classes</span> student)))</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q student_attend_class</code><button id="copy-code-python3ok-qstudent_attend_class" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qstudent_attend_class").onclick = () => copyCode('python3 ok -q student_attend_class', "copy-code-python3ok-qstudent_attend_class");
+        </script>
+        <br>
+
+
+<h3 id="q6-teachers-hold-discussion">Q6: Teachers: Hold Discussion</h3>
+
+
+<p>Implement <code>teacher-hold-class</code>. This method takes in a <code>teacher</code> as input, and emulates holding a class. Specifically, the function should return a <em>new</em> updated <code>teacher</code>, where all <code>student</code> objects in the <code>teacher</code>'s <code>students</code> list have updated <code>class</code> lists to reflect their attendance.</p>
+
+<blockquote><p>Be sure to keep the abstraction barrier in mind! Feel free to use any of the functions implemented in previous parts of this lab. You may also find the <a href="https://cs61a.org/articles/scheme-builtins/"><code>map</code></a> function useful.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">teacher-hold-class</span> teacher)
+<div class="sol-highlight">    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> class (<span class="hljs-name">teacher-get-class</span> teacher))
+    (<span class="hljs-name"><span class="hljs-keyword">define</span></span> new-students
+        (<span class="hljs-name">map</span> (<span class="hljs-name"><span class="hljs-keyword">lambda</span></span> (x) (<span class="hljs-name">student-attend-class</span> x class)) (<span class="hljs-name">teacher-get-students</span> teacher))
+    )
+    (<span class="hljs-name">teacher-create</span> (<span class="hljs-name">teacher-get-name</span> teacher) (<span class="hljs-name">teacher-get-class</span> teacher) new-students)</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q teacher_hold_class</code><button id="copy-code-python3ok-qteacher_hold_class" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qteacher_hold_class").onclick = () => copyCode('python3 ok -q teacher_hold_class', "copy-code-python3ok-qteacher_hold_class");
+        </script>
+        <br>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/lab/sol-lab12/#topics">Topics</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/sol-lab12/#data-abstractions">Data Abstractions</a></li>
+    <li><a href="https://cs61a.org/lab/sol-lab12/#example-data-abstractions">Example Data Abstractions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab12/#rational"><code>Rational</code></a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab12/#trees"><code>Trees</code></a></li>
+    </ul>
+  </ul>
+  <li><a href="https://cs61a.org/lab/sol-lab12/#questions">Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/sol-lab12/#what-would-scheme-do">What Would Scheme Do?</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab12/#q1-wwsd-data-abstractions">Q1: WWSD: Data Abstractions</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab12/#code-writing-questions">Code Writing Questions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab12/#cities">Cities</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab12/#q2-distance">Q2: Distance</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab12/#q3-closer-city">Q3: Closer city</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab12/#teachers-and-students">Teachers and Students</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab12/#q4-teachers-and-students-selectors">Q4: Teachers and Students: Selectors</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab12/#q5-students-attend-class">Q5: Students: Attend Class</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab12/#q6-teachers-hold-discussion">Q6: Teachers: Hold Discussion</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab12/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Lab 12 Solutions _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Lab 12 Solutions _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

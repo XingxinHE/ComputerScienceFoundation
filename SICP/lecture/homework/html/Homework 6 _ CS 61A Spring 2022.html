@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<!-- saved from url=(0026)https://cs61a.org/hw/hw06/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Homework 6 _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Homework 6 _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Homework 6 _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Homework 6 _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Homework 6 _ CS 61A Spring 2022_files/hw.css">
+
+
+    <title>
+Homework 6 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Homework 6 _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw06/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw06/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw06/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Homework 6: Scheme, Scheme Lists
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/hw/hw06/hw06.zip" class="label label-outline">hw06.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><em>Due by 11:59pm on Thursday, April 7</em></p>
+
+
+
+
+
+<h2>Instructions</h2>
+
+<p>Download <a href="https://cs61a.org/hw/hw06/hw06.zip">hw06.zip</a>. Inside the archive, you will find a file called
+<a href="https://cs61a.org/hw/hw06/hw06.scm">hw06.scm</a>, along with a copy of the <code>ok</code> autograder.</p>
+
+<p><strong>Submission:</strong> When you are done, submit with <code>python3 ok
+  --submit</code>.  You may submit more than once before the deadline; only the
+final submission will be scored. Check that you have successfully submitted
+your code on <a href="https://okpy.org/">okpy.org</a>.  See <a href="https://cs61a.org/lab/lab00#submitting-the-assignment">Lab 0</a> for more instructions on
+submitting assignments.</p>
+
+<p><strong>Using Ok:</strong> If you have any questions about using Ok, please
+refer to <a href="https://cs61a.org/articles/using-ok">this guide.</a>
+
+
+  </p><p><strong>Readings:</strong> You might find the following references
+  useful:</p>
+  <ul>
+  <li><a href="https://cs61a.org/articles/scheme-spec/">Scheme Specification</a></li>
+  <li><a href="https://cs61a.org/articles/scheme-builtins/">Scheme Built-in Procedure Reference</a></li>
+</ul>
+  
+
+<p><strong>Grading:</strong> Homework is graded based on
+correctness. Each incorrect problem will decrease the total score by one point. There is a homework recovery policy as stated in the syllabus.
+<strong>This homework is out of 2 points.</strong>
+
+
+
+
+    
+</p><h1 id="required-questions">Required Questions</h1>
+
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="getting-started-videos">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="./Homework 6 _ CS 61A Spring 2022_files/watch.html" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe><p><a href="https://youtu.be/watch?v=yoGzKE1j3Eg&amp;list=PLx38hZJ5RLZfnXDXftRu5P0mn_crGWaWd"> YouTube link </a></p>
+</div>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+
+<h3 id="q1-thane-of-cadr">Q1: Thane of Cadr</h3>
+
+
+<p>Define the procedures <code>cadr</code> and <code>caddr</code>, which return the second
+and third elements of a list, respectively. If you would like a quick refresher on scheme syntax consider looking at <a href="https://cs61a.org/lab/lab10/#scheme">Lab 10 Scheme Refresher</a>.</p>
+
+<solution>
+
+<pre><code class="scheme hljs">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">cddr</span> s)
+  (<span class="hljs-name">cdr</span> (<span class="hljs-name">cdr</span> s)))
+
+(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">cadr</span> s)
+  <span class="hljs-symbol">'YOUR-CODE-HERE</span>
+)
+
+(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">caddr</span> s)
+  <span class="hljs-symbol">'YOUR-CODE-HERE</span>
+)</code></pre>
+
+
+
+</solution>
+
+
+
+<p>Use Ok to unlock and test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q cadr-caddr -u
+python3 ok -q cadr-caddr</code><button id="copy-code-python3ok-qcadr-caddr-upython3ok-qcadr-caddr" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcadr-caddr-upython3ok-qcadr-caddr").onclick = () => copyCode('python3 ok -q cadr-caddr -u\npython3 ok -q cadr-caddr', "copy-code-python3ok-qcadr-caddr-upython3ok-qcadr-caddr");
+        </script>
+        <br>
+
+
+<h3 id="q2-ascending">Q2: Ascending</h3>
+
+
+<p>Implement a procedure called <code>ascending?</code>, which takes a list of numbers <code>lst</code> and
+returns <code>True</code> if the numbers are in nondescending order, and <code>False</code>
+otherwise.  Numbers are considered nondescending if each subsequent number is
+either larger or equal to the previous, that is:</p>
+
+<pre><code class="hljs">1 2 3 3 4</code></pre>
+
+<p>Is nondescending, but:</p>
+
+<pre><code class="hljs">1 2 3 3 2</code></pre>
+
+<p>Is not.</p>
+
+<blockquote><p><em>Hint</em>: The built-in <code>null?</code> function returns whether its argument is <code>nil</code>.</p></blockquote>
+
+<pre><code class="scheme hljs">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">ascending?</span> lst)
+  <span class="hljs-symbol">'YOUR-CODE-HERE</span>
+)</code></pre>
+
+
+
+
+
+<p>Use Ok to unlock and test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q ascending -u
+python3 ok -q ascending</code><button id="copy-code-python3ok-qascending-upython3ok-qascending" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qascending-upython3ok-qascending").onclick = () => copyCode('python3 ok -q ascending -u\npython3 ok -q ascending', "copy-code-python3ok-qascending-upython3ok-qascending");
+        </script>
+        <br>
+
+
+<h3 id="q3-interleave">Q3: Interleave</h3>
+
+
+<p>Implement the function <code>interleave</code>, which takes a two lists <code>lst1</code> and <code>lst2</code> as
+arguments. <code>interleave</code> should return a new list that interleaves the elements
+of the two lists. (In other words, the resulting list should contain elements
+alternating between <code>lst1</code> and <code>lst2</code>.)</p>
+
+<p>If one of the input lists to <code>interleave</code> is shorter than the other, then
+<code>interleave</code> should alternate elements from both lists until one list has no
+more elements, and then the remaining elements from the longer list should be
+added to the end of the new list.</p>
+
+<solution>
+
+<pre><code class="scheme hljs">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">interleave</span> lst1 lst2)
+  <span class="hljs-symbol">'YOUR-CODE-HERE</span>
+)</code></pre>
+
+
+</solution>
+
+<p>Use Ok to unlock and test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q interleave -u
+python3 ok -q interleave</code><button id="copy-code-python3ok-qinterleave-upython3ok-qinterleave" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qinterleave-upython3ok-qinterleave").onclick = () => copyCode('python3 ok -q interleave -u\npython3 ok -q interleave', "copy-code-python3ok-qinterleave-upython3ok-qinterleave");
+        </script>
+        <br>
+
+
+<h3 id="q4-my-filter">Q4: My Filter</h3>
+
+
+<p>Write a procedure <code>my-filter</code>, which takes a predicate <code>func</code> and a list <code>lst</code>, and
+returns a new list containing only elements of the list that satisfy the
+predicate. The output should contain the elements in the same order that they
+appeared in the original list.</p>
+
+<p><strong>Note:</strong> Make sure that you are not just calling the built-in <code>filter</code> function in Scheme - we are asking you to re-implement this!</p>
+
+<solution>
+
+<pre><code class="scheme hljs">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">my-filter</span> func lst)
+  <span class="hljs-symbol">'YOUR-CODE-HERE</span>
+)</code></pre>
+
+
+
+</solution>
+
+<p>Use Ok to unlock and test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q filter -u
+python3 ok -q filter</code><button id="copy-code-python3ok-qfilter-upython3ok-qfilter" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qfilter-upython3ok-qfilter").onclick = () => copyCode('python3 ok -q filter -u\npython3 ok -q filter', "copy-code-python3ok-qfilter-upython3ok-qfilter");
+        </script>
+        <br>
+
+
+<h3 id="q5-no-repeats">Q5: No Repeats</h3>
+
+
+<p>Implement <code>no-repeats</code>, which takes a list of numbers <code>lst</code> as input and returns
+a list that has all of the unique elements of <code>lst</code> in the order that they first
+appear, but no repeats. For example, <code>(no-repeats (list 5 4 5 4 2 2))</code>
+evaluates to <code>(5 4 2)</code>.</p>
+
+<blockquote><p><strong>Hint:</strong> How can you make the first time you see an element in the input list be
+the first and only time you see the element in the resulting list you return?</p></blockquote>
+
+<!-- breaking up the hints requires a comment -->
+
+<blockquote><p><strong>Hint:</strong> You may find it helpful to use the <code>my-filter</code> procedure with a helper
+<code>lambda</code> function to use as a filter. To test if two numbers are equal, use the <code>=</code>
+procedure. To test if two numbers are not equal, use the <code>not</code> procedure in
+combination with <code>=.</code></p></blockquote>
+
+<solution>
+
+<pre><code class="scheme hljs">(<span class="hljs-name"><span class="hljs-keyword">define</span></span> (<span class="hljs-name">no-repeats</span> lst)
+  <span class="hljs-symbol">'YOUR-CODE-HERE</span>
+)</code></pre>
+
+
+</solution>
+
+<p>Use Ok to unlock and test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q no_repeats -u
+python3 ok -q no_repeats</code><button id="copy-code-python3ok-qno_repeats-upython3ok-qno_repeats" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qno_repeats-upython3ok-qno_repeats").onclick = () => copyCode('python3 ok -q no_repeats -u\npython3 ok -q no_repeats', "copy-code-python3ok-qno_repeats-upython3ok-qno_repeats");
+        </script>
+        <br>
+
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/hw/hw06/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/hw/hw06/#getting-started-videos">Getting Started Videos</a></li>
+    <li><a href="https://cs61a.org/hw/hw06/#code-writing-questions">Code Writing Questions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/hw06/#q1-thane-of-cadr">Q1: Thane of Cadr</a></li>
+      <li><a href="https://cs61a.org/hw/hw06/#q2-ascending">Q2: Ascending</a></li>
+      <li><a href="https://cs61a.org/hw/hw06/#q3-interleave">Q3: Interleave</a></li>
+      <li><a href="https://cs61a.org/hw/hw06/#q4-my-filter">Q4: My Filter</a></li>
+      <li><a href="https://cs61a.org/hw/hw06/#q5-no-repeats">Q5: No Repeats</a></li>
+    </ul>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Homework 6 _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Homework 6 _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Homework 6 _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

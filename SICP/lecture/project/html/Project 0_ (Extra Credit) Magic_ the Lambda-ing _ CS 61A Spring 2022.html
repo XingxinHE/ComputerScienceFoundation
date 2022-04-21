@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<!-- saved from url=(0033)https://cs61a.org/proj/lambdaing/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link href="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/project.css" rel="stylesheet" type="text/css">
+
+
+    <title>
+Project 0: (Extra Credit) Magic: the Lambda-ing | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/proj/lambdaing/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/proj/lambdaing/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/proj/lambdaing/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Project 0: (Extra Credit) Magic: the Lambda-ing
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/proj/lambdaing/lambdaing.zip" class="label label-outline">lambdaing.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<div class="haiku">
+  <blockquote><cite>
+  My Professor's deck<br>
+  doesn't have pathetic cards.<br>
+  But it does have this!
+</cite></blockquote>
+</div>
+
+    
+
+<h2 id="introduction">Introduction</h2>
+
+
+<blockquote><p><strong>Note:</strong> This project is an optional extra credit opportunity. The goals of this are
+to practice object oriented programming as well as to try implementing a shorter game
+than some of the other projects in the course. You can get 2 bonus points by submitting
+the entire project by Friday, April 1.</p></blockquote>
+
+
+<h2 id="download-starter-files">Download starter files</h2>
+
+
+<p>To get started, download all of the project code as a <a href="https://cs61a.org/proj/lambdaing/lambdaing.zip">zip archive</a>.</p>
+
+
+<h2 id="about-the-game">About the Game</h2>
+
+
+<p>In this project, we will be implementing a card game!
+This game is inspired by the similarly named
+<a href="https://en.wikipedia.org/wiki/Magic:_The_Gathering">Magic: The Gathering</a>.</p>
+
+
+<h3 id="rules-of-the-game">Rules of the Game</h3>
+
+
+<p>This game is a little involved, though not nearly as much as its namesake.
+Here's how it goes:</p>
+
+<p>There are two players.
+Each player has a hand of cards and a deck, and at the start of each round,
+each player draws a random card from their deck. If a player's deck is empty
+when they try to draw, they will automatically lose the game.</p>
+
+<p>Cards have a name, an attack value, and a defense value.
+Each round, each player chooses one card to play from their own hands.
+Once both players have chosen a card, the cards' <em>power</em> stats are then
+calculated and compared. The card with the higher power wins the round.
+Each played card's power value is calculated as follows:</p>
+
+<pre><code class="hljs python">(player card<span class="hljs-string">'s attack) - (opponent card'</span>s defense)</code></pre>
+
+<p>For example, let's say Player 1 plays a card with 2000 attack and 1000 defense
+and Player 2 plays a card with 1500 attack and 3000 defense.
+Their cards' powers are calculated as:</p>
+
+<pre><code class="hljs">P1: 2000 - 3000 = 2000 - 3000 = -1000
+P2: 1500 - 1000 = 1500 - 1000 = 500</code></pre>
+
+<p>So Player 2 would win this round.</p>
+
+<p>The first player to win 8 rounds wins the match!</p>
+
+
+<h3 id="special-effects">Special Effects</h3>
+
+
+<p>To make the game more interesting, we will add special effects to our cards.
+A card can be of type AI, Tutor, TA, or Instructor,
+and each type has a different <em>effect</em> when they are played.
+All effects are applied before power is calculated during that round:</p>
+
+<ul>
+  <li>An <code>AI</code> card will allow you to add the top two cards of your
+  deck to your hand via drawing.</li>
+  <li>A <code>Tutor</code> card will add a copy of the first card in your hand
+  to your hand, at the cost of losing the current round.</li>
+  <li>A <code>TA</code> card discards the card with the highest <code>power</code> in
+  your hand, and add the discarded card's attack and defense
+  to its own respective stats.</li>
+  <li>An <code>Instructor</code> card can survive multiple rounds, as long as it
+  has a non-negative <code>power</code>. However, at the beginning of the round, its
+  attack and defense are reduced by 1000 each.</li>
+</ul>
+
+<p>This game uses several different files.</p>
+
+<ul>
+  <li>Code for all questions can be found in <code>classes.py</code>.</li>
+  <li>The game loop can be found in <code>cardgame.py</code>, and is responsible for
+  running the game. You won't need to open or read this file to receive
+  full credit.</li>
+  <li>If you want to modify your game later to add your own custom cards and decks,
+  you can look in <code>cards.py</code> to see all the standard cards and the default deck;
+  here, you can add more cards and change what decks you and your opponent use.
+  If you're familiar with the original game, you may notice the cards were not
+  created with balance in mind, so feel free to modify the stats
+  and add or remove cards as desired.</li>
+</ul>
+
+<p>Once you've implemented the game, you can start it by typing:</p>
+
+<pre><code class="hljs">python3 cardgame.py</code></pre>
+
+<p>While playing the game, you can exit it and return to the command line
+with <code>Ctrl-C</code> or <code>Ctrl-D</code>.</p>
+
+<p>Feel free to refer back to these series of rules later on, and let's start making the game!</p>
+
+
+
+
+<h2 id="logistics">Logistics</h2>
+
+
+
+<!-- <p>Remember that you can earn an additional bonus point by submitting the
+  project at least 24 hours before the deadline.</p> -->
+
+
+
+<p>The project is worth 2 extra credit points based on correctness.</p>
+
+
+<p>You will turn in the following files:</p>
+
+<ul>
+  <li><code>classes.py</code></li>
+</ul>
+
+<p>You do not need to modify or turn in any other files to complete the
+project. To submit the project, run the following command:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+<p>You will be able to view your submissions on the <a href="http://ok.cs61a.org/">Ok dashboard</a>.</p>
+
+<p>For the functions that we ask you to complete, there may be some
+initial code that we provide. If you would rather not use that code,
+feel free to delete it and start from scratch. You may also add new
+function definitions as you see fit.</p>
+
+<p><b>However, please do not modify any other functions or edit any files not
+listed above</b>. Doing so may result in your code failing our autograder tests.
+Also, please do not change any function signatures (names, argument order, or
+number of arguments).</p>
+
+
+
+<p>Throughout this project, you should be testing the correctness of your code.
+It is good practice to test often, so that it is easy to isolate any problems.
+However, you should not be testing <i>too</i> often, to allow yourself time to
+think through problems.</p>
+
+<p>We have provided an <b>autograder</b> called <code>ok</code> to help you
+with testing your code and tracking your progress. The first time you run the
+autograder, you will be asked to <b>log in with your Ok account using your web
+browser</b>. Please do so. Each time you run <code>ok</code>, it will back up
+your work and progress on our servers.</p>
+
+<p>The primary purpose of <code>ok</code> is to test your implementations.</p>
+
+<!-- <p>First, some of the test cases are <i>locked</i>. To unlock tests, run the
+following command from your terminal:</p>
+
+<pre><code>python3 ok -u</code></pre>
+
+<p>This command will start an interactive prompt that looks like:</p>
+
+<pre>
+=====================================================================
+Assignment: (Extra Credit) Magic: the Lambda-ing
+Ok, version ...
+=====================================================================
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unlocking tests
+
+At each "? ", type what you would expect the output to be.
+Type exit() to quit
+
+---------------------------------------------------------------------
+Question 0 &gt; Suite 1 &gt; Case 1
+(cases remaining: 1)
+
+&gt;&gt;&gt; Code here
+?
+</pre>
+
+<p>At the <code>?</code>, you can type what you expect the output to be. If you
+are correct, then this test case will be available the next time you run the
+autograder.</p>
+
+<p>The idea is to understand <i>conceptually</i> what your program should do
+first, before you start writing any code.</p>
+
+<p>Once you have unlocked some tests and written some code, you can check the
+correctness of your program using the tests that you have unlocked:</p>
+
+<pre>python3 ok</pre>
+
+<p>Most of the time, you will want to focus on a particular question. Use the
+<code>-q</code> option as directed in the problems below.</p>  -->
+
+<!-- <p>Second, there may be some test cases that are <i>hidden</i>. These test cases are
+<b>not</b> run by the command:</p> -->
+
+<!--<pre>python3 ok</pre>-->
+
+<!-- <p>They are only run when you submit:</p> -->
+
+<!-- <pre>python3 ok --submit</pre> -->
+
+<!-- <p> We keep test cases hidden to ensure that you write your code with the intention
+of solving the question at hand, not purely to pass the given tests. The hidden
+tests will be run when you submit your project. You will receive an email with part of
+the autograder results after submitting. However, the autograder has a 15 minute
+cooldown period. If you submit before 15 minutes have passed, the autograder will
+not run.</p> -->
+
+<p>We recommend that you submit <b>after you finish each
+problem</b>. Only your last submission will be graded. It is also useful for us
+to have more backups of your code in case you run into a submission issue. <b>If you forget to submit, your last backup will be automatically converted to a submission. </b></p>
+
+<!--<p>After you run this command, you will receive an email (to the address-->
+<!--that you used to sign up for Ok) that has the output from all <i>failed</i>-->
+<!--unlocked tests, including hidden tests, along with your score at the bottom. You-->
+<!--can continue submitting until you pass all the tests. However, you will receive-->
+<!--<b>at most one email every half hour</b>.</p>-->
+
+<!--<p>This buffer period is meant for you and your partner to try and understand-->
+<!--where your error comes from, and take some time to think through your code. We-->
+<!--encourage you to do this for all projects.</p>-->
+
+<!---
+<p>If you are trying to debug a test failure, you can launch an interactive session
+after the test is run with:</p>
+
+<pre><code>python3 ok &#x2d;q 05 &#x2d;i</code></pre>
+
+<p>This will run the tests and launch an interactive session if a test does not
+pass.</p>
+
+<pre><code>=====================================================================
+Assignment: Project 1: Hog
+Ok, version ....
+=====================================================================
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Running tests
+
+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;
+Question ... &gt; Suite ... &gt; Case ...
+
+&gt;&gt;&gt; the_test()
+"expected value"
+
+# Error: expected
+#     "expected value"
+# but got
+#     None
+
+# Interactive console. Type exit() to quit
+&gt;&gt;&gt;</code></pre>
+-->
+
+
+<!--- <p>The <code>tests</code> folder is used to store autograder tests, so
+<b>do not modify it</b>. You may lose all your unlocking progress if you
+do. If you need to get a fresh copy, you can download the
+<a href="lambdaing.zip">zip archive</a> and copy it over, but you
+will need to start unlocking from scratch.</p> -->
+
+<p>If you do not want us to record a backup of your work or information about
+your progress, you can run
+
+</p><pre>python3 ok --local</pre>
+
+
+With this option, no information will be sent to our course
+servers.
+
+If you want to test your code interactively, you can run
+
+<pre> python3 ok -q [question number] -i </pre>
+
+with the appropriate question number (e.g. <code>01</code>) inserted.
+This will run the tests for that question until the first one you failed,
+then give you a chance to test the functions you wrote interactively.<p></p>
+
+<p>You can also use the debugging print feature in OK by writing
+
+</p><pre> print("DEBUG:", x) </pre>
+
+which will produce an output in your terminal without causing OK tests to fail
+with extra output.
+
+<h2 id="part-1-basic-game">Part 1: Basic Game</h2>
+
+
+<p>Before attempting any of the following questions, be sure to look at the <code>Deck</code> class included at the bottom of <code>classes.py</code>. A central mechanic of the game is manipulating the player's deck of available cards; many methods of the <code>Deck</code> class will prove to be useful throughout the project.</p>
+
+
+<h3 id="q1-making-cards">Q1: Making Cards</h3>
+
+
+<p>To play a card game, we're going to need to have cards, so let's make some!
+We're gonna implement the basics of the <code>Card</code> class first.</p>
+
+<p>First, implement the <code>Card</code> class constructor in <code>classes.py</code>. This constructor
+takes three arguments:</p>
+
+<ul>
+  <li>a string as the <code>name</code> of the card</li>
+  <li>an integer as the <code>attack</code> value of the card</li>
+  <li>an integer as the <code>defense</code> value of the card</li>
+</ul>
+
+<p>Each <code>Card</code> instance should keep track of these values
+using instance attributes called <code>name</code>, <code>attack</code>, and <code>defense</code>.</p>
+
+<p>You should also implement the <code>power</code> method in <code>Card</code>,
+which takes in another card as an input and calculates the current card's power.
+Refer to the <a href="https://cs61a.org/proj/lambdaing/#rules-of-the-game">Rules of the Game</a>
+if you'd like a refresher on how power is calculated.</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q Card.__init__
+python3 ok -q Card.power</code><button id="copy-code-python3ok-qCard.__init__python3ok-qCard.power" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qCard.__init__python3ok-qCard.power").onclick = () => copyCode('python3 ok -q Card.__init__\npython3 ok -q Card.power', "copy-code-python3ok-qCard.__init__python3ok-qCard.power");
+        </script>
+        <br>
+
+<blockquote><p>For this mini-project, we provide doctests to incrementally test your code;
+note that the Part 1's questions will be considered together under a different <code>ok</code> test, which is included at the end of the section.</p></blockquote>
+
+
+<h3 id="q2-making-a-player">Q2: Making a Player</h3>
+
+<p>Now that we have cards, we can make a deck, but we still need players to
+actually use them. We'll now fill in the implementation of the <code>Player</code> class.</p>
+
+<p>A <code>Player</code> instance has three instance attributes:</p>
+
+<ul>
+  <li><code>name</code> is the player's name. When you play the game, you can enter your name,
+  which will be converted into a string to be passed to the constructor.</li>
+  <li><code>deck</code> is an instance of the <code>Deck</code> class. You can draw from it using
+  its <code>.draw()</code> method.</li>
+  <li><code>hand</code> is a list of <code>Card</code> instances. Each player should start with 5
+  cards in their hand, drawn from their <code>deck</code>. Each card in the hand can be
+  selected by its index in the list during the game. When a player draws a new
+  card from the deck, it is added to the end of this list.</li>
+</ul>
+
+<p>Complete the implementation of the constructor for <code>Player</code> so that <code>self.hand</code>
+is set to a list of 5 cards drawn from the player's <code>deck</code>.</p>
+
+<p>Next, implement the <code>draw</code> and <code>play</code> methods in the <code>Player</code> class.  The
+<code>draw</code> method draws a card from the deck and adds it to the
+player's hand. The <code>play</code> method removes and returns a card from the player's hand at the
+given index.</p>
+
+<blockquote><p>Hint: use class methods wherever possible when attempting to draw from the <code>deck</code> when implementing <code>Player.__init__</code> and <code>Player.draw</code>.</p></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q Player.__init__
+python3 ok -q Player.draw
+python3 ok -q Player.play</code><button id="copy-code-python3ok-qPlayer.__init__python3ok-qPlayer.drawpython3ok-qPlayer.play" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qPlayer.__init__python3ok-qPlayer.drawpython3ok-qPlayer.play").onclick = () => copyCode('python3 ok -q Player.__init__\npython3 ok -q Player.draw\npython3 ok -q Player.play', "copy-code-python3ok-qPlayer.__init__python3ok-qPlayer.drawpython3ok-qPlayer.play");
+        </script>
+        <br>
+
+<blockquote><p>For this mini-project, we provide doctests to incrementally test your code;
+note that the Part 1's questions will be considered together under a different <code>ok</code> test, which is included at the end of the section.</p></blockquote>
+
+<p>After you complete this problem, you have finished Part 1, and you'll be able to play a working version of the game!</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q 01</code><button id="copy-code-python3ok-q01" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-q01").onclick = () => copyCode('python3 ok -q 01', "copy-code-python3ok-q01");
+        </script>
+        <br>
+
+<p>Additionally, type:</p>
+
+<pre><code class="hljs">python3 cardgame.py</code></pre>
+
+<p>to start a game of Magic: The Lambda-ing!</p>
+
+<p>This version doesn't have the effects for different cards yet. In the next part,
+we'll be implementing effects for the various cards.</p>
+
+
+<h2 id="part-2-card-effects">Part 2: Card Effects</h2>
+
+
+<p>To make the card game more interesting, let's add effects to our cards!
+We can do this by implementing an <code>effect</code> function for each card class,
+which takes in the opponent card, the current player, and the opponent player.</p>
+
+<p>You can find the following questions in <code>classes.py</code>.</p>
+
+<blockquote><p><strong>Important:</strong>
+For the following sections,
+do <strong>not</strong> overwrite any lines denoted under
+<code>You should add your implementation above this</code>.
+In addition, there are pre-designated variables in
+certain <code>effect</code> methods which are used to determine
+when to print text. Be sure to set the variables to
+the correct values in your implementation, such that
+the text is printed when the effect occurs.</p></blockquote>
+
+
+<h3 id="q3-ais-resourceful-resources">Q3: AIs: Resourceful Resources</h3>
+
+
+<p>In the <code>AICard</code> class, implement the <code>effect</code> method for AIs. An <code>AICard</code> will allow you
+to add the top two cards of your deck to your hand via <code>draw</code>ing from your deck.</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q AICard.effect</code><button id="copy-code-python3ok-qAICard.effect" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qAICard.effect").onclick = () => copyCode('python3 ok -q AICard.effect', "copy-code-python3ok-qAICard.effect");
+        </script>
+        <br>
+
+<blockquote><p>For this mini-project, we provide doctests to incrementally test your code;
+note that the Part 2's questions will be considered together under a different <code>ok</code> test, which is included at the end of the section.</p></blockquote>
+
+
+<h3 id="q4-tutors-sneaky-search">Q4: Tutors: Sneaky Search</h3>
+
+
+<p>In the <code>TutorCard</code> class, implement the <code>effect</code> method for Tutors.
+A <code>TutorCard</code> will add a copy of the first card in your hand to
+your hand, at the cost of losing the current round. Note that if there are no
+cards in hand, a <code>TutorCard</code> will not add any cards to the hand,
+but must still lose the round.</p>
+
+<blockquote><p>To implement the "losing" functionality, it is sufficient to override
+<code>TutorCard</code>'s <code>power</code> method to return <code>-float('inf')</code>. In addition, be sure to add
+copies of cards, instead of the chosen card itself! Class methods may
+come in handy.</p></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q TutorCard.effect</code><button id="copy-code-python3ok-qTutorCard.effect" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qTutorCard.effect").onclick = () => copyCode('python3 ok -q TutorCard.effect', "copy-code-python3ok-qTutorCard.effect");
+        </script>
+        <br>
+
+<blockquote><p>For this mini-project, we provide doctests to incrementally test your code;
+note that the Part 2's questions will be considered together under a different <code>ok</code> test, which is included at the end of the section.</p></blockquote>
+
+
+<h3 id="q5-tas-power-transfer">Q5: TAs: Power Transfer</h3>
+
+
+<p>In the <code>TACard</code> class, implement the <code>effect</code> method for TAs.
+A <code>TACard</code> discards the card with the highest <code>power</code> in
+your hand, and add the discarded card's attack and defense
+to its own respective stats. <strong>Discarding</strong> a card removes
+the card from your <code>hand</code>. If there are no cards in hand, the
+<code>TACard</code> should not do anything for its effect.</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q TACard.effect</code><button id="copy-code-python3ok-qTACard.effect" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qTACard.effect").onclick = () => copyCode('python3 ok -q TACard.effect', "copy-code-python3ok-qTACard.effect");
+        </script>
+        <br>
+
+<blockquote><p>For this mini-project, we provide doctests to incrementally test your code;
+note that the Part 2's questions will be considered together under a different <code>ok</code> test, which is included at the end of the section.</p></blockquote>
+
+
+<h3 id="q6-instructors-immovable">Q6: Instructors: Immovable</h3>
+
+
+<p>In the <code>InstructorCard</code> class, implement the <code>effect</code> method for Instructors.
+An <code>InstructorCard</code> can survive multiple rounds, as long as it has a non-negative <code>attack</code>
+or <code>defense</code> at the end of a round. However, at the beginning of
+the round, its attack and defense are permanently reduced by 1000 each.</p>
+
+<blockquote><p>To implement the "survive" functionality, the <code>InstructorCard</code> should re-add
+itself to the player's hand.</p></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q InstructorCard.effect</code><button id="copy-code-python3ok-qInstructorCard.effect" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qInstructorCard.effect").onclick = () => copyCode('python3 ok -q InstructorCard.effect', "copy-code-python3ok-qInstructorCard.effect");
+        </script>
+        <br>
+
+<blockquote><p>For this mini-project, we provide doctests to incrementally test your code;
+note that the Part 2's questions will be considered together under a different <code>ok</code> test, which is included at the end of the section.</p></blockquote>
+
+<p>After you complete this problem,
+you'll have a fully functional game of Magic: The Lambda-ing!</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q 02</code><button id="copy-code-python3ok-q02" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-q02").onclick = () => copyCode('python3 ok -q 02', "copy-code-python3ok-q02");
+        </script>
+        <br>
+
+<p>Additionally, type:</p>
+
+<pre><code class="hljs">python3 cardgame.py</code></pre>
+
+<p>to start a game.</p>
+
+<p>This doesn't have to be the end, though;
+we encourage you to get creative with more card types, effects,
+and even adding more custom cards to your deck!</p>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+<script>
+/*
+This code is duplicated in lab-check-in.html. Doesn't work if we move it to a separate
+file because of JQuery document ready concurrency issues.
+*/
+$(function() {
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+});
+</script>
+
+<script>
+$("#cats_typing").hover(
+  function() {
+    $("#cats_typing").attr("src", "images/cats_typing.gif");
+  },
+  function() {
+    $("#cats_typing").attr("src", "images/cats_typing_still.gif");
+  }
+);
+</script>
+
+
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li class=""><a href="https://cs61a.org/proj/lambdaing/#introduction">Introduction</a></li>
+  <li class=""><a href="https://cs61a.org/proj/lambdaing/#download-starter-files">Download starter files</a></li>
+  <li class=""><a href="https://cs61a.org/proj/lambdaing/#about-the-game">About the Game</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#rules-of-the-game">Rules of the Game</a></li>
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#special-effects">Special Effects</a></li>
+  </ul>
+  <li class=""><a href="https://cs61a.org/proj/lambdaing/#logistics">Logistics</a></li>
+  <li class=""><a href="https://cs61a.org/proj/lambdaing/#part-1-basic-game">Part 1: Basic Game</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#q1-making-cards">Q1: Making Cards</a></li>
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#q2-making-a-player">Q2: Making a Player</a></li>
+  </ul>
+  <li class=""><a href="https://cs61a.org/proj/lambdaing/#part-2-card-effects">Part 2: Card Effects</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#q3-ais-resourceful-resources">Q3: AIs: Resourceful Resources</a></li>
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#q4-tutors-sneaky-search">Q4: Tutors: Sneaky Search</a></li>
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#q5-tas-power-transfer">Q5: TAs: Power Transfer</a></li>
+    <li class=""><a href="https://cs61a.org/proj/lambdaing/#q6-instructors-immovable">Q6: Instructors: Immovable</a></li>
+  </ul>
+  <li class=""><a href="https://cs61a.org/proj/lambdaing/#submit">Submit</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Project 0_ (Extra Credit) Magic_ the Lambda-ing _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

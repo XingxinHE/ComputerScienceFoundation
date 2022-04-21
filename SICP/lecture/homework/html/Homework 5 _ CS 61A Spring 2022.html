@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<!-- saved from url=(0026)https://cs61a.org/hw/hw05/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Homework 5 _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Homework 5 _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Homework 5 _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Homework 5 _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Homework 5 _ CS 61A Spring 2022_files/hw.css">
+
+
+    <title>
+Homework 5 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Homework 5 _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw05/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw05/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw05/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Homework 5: Trees, Linked Lists
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/hw/hw05/hw05.zip" class="label label-outline">hw05.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><em>Due by 11:59pm on Tuesday, March 15</em></p>
+
+
+
+
+
+<h2>Instructions</h2>
+
+<p>Download <a href="https://cs61a.org/hw/hw05/hw05.zip">hw05.zip</a>. Inside the archive, you will find a file called
+<a href="https://cs61a.org/hw/hw05/hw05.py">hw05.py</a>, along with a copy of the <code>ok</code> autograder.</p>
+
+<p><strong>Submission:</strong> When you are done, submit with <code>python3 ok
+  --submit</code>.  You may submit more than once before the deadline; only the
+final submission will be scored. Check that you have successfully submitted
+your code on <a href="https://okpy.org/">okpy.org</a>.  See <a href="https://cs61a.org/lab/lab00#submitting-the-assignment">Lab 0</a> for more instructions on
+submitting assignments.</p>
+
+<p><strong>Using Ok:</strong> If you have any questions about using Ok, please
+refer to <a href="https://cs61a.org/articles/using-ok">this guide.</a>
+
+
+  </p><p><strong>Readings:</strong> You might find the following references
+  useful:</p>
+  <ul>
+  <li><a href="http://composingprograms.com/pages/42-implicit-sequences.html">Section 4.2</a></li>
+</ul>
+  
+
+<p><strong>Grading:</strong> Homework is graded based on
+correctness. Each incorrect problem will decrease the total score by one point. There is a homework recovery policy as stated in the syllabus.
+<strong>This homework is out of 2 points.</strong>
+
+
+
+
+    
+</p><h1 id="required-questions">Required Questions</h1>
+
+
+<blockquote><p><strong>Note</strong>: This homework is due on Tuesday, March 15 instead of the standard deadline of Thursday, March 10.</p></blockquote>
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="getting-started-videos">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="./Homework 5 _ CS 61A Spring 2022_files/watch.html" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe><p><a href="https://youtu.be/watch?v=WuR5ZPYuyZw&amp;list=PLx38hZJ5RLZc9d722rT5jOAR_S6fWovdN"> YouTube link </a></p>
+</div>
+
+
+<h2 id="mid-semester-feedback">Mid-Semester Feedback</h2>
+
+
+
+<h3 id="q1-mid-semester-feedback">Q1: Mid-Semester Feedback</h3>
+
+
+<p>As part of this week's homework, please fill out the
+<a href="https://go.cs61a.org/midsem-survey">Mid-Semester Feedback</a> form.</p>
+
+<p>This survey is designed to help us make short term adjustments to the course
+so that it works better for you. We appreciate your feedback. We may not be able
+to make every change that you request, but we will read all the feedback and
+consider it.</p>
+
+<blockquote><p><strong>Confidentiality</strong>:
+Your responses to the survey are confidential, and only the instructor
+(Pamela) and head TA (Vanshaj) will be able to see this data unanonymized.
+More specifics on confidentiality can be found on the survey itself.</p></blockquote>
+
+<p>Once you finish the survey, you will be presented with a passphrase (if you miss
+it, it should also be at the bottom of the confirmation email you receive). Put
+this passphrase, as a string, on the line that says
+<code>passphrase = '*** PASSPHRASE HERE ***'</code> in the Python file for this assignment.</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q midsem_survey</code><button id="copy-code-python3ok-qmidsem_survey" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qmidsem_survey").onclick = () => copyCode('python3 ok -q midsem_survey', "copy-code-python3ok-qmidsem_survey");
+        </script>
+        <br>
+
+
+<h2 id="parsons-problems">Parsons Problems</h2>
+
+
+
+<h3 id="q2-chain">Q2: Chain</h3>
+
+
+<p>For this question, we will define a chain as a path from the root of a tree <code>t</code> to any leaf 
+such that all nodes on the path share the same <code>label</code>. Implement the function <code>chain</code>, which,
+given a tree <code>t</code>, returns <code>True</code> if there exists any <code>chain</code> in the tree, and <code>False</code> otherwise.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">chain</span><span class="hljs-params">(t)</span>:</span>
+    <span class="hljs-string">"""
+    Returns whether there exists a path in t where all nodes
+    share the same label.
+    &gt;&gt;&gt; all_fives = Tree(5, [Tree(5), Tree(5, [Tree(5)])])
+    &gt;&gt;&gt; chain(all_fives)
+    True
+    &gt;&gt;&gt; t1 = Tree(1, [Tree(3, [Tree(4)]), Tree(1)])
+    &gt;&gt;&gt; chain(t1)
+    True
+    &gt;&gt;&gt; t2 = Tree(1, [Tree(3, [Tree(4)]), Tree(5)])
+    &gt;&gt;&gt; chain(t2)
+    False
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+
+<h3 id="q3-flatten-link">Q3: Flatten Link</h3>
+
+
+<p>Write a function <code>flatten_link</code> that takes in a linked list <code>lnk</code> and returns the
+sequence as a Python list. If <code>lnk</code> has nested linked lists, <code>flatten_link</code> should
+flatten <code>lnk</code>.</p>
+
+<pre><code class="hljs sql">def flatten_link(lnk):
+    """Takes a linked list and returns a flattened Python list <span class="hljs-keyword">with</span> the same elements.
+
+    &gt;&gt;&gt; <span class="hljs-keyword">link</span> = <span class="hljs-keyword">Link</span>(<span class="hljs-number">1</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">2</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">3</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">4</span>))))
+    &gt;&gt;&gt; flatten_link(<span class="hljs-keyword">link</span>)
+    [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+    &gt;&gt;&gt; flatten_link(Link.empty)
+    []
+    &gt;&gt;&gt; deep_link = <span class="hljs-keyword">Link</span>(<span class="hljs-keyword">Link</span>(<span class="hljs-number">1</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">2</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">3</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">4</span>)))), <span class="hljs-keyword">Link</span>(<span class="hljs-keyword">Link</span>(<span class="hljs-number">5</span>), <span class="hljs-keyword">Link</span>(<span class="hljs-number">6</span>)))
+    &gt;&gt;&gt; flatten_link(deep_link)
+    [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+    <span class="hljs-string">"""
+    "</span>*** YOUR CODE HERE ***<span class="hljs-string">"
+</span></code></pre>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+
+<h3 id="q4-has-path">Q4: Has Path</h3>
+
+
+<p>Write a function <code>has_path</code> that takes in a Tree <code>t</code> and a string <code>term</code>. It
+returns <code>True</code> if there is a path that starts from the root where the entries
+along the path spell out the <code>term</code>, and <code>False</code> otherwise. You may assume 
+that every node's <code>label</code> is exactly one character.</p>
+
+<blockquote><p>This data structure is called a trie, and it has a lot of cool 
+applications, such as autocomplete.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">has_path</span><span class="hljs-params">(t, term)</span>:</span>
+    <span class="hljs-string">"""Return whether there is a path in a Tree where the entries along the path
+    spell out a particular term.
+
+    &gt;&gt;&gt; greetings = Tree('h', [Tree('i'),
+    ...                        Tree('e', [Tree('l', [Tree('l', [Tree('o')])]),
+    ...                                   Tree('y')])])
+    &gt;&gt;&gt; print(greetings)
+    h
+      i
+      e
+        l
+          l
+            o
+        y
+    &gt;&gt;&gt; has_path(greetings, 'h')
+    True
+    &gt;&gt;&gt; has_path(greetings, 'i')
+    False
+    &gt;&gt;&gt; has_path(greetings, 'hi')
+    True
+    &gt;&gt;&gt; has_path(greetings, 'hello')
+    True
+    &gt;&gt;&gt; has_path(greetings, 'hey')
+    True
+    &gt;&gt;&gt; has_path(greetings, 'bye')
+    False
+    &gt;&gt;&gt; has_path(greetings, 'hint')
+    False
+    """</span>
+    <span class="hljs-keyword">assert</span> len(term) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">'no path for empty term.'</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q has_path</code><button id="copy-code-python3ok-qhas_path" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qhas_path").onclick = () => copyCode('python3 ok -q has_path', "copy-code-python3ok-qhas_path");
+        </script>
+        <br>
+
+
+<h3 id="q5-duplicate-link">Q5: Duplicate Link</h3>
+
+
+<p>Write a function <code>duplicate_link</code> that takes in a linked list <code>lnk</code> and a <code>value</code>. <code>duplicate_link</code> will mutate <code>lnk</code> such that if there is a linked list node that has a <code>first</code> equal to <code>value</code>, that node will be duplicated. <strong>Note that</strong> you should be mutating the original link list <code>lnk</code>; you will need to create new <code>Link</code>s, but you should not be returning a new linked list.</p>
+
+<blockquote><p><strong>Note</strong>: in order to insert a link into a linked list, you need to modify the <code>.rest</code> of certain links. We encourage you to draw out a doctest to visualize!</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">duplicate_link</span><span class="hljs-params">(lnk, val)</span>:</span>
+    <span class="hljs-string">"""Mutates `lnk` such that if there is a linked list
+    node that has a first equal to value, that node will
+    be duplicated. Note that you should be mutating the
+    original link list.
+
+    &gt;&gt;&gt; x = Link(5, Link(4, Link(3)))
+    &gt;&gt;&gt; duplicate_link(x, 5)
+    &gt;&gt;&gt; x
+    Link(5, Link(5, Link(4, Link(3))))
+    &gt;&gt;&gt; y = Link(2, Link(4, Link(6, Link(8))))
+    &gt;&gt;&gt; duplicate_link(y, 10)
+    &gt;&gt;&gt; y
+    Link(2, Link(4, Link(6, Link(8))))
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q duplicate_link</code><button id="copy-code-python3ok-qduplicate_link" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qduplicate_link").onclick = () => copyCode('python3 ok -q duplicate_link', "copy-code-python3ok-qduplicate_link");
+        </script>
+        <br>
+
+
+<h3 id="q6-mutable-mapping">Q6: Mutable Mapping</h3>
+
+
+<p>Implement <code>deep_map_mut(fn, link)</code>, which applies a function <code>fn</code> onto
+all elements in the given linked list <code>lnk</code>. If an element is itself a
+linked list, apply <code>fn</code> to each of its elements, and so on.</p>
+
+<p>Your implementation should mutate the original linked list. Do not
+create any new linked lists.</p>
+
+<blockquote><p><strong>Hint</strong>: The built-in <code>isinstance</code> function may be useful.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>s = Link(<span class="hljs-number">1</span>, Link(<span class="hljs-number">2</span>, Link(<span class="hljs-number">3</span>, Link(<span class="hljs-number">4</span>))))
+<span class="hljs-meta">&gt;&gt;&gt; </span>isinstance(s, Link)
+<span class="hljs-literal">True</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>isinstance(s, int)
+<span class="hljs-literal">False</span></code></pre></blockquote>
+
+<!-- separator for the indent blocks -->
+
+<blockquote><p><strong>Construct Check</strong>: The last doctest of this question ensures that you
+do not create new linked lists. If you are failing this doctest, ensure
+that you are not creating link lists by calling the constructor, i.e.</p>
+
+<pre><code class="hljs">s = Link(1)</code></pre></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">deep_map_mut</span><span class="hljs-params">(fn, lnk)</span>:</span>
+    <span class="hljs-string">"""Mutates a deep link lnk by replacing each item found with the
+    result of calling fn on the item.  Does NOT create new Links (so
+    no use of Link's constructor).
+
+    Does not return the modified Link object.
+
+    &gt;&gt;&gt; link1 = Link(3, Link(Link(4), Link(5, Link(6))))
+    &gt;&gt;&gt; # Disallow the use of making new Links before calling deep_map_mut
+    &gt;&gt;&gt; Link.__init__, hold = lambda *args: print("Do not create any new Links."), Link.__init__
+    &gt;&gt;&gt; try:
+    ...     deep_map_mut(lambda x: x * x, link1)
+    ... finally:
+    ...     Link.__init__ = hold
+    &gt;&gt;&gt; print(link1)
+    &lt;9 &lt;16&gt; 25 36&gt;
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q deep_map_mut</code><button id="copy-code-python3ok-qdeep_map_mut" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qdeep_map_mut").onclick = () => copyCode('python3 ok -q deep_map_mut', "copy-code-python3ok-qdeep_map_mut");
+        </script>
+        <br>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+
+<h1 id="optional-questions">Optional Questions</h1>
+
+<p>Homework assignments will also contain prior exam-level questions for you to take a look at.
+ These questions have no submission component; feel free to attempt them if you'd like a challenge!</p>
+
+<ol>
+  <li>Spring 2018 MT2 Q5ab: <a href="https://cs61a.org/exam/sp18/mt2/61a-sp18-mt2.pdf#page=7">Trees</a></li>
+  <li>Spring 2019 MT2 Q6a: <a href="https://cs61a.org/exam/sp19/mt2/61a-sp19-mt2.pdf#page=7">Trie this</a></li>
+  <li>Fall 2017 Final Q4a: <a href="https://inst.eecs.berkeley.edu/~cs61a/fa17/assets/pdfs/61a-fa17-final.pdf#page=5">O! Pascal</a></li>
+</ol>
+
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/hw/hw05/#instructions">Instructions</a></li>
+  <li><a href="https://cs61a.org/hw/hw05/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/hw/hw05/#getting-started-videos">Getting Started Videos</a></li>
+    <li><a href="https://cs61a.org/hw/hw05/#mid-semester-feedback">Mid-Semester Feedback</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/hw05/#q1-mid-semester-feedback">Q1: Mid-Semester Feedback</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/hw05/#parsons-problems">Parsons Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/hw05/#q2-chain">Q2: Chain</a></li>
+      <li><a href="https://cs61a.org/hw/hw05/#q3-flatten-link">Q3: Flatten Link</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/hw05/#code-writing-questions">Code Writing Questions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/hw05/#q4-has-path">Q4: Has Path</a></li>
+      <li><a href="https://cs61a.org/hw/hw05/#q5-duplicate-link">Q5: Duplicate Link</a></li>
+      <li><a href="https://cs61a.org/hw/hw05/#q6-mutable-mapping">Q6: Mutable Mapping</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/hw05/#submit">Submit</a></li>
+  </ul>
+  <li><a href="https://cs61a.org/hw/hw05/#optional-questions">Optional Questions</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Homework 5 _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Homework 5 _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Homework 5 _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

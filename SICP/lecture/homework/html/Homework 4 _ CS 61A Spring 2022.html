@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<!-- saved from url=(0026)https://cs61a.org/hw/hw04/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Homework 4 _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Homework 4 _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Homework 4 _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Homework 4 _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Homework 4 _ CS 61A Spring 2022_files/hw.css">
+
+
+    <title>
+Homework 4 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Homework 4 _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw04/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw04/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw04/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Homework 4: Python Lists, Object-Oriented Programming
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/hw/hw04/hw04.zip" class="label label-outline">hw04.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><em>Due by 11:59pm on Thursday, March 3</em></p>
+
+
+
+
+
+<h2>Instructions</h2>
+
+<p>Download <a href="https://cs61a.org/hw/hw04/hw04.zip">hw04.zip</a>. Inside the archive, you will find a file called
+<a href="https://cs61a.org/hw/hw04/hw04.py">hw04.py</a>, along with a copy of the <code>ok</code> autograder.</p>
+
+<p><strong>Submission:</strong> When you are done, submit with <code>python3 ok
+  --submit</code>.  You may submit more than once before the deadline; only the
+final submission will be scored. Check that you have successfully submitted
+your code on <a href="https://okpy.org/">okpy.org</a>.  See <a href="https://cs61a.org/lab/lab00#submitting-the-assignment">Lab 0</a> for more instructions on
+submitting assignments.</p>
+
+<p><strong>Using Ok:</strong> If you have any questions about using Ok, please
+refer to <a href="https://cs61a.org/articles/using-ok">this guide.</a>
+
+
+  </p><p><strong>Readings:</strong> You might find the following references
+  useful:</p>
+  <ul>
+  <li><a href="http://composingprograms.com/pages/23-sequences.html">Section 2.3</a></li>
+  <li><a href="http://composingprograms.com/pages/25-object-oriented-programming.html">Section 2.5</a></li>
+</ul>
+  
+
+<p><strong>Grading:</strong> Homework is graded based on
+correctness. Each incorrect problem will decrease the total score by one point. There is a homework recovery policy as stated in the syllabus.
+<strong>This homework is out of 2 points.</strong>
+
+
+
+
+    
+</p><h1 id="required-questions">Required questions</h1>
+
+
+
+<h2 id="parsons-problems">Parsons Problems</h2>
+
+
+<p>To work on these problems, open the Parsons editor:</p>
+
+<pre><code class="py hljs python">python3 parsons</code></pre>
+
+
+
+
+<h3 id="q1-remove-odd-indices">Q1: Remove Odd Indices</h3>
+
+
+<p>Complete the function <code>remove_odd_indices</code>, which takes in a list <code>lst</code> and a boolean <code>odd</code>, and returns a new list with elements removed at certain indices. 
+If <code>odd</code> is <code>True</code>, then the function should remove elements at odd indices; otherwise if <code>odd</code> is False, then the function should remove
+even indexed items.</p>
+
+<p>Note that lists are zero-indexed; thus, the first element is at index 0, the second element is at index 1, etc.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">remove_odd_indices</span><span class="hljs-params">(lst, odd)</span>:</span>
+    <span class="hljs-string">""" 
+    Remove elements of lst that have odd indices.
+    &gt;&gt;&gt; s = [1, 2, 3, 4]
+    &gt;&gt;&gt; t = remove_odd_indices(s, True)
+    &gt;&gt;&gt; s
+    [1, 2, 3, 4]
+    &gt;&gt;&gt; t
+    [1, 3]
+    &gt;&gt;&gt; l = [5, 6, 7, 8]
+    &gt;&gt;&gt; m = remove_odd_indices(l, False)
+    &gt;&gt;&gt; m
+    [6, 8]
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+
+<h3 id="q2-smart-fridge">Q2: Smart Fridge</h3>
+
+
+<p>The <code>SmartFridge</code> class is used by smart
+refrigerators to track which items are in the fridge
+and let owners know when an item has run out.</p>
+
+<p>The class internally uses a dictionary to store items,
+where each key is the item name and the value is the current quantity.
+The <code>add_item</code> method should add the given quantity
+of the given item and report the current quantity.
+You can assume that the <code>use_item</code> method will only be called on
+items that are already in the fridge, and it should use up
+the given quantity of the given item. If the quantity would fall to or below zero, it should only use <em>up to</em> the remaining quantity, and remind the owner to buy more of that item.
+<br>
+
+Finish implementing the <code>SmartFridge</code> class definition
+so that its <code>add_item</code> and <code>use_item</code> methods work as expected.</p>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SmartFridge</span>:</span>
+    <span class="hljs-string">""""
+    &gt;&gt;&gt; fridgey = SmartFridge()
+    &gt;&gt;&gt; fridgey.add_item('Mayo', 1)
+    'I now have 1 Mayo'
+    &gt;&gt;&gt; fridgey.add_item('Mayo', 2)
+    'I now have 3 Mayo'
+    &gt;&gt;&gt; fridgey.use_item('Mayo', 2.5)
+    'I have 0.5 Mayo left'
+    &gt;&gt;&gt; fridgey.use_item('Mayo', 0.5)
+    'Uh oh, buy more Mayo!'
+    """</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.items = {}
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_item</span><span class="hljs-params">(self, item, quantity)</span>:</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">use_item</span><span class="hljs-params">(self, item, quantity)</span>:</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+
+<h3 id="q3-merge">Q3: Merge</h3>
+
+
+<p>Write a function <code>merge</code> that takes 2 <em>sorted</em> lists <code>lst1</code> and <code>lst2</code>,
+and returns a new list that contains all the elements in the two lists
+in sorted order.
+Note: Try to solve this question using recursion instead of iteration.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">merge</span><span class="hljs-params">(lst1, lst2)</span>:</span>
+    <span class="hljs-string">"""Merges two sorted lists.
+
+    &gt;&gt;&gt; merge([1, 3, 5], [2, 4, 6])
+    [1, 2, 3, 4, 5, 6]
+    &gt;&gt;&gt; merge([], [2, 4, 6])
+    [2, 4, 6]
+    &gt;&gt;&gt; merge([1, 2, 3], [])
+    [1, 2, 3]
+    &gt;&gt;&gt; merge([5, 7], [2, 4, 6])
+    [2, 4, 5, 6, 7]
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q merge</code><button id="copy-code-python3ok-qmerge" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qmerge").onclick = () => copyCode('python3 ok -q merge', "copy-code-python3ok-qmerge");
+        </script>
+        <br>
+
+
+<h3 id="q4-mint">Q4: Mint</h3>
+
+
+<p>A mint is a place where coins are made. In this question, you'll implement a <code>Mint</code> class that can output a <code>Coin</code> with the correct year and worth.</p>
+
+<ul>
+  <li>Each <code>Mint</code> instance has a <code>year</code> stamp. The <code>update</code> method sets the
+  <code>year</code> stamp to the <code>present_year</code> class attribute of the <code>Mint</code> class.</li>
+  <li>The <code>create</code> method takes a subclass of <code>Coin</code> and returns an instance of
+  that class stamped with the <code>mint</code>'s year (which may be different from
+  <code>Mint.present_year</code> if it has not been updated.)</li>
+  <li>A <code>Coin</code>'s <code>worth</code> method returns the <code>cents</code> value of the coin plus one
+  extra cent for each year of age beyond 50. A coin's age can be determined
+  by subtracting the coin's year from the <code>present_year</code> class attribute of
+  the <code>Mint</code> class.</li>
+</ul>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Mint</span>:</span>
+    <span class="hljs-string">"""A mint creates coins by stamping on years.
+
+    The update method sets the mint's stamp to Mint.present_year.
+
+    &gt;&gt;&gt; mint = Mint()
+    &gt;&gt;&gt; mint.year
+    2021
+    &gt;&gt;&gt; dime = mint.create(Dime)
+    &gt;&gt;&gt; dime.year
+    2021
+    &gt;&gt;&gt; Mint.present_year = 2101  # Time passes
+    &gt;&gt;&gt; nickel = mint.create(Nickel)
+    &gt;&gt;&gt; nickel.year     # The mint has not updated its stamp yet
+    2021
+    &gt;&gt;&gt; nickel.worth()  # 5 cents + (80 - 50 years)
+    35
+    &gt;&gt;&gt; mint.update()   # The mint's year is updated to 2101
+    &gt;&gt;&gt; Mint.present_year = 2176     # More time passes
+    &gt;&gt;&gt; mint.create(Dime).worth()    # 10 cents + (75 - 50 years)
+    35
+    &gt;&gt;&gt; Mint().create(Dime).worth()  # A new mint has the current year
+    10
+    &gt;&gt;&gt; dime.worth()     # 10 cents + (155 - 50 years)
+    115
+    &gt;&gt;&gt; Dime.cents = 20  # Upgrade all dimes!
+    &gt;&gt;&gt; dime.worth()     # 20 cents + (155 - 50 years)
+    125
+    """</span>
+    present_year = <span class="hljs-number">2021</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.update()
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create</span><span class="hljs-params">(self, coin)</span>:</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Coin</span>:</span>
+    cents = <span class="hljs-literal">None</span> <span class="hljs-comment"># will be provided by subclasses, but not by Coin itself</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, year)</span>:</span>
+        self.year = year
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">worth</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Nickel</span><span class="hljs-params">(Coin)</span>:</span>
+    cents = <span class="hljs-number">5</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dime</span><span class="hljs-params">(Coin)</span>:</span>
+    cents = <span class="hljs-number">10</span></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q Mint</code><button id="copy-code-python3ok-qMint" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qMint").onclick = () => copyCode('python3 ok -q Mint', "copy-code-python3ok-qMint");
+        </script>
+        <br>
+
+
+<h3 id="q5-vending-machine">Q5: Vending Machine</h3>
+
+
+<p>In this question you'll create a <a href="https://en.wikipedia.org/wiki/Vending_machine">vending machine</a> that only outputs a single product and provides change when needed.</p>
+
+<p>Create a class called <code>VendingMachine</code> that represents a vending
+machine for some product. A <code>VendingMachine</code> object returns strings
+describing its interactions. Remember to match <strong>exactly</strong> the strings in the
+doctests -- including punctuation and spacing!</p>
+
+<p>Fill in the <code>VendingMachine</code> class, adding attributes and methods as
+appropriate, such that its behavior matches the following doctests:</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VendingMachine</span>:</span>
+    <span class="hljs-string">"""A vending machine that vends some product for some price.
+
+    &gt;&gt;&gt; v = VendingMachine('candy', 10)
+    &gt;&gt;&gt; v.vend()
+    'Nothing left to vend. Please restock.'
+    &gt;&gt;&gt; v.add_funds(15)
+    'Nothing left to vend. Please restock. Here is your $15.'
+    &gt;&gt;&gt; v.restock(2)
+    'Current candy stock: 2'
+    &gt;&gt;&gt; v.vend()
+    'You must add $10 more funds.'
+    &gt;&gt;&gt; v.add_funds(7)
+    'Current balance: $7'
+    &gt;&gt;&gt; v.vend()
+    'You must add $3 more funds.'
+    &gt;&gt;&gt; v.add_funds(5)
+    'Current balance: $12'
+    &gt;&gt;&gt; v.vend()
+    'Here is your candy and $2 change.'
+    &gt;&gt;&gt; v.add_funds(10)
+    'Current balance: $10'
+    &gt;&gt;&gt; v.vend()
+    'Here is your candy.'
+    &gt;&gt;&gt; v.add_funds(15)
+    'Nothing left to vend. Please restock. Here is your $15.'
+
+    &gt;&gt;&gt; w = VendingMachine('soda', 2)
+    &gt;&gt;&gt; w.restock(3)
+    'Current soda stock: 3'
+    &gt;&gt;&gt; w.restock(3)
+    'Current soda stock: 6'
+    &gt;&gt;&gt; w.add_funds(2)
+    'Current balance: $2'
+    &gt;&gt;&gt; w.vend()
+    'Here is your soda.'
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+</solution>
+
+<blockquote><p>You may find Python's formatted string literals, or <a href="https://docs.python.org/3/tutorial/inputoutput.html#fancier-output-formatting">f-strings</a> useful.
+A quick example:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>feeling = <span class="hljs-string">'love'</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>course = <span class="hljs-string">'61A!'</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-string">f'I <span class="hljs-subst">{feeling}</span> <span class="hljs-subst">{course}</span>'</span>
+<span class="hljs-string">'I love 61A!'</span></code></pre></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q VendingMachine</code><button id="copy-code-python3ok-qVendingMachine" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qVendingMachine").onclick = () => copyCode('python3 ok -q VendingMachine', "copy-code-python3ok-qVendingMachine");
+        </script>
+        <br>
+
+<blockquote><p>If you're curious about alternate methods of string formatting, you can also check out an older method of <a href="https://docs.python.org/2/library/stdtypes.html#str.format">Python string formatting</a>.
+A quick example:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>ten, twenty, thirty = <span class="hljs-number">10</span>, <span class="hljs-string">'twenty'</span>, [<span class="hljs-number">30</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-string">'{0} plus {1} is {2}'</span>.format(ten, twenty, thirty)
+<span class="hljs-string">'10 plus twenty is [30]'</span></code></pre></blockquote>
+
+
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/hw/hw04/#required-questions">Required questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/hw/hw04/#parsons-problems">Parsons Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/hw04/#q1-remove-odd-indices">Q1: Remove Odd Indices</a></li>
+      <li><a href="https://cs61a.org/hw/hw04/#q2-smart-fridge">Q2: Smart Fridge</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/hw04/#code-writing-questions">Code Writing Questions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/hw04/#q3-merge">Q3: Merge</a></li>
+      <li><a href="https://cs61a.org/hw/hw04/#q4-mint">Q4: Mint</a></li>
+      <li><a href="https://cs61a.org/hw/hw04/#q5-vending-machine">Q5: Vending Machine</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/hw04/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Homework 4 _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Homework 4 _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Homework 4 _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

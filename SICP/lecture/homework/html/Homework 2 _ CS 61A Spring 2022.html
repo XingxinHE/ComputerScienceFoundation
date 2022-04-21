@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<!-- saved from url=(0026)https://cs61a.org/hw/hw02/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Homework 2 _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Homework 2 _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Homework 2 _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Homework 2 _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Homework 2 _ CS 61A Spring 2022_files/hw.css">
+
+
+    <title>
+Homework 2 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Homework 2 _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw02/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw02/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw02/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Homework 2: Higher Order Functions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/hw/hw02/hw02.zip" class="label label-outline">hw02.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><em>Due by 11:59pm on Thursday, February 3</em></p>
+
+
+
+
+
+<h2>Instructions</h2>
+
+<p>Download <a href="https://cs61a.org/hw/hw02/hw02.zip">hw02.zip</a>. Inside the archive, you will find
+a file called <a href="https://cs61a.org/hw/hw02/hw02.py">hw02.py</a>, along with a copy of the <code>ok</code>
+autograder.</p>
+
+<p><strong>Submission:</strong> When you are done, submit with <code>python3 ok
+  --submit</code>.  You may submit more than once before the deadline; only the
+final submission will be scored. Check that you have successfully submitted
+your code on <a href="https://okpy.org/">okpy.org</a>.  See <a href="https://cs61a.org/lab/lab00#submitting-the-assignment">Lab 0</a> for more instructions on
+submitting assignments.</p>
+
+<p><strong>Using Ok:</strong> If you have any questions about using Ok, please
+refer to <a href="https://cs61a.org/articles/using-ok">this guide.</a>
+
+
+  </p><p><strong>Readings:</strong> You might find the following references
+  useful:</p>
+  <ul>
+  <li><a href="https://composingprograms.com/pages/16-higher-order-functions.html">Section 1.6</a></li>
+</ul>
+  
+
+<p><strong>Grading:</strong> Homework is graded based on
+correctness. Each incorrect problem will decrease the total score by one point. There is a homework recovery policy as stated in the syllabus.
+<strong>This homework is out of 2 points.</strong>
+
+
+
+
+    
+</p><h1 id="required-questions">Required questions</h1>
+
+
+<p>Several doctests refer to these functions:</p>
+
+<pre><code class="hljs python"><span class="hljs-keyword">from</span> operator <span class="hljs-keyword">import</span> add, mul
+
+square = <span class="hljs-keyword">lambda</span> x: x * x
+
+identity = <span class="hljs-keyword">lambda</span> x: x
+
+triple = <span class="hljs-keyword">lambda</span> x: <span class="hljs-number">3</span> * x
+
+increment = <span class="hljs-keyword">lambda</span> x: x + <span class="hljs-number">1</span></code></pre>
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="getting-started-videos">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="./Homework 2 _ CS 61A Spring 2022_files/videoseries.html" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe><p><a href="https://youtu.be/playlist?list=PLx38hZJ5RLZedViMkGxB-aaVh2M272bHc"> YouTube link </a></p>
+</div>
+
+
+<h2 id="parsons-problems">Parsons Problems</h2>
+
+
+<p>To work on these problems, open the Parsons editor:</p>
+
+<pre><code class="py hljs python">python3 parsons</code></pre>
+
+
+
+
+<h3 id="q1-count-until-larger">Q1: Count Until Larger</h3>
+
+
+<p>Implement the function <code>count_until_larger</code>. <code>count_until_larger</code> takes in a positive integer <code>num</code>. <code>count_until_larger</code> counts the distance between the rightmost digit of <code>num</code> and the nearest greater digit; to do so, the function counts digits from right to left. Once it encounters a digit larger than the rightmost digit, it returns that count. If no such digit exists, then the function returns <code>-1</code>.</p>
+
+<p>For example, <code>8117</code> has a rightmost digit of <code>7</code> and returns a count of <code>3</code>. <code>9118117</code> also returns a count of <code>3</code>: for both, the count stops at <code>8</code>.</p>
+
+<p><code>0</code> should be treated as having no digits and returns a count of <code>-1</code>.</p>
+
+<p>Consult the following doctests for specific behaviors of <code>count_until_larger</code>.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">count_until_larger</span><span class="hljs-params">(num)</span>:</span>
+    <span class="hljs-string">"""
+    Complete the function count_until_larger that takes in a positive integer num.
+    count_until_larger examines the rightmost digit and counts digits from right to
+    left until it encounters a digit larger than the rightmost digit, then returns that count.
+
+    &gt;&gt;&gt; count_until_larger(117) # .Case 1
+    -1
+    &gt;&gt;&gt; count_until_larger(8117) # .Case 2
+    3
+    &gt;&gt;&gt; count_until_larger(9118117) # .Case 3
+    3
+    &gt;&gt;&gt; count_until_larger(8777)  # .Case 4
+    3
+    &gt;&gt;&gt; count_until_larger(22) # .Case 5
+    -1
+    &gt;&gt;&gt; count_until_larger(0) # .Case 6
+    -1
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+
+<h3 id="q2-filter-sequence">Q2: Filter Sequence</h3>
+
+
+<p>Write a function <code>filter_sequence</code> which takes in two integers, <code>start</code> and <code>stop</code>, as well as a function <code>cond</code>, which takes in a single argument and outputs a boolean value. <code>filter_sequence</code> returns the sum of all digits from <code>start</code> to <code>stop</code> (inclusive) for which <code>cond</code> returns <code>True</code>.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">filter_sequence</span><span class="hljs-params">(cond, start, stop)</span>:</span>
+    <span class="hljs-string">"""
+    Returns the sum of numbers from start (inclusive) to stop (inclusive) that satisfy
+    the one-argument function cond.
+
+    &gt;&gt;&gt; filter_sequence(lambda x: x % 2 == 0, 0, 10) # .Case 1
+    30
+    &gt;&gt;&gt; filter_sequence(lambda x: x % 2 == 1, 0, 10) # .Case 2
+    25
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+
+<h3 id="q3-hailstone">Q3: Hailstone</h3>
+
+
+<p>Douglas Hofstadter's Pulitzer-prize-winning book, <em>Gödel, Escher, Bach</em>, poses
+the following mathematical puzzle.</p>
+
+<ol>
+  <li>Pick a positive integer <code>n</code> as the start.</li>
+  <li>If <code>n</code> is even, divide it by 2.</li>
+  <li>If <code>n</code> is odd, multiply it by 3 and add 1.</li>
+  <li>Continue this process until <code>n</code> is 1.</li>
+</ol>
+
+<p>The number <code>n</code> will travel up and down but eventually end at 1 (at least for
+all numbers that have ever been tried -- nobody has ever proved that the
+sequence will terminate). Analogously, a hailstone travels up and down in the
+atmosphere before eventually landing on earth.</p>
+
+<p>This sequence of values of <code>n</code> is often called a Hailstone sequence. Write a
+function that takes a single argument with formal parameter name <code>n</code>, prints
+out the hailstone sequence starting at <code>n</code>, and returns the number of steps in
+the sequence:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">hailstone</span><span class="hljs-params">(n)</span>:</span>
+    <span class="hljs-string">"""Print the hailstone sequence starting at n and return its
+    length.
+
+    &gt;&gt;&gt; a = hailstone(10)
+    10
+    5
+    16
+    8
+    4
+    2
+    1
+    &gt;&gt;&gt; a
+    7
+    &gt;&gt;&gt; b = hailstone(1)
+    1
+    &gt;&gt;&gt; b
+    1
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+<p>Hailstone sequences can get quite long! Try 27. What's the longest you can
+find?</p>
+
+<blockquote><p>Note that if <code>n == 1</code> initially, then the sequence is one step long.</p></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q hailstone</code><button id="copy-code-python3ok-qhailstone" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qhailstone").onclick = () => copyCode('python3 ok -q hailstone', "copy-code-python3ok-qhailstone");
+        </script>
+        <br>
+
+<p><strong>Curious about hailstones or hailstone sequences? Take a look at these articles:</strong></p>
+
+<ul>
+  <li>Check out <a href="https://www.nationalgeographic.org/encyclopedia/hail/">this article</a> to learn more about how hailstones work!</li>
+  <li>In 2019, there was a major <a href="https://www.quantamagazine.org/mathematician-terence-tao-and-the-collatz-conjecture-20191211/">development</a> in understanding how the hailstone conjecture works for most numbers!</li>
+</ul>
+
+
+
+
+<h3 id="q4-product">Q4: Product</h3>
+
+
+<p>The <code>summation(n, term)</code> function from the higher-order functions lecture adds
+up <code>term(1) + ... + term(n)</code>.  Write a similar function called <code>product</code> that
+returns <code>term(1) * ... * term(n)</code>.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">product</span><span class="hljs-params">(n, term)</span>:</span>
+    <span class="hljs-string">"""Return the product of the first n terms in a sequence.
+
+    n: a positive integer
+    term:  a function that takes one argument to produce the term
+
+    &gt;&gt;&gt; product(3, identity)  # 1 * 2 * 3
+    6
+    &gt;&gt;&gt; product(5, identity)  # 1 * 2 * 3 * 4 * 5
+    120
+    &gt;&gt;&gt; product(3, square)    # 1^2 * 2^2 * 3^2
+    36
+    &gt;&gt;&gt; product(5, square)    # 1^2 * 2^2 * 3^2 * 4^2 * 5^2
+    14400
+    &gt;&gt;&gt; product(3, increment) # (1+1) * (2+1) * (3+1)
+    24
+    &gt;&gt;&gt; product(3, triple)    # 1*3 * 2*3 * 3*3
+    162
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q product</code><button id="copy-code-python3ok-qproduct" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qproduct").onclick = () => copyCode('python3 ok -q product', "copy-code-python3ok-qproduct");
+        </script>
+        <br>
+
+
+
+
+<h3 id="q5-accumulate">Q5: Accumulate</h3>
+
+
+<p>Let's take a look at how <code>summation</code> and <code>product</code> are instances of a more
+general function called <code>accumulate</code>, which we would like to implement:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">accumulate</span><span class="hljs-params">(merger, start, n, term)</span>:</span>
+    <span class="hljs-string">"""Return the result of merging the first n terms in a sequence and start.
+    The terms to be merged are term(1), term(2), ..., term(n). merger is a
+    two-argument commutative function.
+
+    &gt;&gt;&gt; accumulate(add, 0, 5, identity)  # 0 + 1 + 2 + 3 + 4 + 5
+    15
+    &gt;&gt;&gt; accumulate(add, 11, 5, identity) # 11 + 1 + 2 + 3 + 4 + 5
+    26
+    &gt;&gt;&gt; accumulate(add, 11, 0, identity) # 11
+    11
+    &gt;&gt;&gt; accumulate(add, 11, 3, square)   # 11 + 1^2 + 2^2 + 3^2
+    25
+    &gt;&gt;&gt; accumulate(mul, 2, 3, square)    # 2 * 1^2 * 2^2 * 3^2
+    72
+    &gt;&gt;&gt; # 2 + (1^2 + 1) + (2^2 + 1) + (3^2 + 1)
+    &gt;&gt;&gt; accumulate(lambda x, y: x + y + 1, 2, 3, square)
+    19
+    &gt;&gt;&gt; # ((2 * 1^2 * 2) * 2^2 * 2) * 3^2 * 2
+    &gt;&gt;&gt; accumulate(lambda x, y: 2 * x * y, 2, 3, square)
+    576
+    &gt;&gt;&gt; accumulate(lambda x, y: (x + y) % 17, 19, 20, square)
+    16
+    """</span>
+    <span class="hljs-string">"*** YOUR CODE HERE ***"</span>
+</code></pre>
+
+<p><code>accumulate</code> has the following parameters:</p>
+
+<ul>
+  <li><code>term</code> and <code>n</code>: the same parameters as in <code>summation</code> and <code>product</code></li>
+  <li><code>merger</code>: a two-argument function that specifies how the current term
+  is merged with the previously accumulated terms.</li>
+  <li><code>start</code>: value at which to start the accumulation.</li>
+</ul>
+
+<p>For example, the result of <code>accumulate(add, 11, 3, square)</code> is</p>
+
+<pre><code class="hljs">11 + square(1) + square(2) + square(3) = 25</code></pre>
+
+<blockquote><p><strong>Note:</strong>
+You may assume that <code>merger</code> is commutative.
+That is, <code>merger(a, b) == merger(b, a)</code> for all <code>a</code>, <code>b</code>, and <code>c</code>.
+However, you may not assume <code>merger</code> is chosen from a fixed function set
+and hard-code the solution.</p></blockquote>
+
+<p>After implementing <code>accumulate</code>, show how <code>summation</code> and <code>product</code> can both be
+defined as function calls to <code>accumulate</code>.</p>
+
+<p><strong>Important:</strong>
+You should have a single line of code (which should be a <code>return</code> statement)
+in each of your implementations for <code>summation_using_accumulate</code> and
+<code>product_using_accumulate</code>, which the syntax check will check for.</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q accumulate
+python3 ok -q summation_using_accumulate
+python3 ok -q product_using_accumulate</code><button id="copy-code-python3ok-qaccumulatepython3ok-qsummation_using_accumulatepython3ok-qproduct_using_accumulate" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qaccumulatepython3ok-qsummation_using_accumulatepython3ok-qproduct_using_accumulate").onclick = () => copyCode('python3 ok -q accumulate\npython3 ok -q summation_using_accumulate\npython3 ok -q product_using_accumulate', "copy-code-python3ok-qaccumulatepython3ok-qsummation_using_accumulatepython3ok-qproduct_using_accumulate");
+        </script>
+        <br>
+
+
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+
+<h2 id="bonus-questions">Bonus Questions</h2>
+
+
+<p>Homework assignments will also contain prior exam-level questions for you to take a look at.
+These questions have no submission component; feel free to attempt them if you'd like a challenge!</p>
+
+<blockquote><p>Note that exams from Spring 2020, Fall 2020, and Spring 2021 gave students access to an interpreter, so the question format
+may be different than other years. Regardless, the questions included remain good exam-level problems doable <em>without</em> access
+to an interpreter.</p></blockquote>
+
+<ol>
+  <li>Fall 2019 MT1 Q3: <a href="https://cs61a.org/exam/fa19/mt1/61a-fa19-mt1.pdf#page=4">You Again</a> [Higher Order Functions]</li>
+  <li>Spring 2021 MT1 Q4: <a href="https://cs61a.org/exam/sp21/mt1/61a-sp21-mt1.pdf#page=14">Domain on the Range</a> [Higher Order Functions]</li>
+  <li>Fall 2021 MT1 Q1b: <a href="https://cs61a.org/exam/fa21/mt1/61a-fa21-mt1.pdf#page=4">tik</a> [Functions and Expressions]</li>
+</ol>
+
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li class=""><a href="https://cs61a.org/hw/hw02/#required-questions">Required questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/hw/hw02/#getting-started-videos">Getting Started Videos</a></li>
+    <li class=""><a href="https://cs61a.org/hw/hw02/#parsons-problems">Parsons Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class=""><a href="https://cs61a.org/hw/hw02/#q1-count-until-larger">Q1: Count Until Larger</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw02/#q2-filter-sequence">Q2: Filter Sequence</a></li>
+    </ul>
+    <li class=""><a href="https://cs61a.org/hw/hw02/#code-writing-questions">Code Writing Questions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class=""><a href="https://cs61a.org/hw/hw02/#q3-hailstone">Q3: Hailstone</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw02/#q4-product">Q4: Product</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw02/#q5-accumulate">Q5: Accumulate</a></li>
+    </ul>
+    <li class=""><a href="https://cs61a.org/hw/hw02/#submit">Submit</a></li>
+    <li class=""><a href="https://cs61a.org/hw/hw02/#bonus-questions">Bonus Questions</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Homework 2 _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Homework 2 _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Homework 2 _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

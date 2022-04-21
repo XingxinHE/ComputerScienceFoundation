@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)https://cs61a.org/hw/sol-hw03/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Homework 3 Solutions _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Homework 3 Solutions _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Homework 3 Solutions _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Homework 3 Solutions _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Homework 3 Solutions _ CS 61A Spring 2022_files/hw.css">
+
+
+    <title>
+Homework 3 Solutions | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Homework 3 Solutions _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/sol-hw03/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/sol-hw03/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/sol-hw03/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Homework 3 Solutions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/hw/sol-hw03/hw03.zip" class="label label-outline">hw03.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<h2>Solution Files</h2>
+<p>You can find the solutions in <a href="https://cs61a.org/hw/sol-hw03/hw03.py">hw03.py</a>.</p>
+
+    
+<blockquote><p><strong>Important:</strong>: An update to Homework 3 was released on Sunday. If you downloaded the homework before then, please update your assignment! To do so and save your progress, redownload the homework and copy the <code>hw03.ok</code> file from the new folder to your old folder. You can continue working in and submit from your old folder.</p></blockquote>
+
+
+<h1 id="required-questions">Required Questions</h1>
+
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle">
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="getting-started-videos">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="./Homework 3 Solutions _ CS 61A Spring 2022_files/watch.html" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe><p><a href="https://youtu.be/watch?v=_F4uNI6qTjA&amp;list=PLx38hZJ5RLZdj4fEiGslUdu3VKoVOqTg3"> YouTube link </a></p>
+</div>
+
+
+<h2 id="parsons-problems">Parsons Problems</h2>
+
+
+<p>To work on these problems, open the Parsons editor:</p>
+
+<pre><code class="py hljs python">python3 parsons</code></pre>
+
+
+
+
+<h3 id="q1-neighbor-digits">Q1: Neighbor Digits</h3>
+
+
+<p>Implement the function <code>neighbor_digits</code>. <code>neighbor_digits</code> takes in a positive integer <code>num</code> and an optional argument <code>prev_digit</code>. <code>neighbor_digits</code> outputs the number of digits in <code>num</code> that have the same digit to its right or left.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">neighbor_digits</span><span class="hljs-params">(num, prev_digit=<span class="hljs-number">-1</span>)</span>:</span>
+    <span class="hljs-string">"""
+    Returns the number of digits in num that have the same digit to its right
+    or left.
+    &gt;&gt;&gt; neighbor_digits(111)
+    3
+    &gt;&gt;&gt; neighbor_digits(123)
+    0
+    &gt;&gt;&gt; neighbor_digits(112)
+    2
+    &gt;&gt;&gt; neighbor_digits(1122)
+    4
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">if</span> num &lt; <span class="hljs-number">10</span>:
+        <span class="hljs-keyword">return</span> num == prev_digit
+    last = num % <span class="hljs-number">10</span>
+    rest = num // <span class="hljs-number">10</span>
+    <span class="hljs-keyword">return</span> int(prev_digit == last <span class="hljs-keyword">or</span> rest % <span class="hljs-number">10</span> == last) + neighbor_digits(num // <span class="hljs-number">10</span>, last)</div></code></pre>
+
+
+<h3 id="q2-has-subsequence">Q2: Has Subsequence</h3>
+
+
+<p>Implement the function <code>has_subseq</code>, which takes in a number <code>n</code> and a "sequence" of digits <code>seq</code>. The function returns whether <code>n</code> contains <code>seq</code> as a subsequence, which does not have to be consecutive.</p>
+
+<p>For example, <code>141</code> contains the sequence <code>11</code> because the first digit of the sequence, 1, is the first digit of <code>141</code>, and the next digit of the sequence, 1, is found later in <code>141</code>.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">has_subseq</span><span class="hljs-params">(n, seq)</span>:</span>
+    <span class="hljs-string">"""
+    Complete has_subseq, a function which takes in a number n and a "sequence"
+    of digits seq and returns whether n contains seq as a subsequence, which
+    does not have to be consecutive.
+
+    &gt;&gt;&gt; has_subseq(123, 12)
+    True
+    &gt;&gt;&gt; has_subseq(141, 11)
+    True
+    &gt;&gt;&gt; has_subseq(144, 12)
+    False
+    &gt;&gt;&gt; has_subseq(144, 1441)
+    False
+    &gt;&gt;&gt; has_subseq(1343412, 134)
+    True
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">if</span> n == seq:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+    <span class="hljs-keyword">if</span> n &lt; seq:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+    without = has_subseq(n // <span class="hljs-number">10</span>, seq)
+    <span class="hljs-keyword">if</span> seq % <span class="hljs-number">10</span> == n % <span class="hljs-number">10</span>:
+        <span class="hljs-keyword">return</span> has_subseq(n // <span class="hljs-number">10</span>, seq // <span class="hljs-number">10</span>) <span class="hljs-keyword">or</span> without
+    <span class="hljs-keyword">return</span> without</div></code></pre>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+
+<h3 id="q3-num-eights">Q3: Num eights</h3>
+
+
+<p>Write a recursive function <code>num_eights</code> that takes a positive integer <code>pos</code> and
+returns the number of times the digit 8 appears in <code>pos</code>.</p>
+
+<p><strong>Important:</strong>
+Use recursion; the tests will fail if you use any assignment statements.
+(You can however use function definitions if you so wish.)</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">num_eights</span><span class="hljs-params">(pos)</span>:</span>
+    <span class="hljs-string">"""Returns the number of times 8 appears as a digit of pos.
+
+    &gt;&gt;&gt; num_eights(3)
+    0
+    &gt;&gt;&gt; num_eights(8)
+    1
+    &gt;&gt;&gt; num_eights(88888888)
+    8
+    &gt;&gt;&gt; num_eights(2638)
+    1
+    &gt;&gt;&gt; num_eights(86380)
+    2
+    &gt;&gt;&gt; num_eights(12345)
+    0
+    &gt;&gt;&gt; from construct_check import check
+    &gt;&gt;&gt; # ban all assignment statements
+    &gt;&gt;&gt; check(HW_SOURCE_FILE, 'num_eights',
+    ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr'])
+    True
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">if</span> pos % <span class="hljs-number">10</span> == <span class="hljs-number">8</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + num_eights(pos // <span class="hljs-number">10</span>)
+    <span class="hljs-keyword">elif</span> pos &lt; <span class="hljs-number">10</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> num_eights(pos // <span class="hljs-number">10</span>)</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q num_eights</code><button id="copy-code-python3ok-qnum_eights" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qnum_eights").onclick = () => copyCode('python3 ok -q num_eights', "copy-code-python3ok-qnum_eights");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+
+<p>The equivalent iterative version of this problem might look something like
+this:</p>
+
+<pre><code class="hljs python">total = <span class="hljs-number">0</span>
+<span class="hljs-keyword">while</span> pos &gt; <span class="hljs-number">0</span>:
+    <span class="hljs-keyword">if</span> pos % <span class="hljs-number">10</span> == <span class="hljs-number">8</span>:
+        total = total + <span class="hljs-number">1</span>
+    pos = pos // <span class="hljs-number">10</span>
+<span class="hljs-keyword">return</span> total</code></pre>
+
+<p>The main idea is that we check each digit for a eight. The recursive solution
+is similar, except that you depend on the recursive call to count the
+occurences of eight in the rest of the number. Then, you add that to the number
+of eights you see in the current digit.</p>
+
+</div>
+
+
+<h3 id="q4-ping-pong">Q4: Ping-pong</h3>
+
+
+<p>The ping-pong sequence counts up starting from 1 and is always either counting
+up or counting down.  At element <code>k</code>, the direction switches if <code>k</code> is a
+multiple of 8 or contains the digit 8.  The first 30 elements of the ping-pong
+sequence are listed below, with direction swaps marked using brackets at the
+8th, 16th, 18th, 24th, and 28th elements:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tbody><tr>
+    <th>Index</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>[8]</th>
+    <th>9</th>
+    <th>10</th>
+    <th>11</th>
+    <th>12</th>
+    <th>13</th>
+    <th>14</th>
+    <th>15</th>
+    <th>[16]</th>
+    <th>17</th>
+    <th>[18]</th>
+    <th>19</th>
+    <th>20</th>
+    <th>21</th>
+    <th>22</th>
+    <th>23</th>
+  </tr>
+  <tr>
+    <td>PingPong Value</td>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+    <td>[8]</td>
+    <td>7</td>
+    <td>6</td>
+    <td>5</td>
+    <td>4</td>
+    <td>3</td>
+    <td>2</td>
+    <td>1</td>
+    <td>[0]</td>
+    <td>1</td>
+    <td>[2]</td>
+    <td>1</td>
+    <td>0</td>
+    <td>-1</td>
+    <td>-2</td>
+    <td>-3</td>
+  </tr>
+
+          </tbody></table>
+        </div>
+        
+
+
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tbody><tr>
+    <th>Index (cont.)</th>
+    <th>[24]</th>
+    <th>25</th>
+    <th>26</th>
+    <th>27</th>
+    <th>[28]</th>
+    <th>29</th>
+    <th>30</th>
+  </tr>
+  <tr>
+    <td>PingPong Value</td>
+    <td>[-4]</td>
+    <td>-3</td>
+    <td>-2</td>
+    <td>-1</td>
+    <td>[0]</td>
+    <td>-1</td>
+    <td>-2</td>
+  </tr>
+
+          </tbody></table>
+        </div>
+        
+
+
+
+<p>Implement a function <code>pingpong</code> that returns the nth element of the ping-pong
+sequence <em>without using any assignment statements</em>. (You are allowed to use function definitions.)</p>
+
+<p>You may use the function <code>num_eights</code>, which you defined in the previous question.</p>
+
+<p><strong>Important:</strong>
+Use recursion; the tests will fail if you use any assignment statements.
+(You can however use function definitions if you so wish.)</p>
+
+<blockquote><p><strong>Hint:</strong>
+If you're stuck, first try implementing <code>pingpong</code> using assignment
+statements and a <code>while</code> statement. Then, to convert this into a recursive
+solution, write a helper function that has a parameter for each variable that
+changes values in the body of the while loop.</p>
+
+<p><strong>Hint:</strong>
+There are a few pieces of information that we need to keep track of.
+One of these details is the direction that we're going (either increasing or decreasing).
+Building off of the hint above, think about how we can keep track of the direction throughout the calls to the helper function.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pingpong</span><span class="hljs-params">(n)</span>:</span>
+    <span class="hljs-string">"""Return the nth element of the ping-pong sequence.
+
+    &gt;&gt;&gt; pingpong(8)
+    8
+    &gt;&gt;&gt; pingpong(10)
+    6
+    &gt;&gt;&gt; pingpong(15)
+    1
+    &gt;&gt;&gt; pingpong(21)
+    -1
+    &gt;&gt;&gt; pingpong(22)
+    -2
+    &gt;&gt;&gt; pingpong(30)
+    -2
+    &gt;&gt;&gt; pingpong(68)
+    0
+    &gt;&gt;&gt; pingpong(69)
+    -1
+    &gt;&gt;&gt; pingpong(80)
+    0
+    &gt;&gt;&gt; pingpong(81)
+    1
+    &gt;&gt;&gt; pingpong(82)
+    0
+    &gt;&gt;&gt; pingpong(100)
+    -6
+    &gt;&gt;&gt; from construct_check import check
+    &gt;&gt;&gt; # ban assignment statements
+    &gt;&gt;&gt; check(HW_SOURCE_FILE, 'pingpong',
+    ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr'])
+    True
+    """</span>
+<div class="sol-highlight">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">helper</span><span class="hljs-params">(result, i, step)</span>:</span>
+        <span class="hljs-keyword">if</span> i == n:
+            <span class="hljs-keyword">return</span> result
+        <span class="hljs-keyword">elif</span> i % <span class="hljs-number">8</span> == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> num_eights(i) &gt; <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> helper(result - step, i + <span class="hljs-number">1</span>, -step)
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-keyword">return</span> helper(result + step, i + <span class="hljs-number">1</span>, step)
+    <span class="hljs-keyword">return</span> helper(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)
+
+<span class="hljs-comment"># Alternate solution 1</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pingpong_next</span><span class="hljs-params">(x, i, step)</span>:</span>
+    <span class="hljs-keyword">if</span> i == n:
+        <span class="hljs-keyword">return</span> x
+    <span class="hljs-keyword">return</span> pingpong_next(x + step, i + <span class="hljs-number">1</span>, next_dir(step, i+<span class="hljs-number">1</span>))
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">next_dir</span><span class="hljs-params">(step, i)</span>:</span>
+    <span class="hljs-keyword">if</span> i % <span class="hljs-number">8</span> == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> num_eights(i) &gt; <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> -step
+    <span class="hljs-keyword">return</span> step
+
+<span class="hljs-comment"># Alternate solution 2</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pingpong_alt</span><span class="hljs-params">(n)</span>:</span>
+    <span class="hljs-keyword">if</span> n &lt;= <span class="hljs-number">8</span>:
+        <span class="hljs-keyword">return</span> n
+    <span class="hljs-keyword">return</span> direction(n) + pingpong_alt(n<span class="hljs-number">-1</span>)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">direction</span><span class="hljs-params">(n)</span>:</span>
+    <span class="hljs-keyword">if</span> n &lt; <span class="hljs-number">8</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+    <span class="hljs-keyword">if</span> (n<span class="hljs-number">-1</span>) % <span class="hljs-number">8</span> == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> num_eights(n<span class="hljs-number">-1</span>) &gt; <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span> * direction(n<span class="hljs-number">-1</span>)
+    <span class="hljs-keyword">return</span> direction(n<span class="hljs-number">-1</span>)</div></code></pre>
+
+</solution>
+
+<!--
+
+<pre><code>def has_eight(k):
+    &quot;&quot;&quot;Returns True if at least one of the digits of k is a 8, False otherwise.
+
+    &gt;&gt;&gt; has_eight(3)
+    False
+    &gt;&gt;&gt; has_eight(8)
+    True
+    &gt;&gt;&gt; has_eight(2834)
+    True
+    &gt;&gt;&gt; has_eight(2634)
+    False
+    &gt;&gt;&gt; has_eight(834)
+    True
+    &gt;&gt;&gt; has_eight(8888)
+    True
+    &quot;&quot;&quot;
+    if k % 10 == 8:
+        return True
+    elif k &lt; 10:
+        return False
+    else:
+        return has_eight(k // 10)</code></pre>
+
+-->
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q pingpong</code><button id="copy-code-python3ok-qpingpong" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qpingpong").onclick = () => copyCode('python3 ok -q pingpong', "copy-code-python3ok-qpingpong");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+
+<p>This is a fairly involved recursion problem, which we will first solve
+through iteration and then convert to a recursive solution.</p>
+
+<p>Note that at any given point in the sequence, we need to keep track of the
+current <em>value</em> of the sequence (this is the value that might be output)
+as well as the current <em>index</em> of the sequence (how many items we have
+seen so far, not actually output).</p>
+
+<p>For example, 14th element has <em>value</em> 0, but it's the 14th <em>index</em> in
+the sequence. We will refer to the value as <code>x</code> and the index as <code>i</code>. An
+iterative solution may look something like this:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pingpong</span><span class="hljs-params">(n)</span>:</span>
+    i = <span class="hljs-number">1</span>
+    x = <span class="hljs-number">1</span>
+    <span class="hljs-keyword">while</span> i &lt; n:
+        x += <span class="hljs-number">1</span>
+        i += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> x</code></pre>
+
+<p>Hopefully, it is clear to you that this has a big problem. This doesn't
+account for changes in directions at all! It will work for the first eight
+values of the sequence, but then fail after that. To fix this, we can add
+in a check for direction, and then also keep track of the current
+direction to make our lives a bit easier (it's possible to compute the
+direction from scratch at each step, see the <code>direction</code> function in the
+alternate solution).</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pingpong</span><span class="hljs-params">(n)</span>:</span>
+    i = <span class="hljs-number">1</span>
+    x = <span class="hljs-number">1</span>
+    is_up = <span class="hljs-literal">True</span>
+    <span class="hljs-keyword">while</span> i &lt; n:
+        is_up = next_dir(...)
+        <span class="hljs-keyword">if</span> is_up:
+            x += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">else</span>:
+            x -= <span class="hljs-number">1</span>
+        i += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> x</code></pre>
+
+<p>All that's left to do is to write the <code>next_dir</code> function, which will take
+in the <em>current direction</em> and <em>index</em> and then tell us what direction to
+go in next (which could be the same direction):</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">next_dir</span><span class="hljs-params">(is_up, i)</span>:</span>
+    <span class="hljs-keyword">if</span> i % <span class="hljs-number">8</span> == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> num_eights(i) &gt; <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">not</span> is_up
+    <span class="hljs-keyword">return</span> is_up</code></pre>
+
+<p>There's a tiny optimization we can make here. Instead of calculating an
+increment based on the value of <code>is_up</code>, we can make it directly store the
+direction of change into the variable (<code>next_dir</code> is also updated, see the
+solution for the new version):</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pingpong</span><span class="hljs-params">(n)</span>:</span>
+    i = <span class="hljs-number">1</span>
+    x = <span class="hljs-number">1</span>
+    step = <span class="hljs-number">1</span>
+    <span class="hljs-keyword">while</span> i &lt; n:
+        step = next_dir(step, i)
+        x += step
+        i += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> x</code></pre>
+
+<p>This will work, but it uses assignment. To convert it to an equivalent
+recursive version without assignment, make each local variable into a
+parameter of a new helper function, and then add an appropriate base case.
+Lastly, we seed the helper function with appropriate starting values by
+calling it with the values we had in the iterative version.</p>
+
+<p>You should be able to convince yourself that the version of <code>pingpong</code> in
+the solutions has the same logic as the iterative version of <code>pingpong</code>
+above.</p>
+
+<p>Video walkthrough: </p><p><a href="https://youtu.be/74gwPjgrN_k"> YouTube link </a></p><p></p>
+
+</div>
+
+<!--<include topics/recursion/medium/missing-digits.md>-->
+
+
+<h3 id="q5-count-coins">Q5: Count coins</h3>
+
+
+<p>Given a positive integer <code>change</code>, a set of coins makes change for <code>change</code> if
+the sum of the values of the coins is <code>change</code>.
+Here we will use standard US Coin values: 1, 5, 10, 25.
+For example, the following sets make change for <code>15</code>:</p>
+
+<ul>
+  <li>15 1-cent coins</li>
+  <li>10 1-cent, 1 5-cent coins</li>
+  <li>5 1-cent, 2 5-cent coins</li>
+  <li>5 1-cent, 1 10-cent coins</li>
+  <li>3 5-cent coins</li>
+  <li>1 5-cent, 1 10-cent coin</li>
+</ul>
+
+<p>Thus, there are 6 ways to make change for <code>15</code>.  Write a <strong>recursive</strong> function
+<code>count_coins</code> that takes a positive integer <code>change</code> and returns the number of
+ways to make change for <code>change</code> using coins.</p>
+
+<p>You can use either of the functions given to you:</p>
+
+<ul>
+  <li><code>get_larger_coin</code> will return the next larger coin denomination from the
+  input, i.e. <code>get_larger_coin(5)</code> is <code>10</code>.</li>
+  <li><code>get_smaller_coin</code> will return the next smaller coin denomination from the
+  input, i.e. <code>get_smaller_coin(5)</code> is <code>1</code>.</li>
+</ul>
+
+<p>There are two main ways in which you can approach this problem.
+One way uses <code>get_larger_coin</code>, and another uses <code>get_smaller_coin</code>.</p>
+
+<p><strong>Important:</strong>
+Use recursion; the tests will fail if you use loops.</p>
+
+<blockquote><p><strong>Hint:</strong>
+Refer the <a href="http://composingprograms.com/pages/17-recursive-functions.html#example-partitions">implementation</a> of <code>count_partitions</code> for an example
+of how to count the ways to sum up to a final value with smaller parts.
+If you need to keep track of more than one value across recursive calls,
+consider writing a helper function.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_larger_coin</span><span class="hljs-params">(coin)</span>:</span>
+    <span class="hljs-string">"""Returns the next larger coin in order.
+    &gt;&gt;&gt; get_larger_coin(1)
+    5
+    &gt;&gt;&gt; get_larger_coin(5)
+    10
+    &gt;&gt;&gt; get_larger_coin(10)
+    25
+    &gt;&gt;&gt; get_larger_coin(2) # Other values return None
+    """</span>
+    <span class="hljs-keyword">if</span> coin == <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">5</span>
+    <span class="hljs-keyword">elif</span> coin == <span class="hljs-number">5</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">10</span>
+    <span class="hljs-keyword">elif</span> coin == <span class="hljs-number">10</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">25</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_smaller_coin</span><span class="hljs-params">(coin)</span>:</span>
+    <span class="hljs-string">"""Returns the next smaller coin in order.
+    &gt;&gt;&gt; get_smaller_coin(25)
+    10
+    &gt;&gt;&gt; get_smaller_coin(10)
+    5
+    &gt;&gt;&gt; get_smaller_coin(5)
+    1
+    &gt;&gt;&gt; get_smaller_coin(2) # Other values return None
+    """</span>
+    <span class="hljs-keyword">if</span> coin == <span class="hljs-number">25</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">10</span>
+    <span class="hljs-keyword">elif</span> coin == <span class="hljs-number">10</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">5</span>
+    <span class="hljs-keyword">elif</span> coin == <span class="hljs-number">5</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">count_coins</span><span class="hljs-params">(change)</span>:</span>
+    <span class="hljs-string">"""Return the number of ways to make change using coins of value of 1, 5, 10, 25.
+    &gt;&gt;&gt; count_coins(15)
+    6
+    &gt;&gt;&gt; count_coins(10)
+    4
+    &gt;&gt;&gt; count_coins(20)
+    9
+    &gt;&gt;&gt; count_coins(100) # How many ways to make change for a dollar?
+    242
+    &gt;&gt;&gt; count_coins(200)
+    1463
+    &gt;&gt;&gt; from construct_check import check
+    &gt;&gt;&gt; # ban iteration
+    &gt;&gt;&gt; check(HW_SOURCE_FILE, 'count_coins', ['While', 'For'])
+    True
+    """</span>
+<div class="sol-highlight">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">constrained_count</span><span class="hljs-params">(change, smallest_coin)</span>:</span>
+        <span class="hljs-keyword">if</span> change == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+        <span class="hljs-keyword">if</span> change &lt; <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+        <span class="hljs-keyword">if</span> smallest_coin == <span class="hljs-literal">None</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+        without_coin = constrained_count(change, get_larger_coin(smallest_coin))
+        with_coin = constrained_count(change - smallest_coin, smallest_coin)
+        <span class="hljs-keyword">return</span> without_coin + with_coin
+    <span class="hljs-keyword">return</span> constrained_count(change, <span class="hljs-number">1</span>)
+
+    <span class="hljs-comment"># Alternate solution: using get_smaller_coin</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">constrained_count_small</span><span class="hljs-params">(change, largest_coin)</span>:</span>
+        <span class="hljs-keyword">if</span> change == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+        <span class="hljs-keyword">if</span> change &lt; <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+        <span class="hljs-keyword">if</span> largest_coin == <span class="hljs-literal">None</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+        without_coin = constrained_count_small(change, get_smaller_coin(largest_coin))
+        with_coin = constrained_count_small(change - largest_coin, largest_coin)
+        <span class="hljs-keyword">return</span> without_coin + with_coin
+    <span class="hljs-keyword">return</span> constrained_count_small(change, <span class="hljs-number">25</span>)</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q count_coins</code><button id="copy-code-python3ok-qcount_coins" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcount_coins").onclick = () => copyCode('python3 ok -q count_coins', "copy-code-python3ok-qcount_coins");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+
+<p>This is remarkably similar to the <code>count_partitions</code> problem, with a
+few minor differences:</p>
+
+<ul>
+  <li>A maximum partition size is not given, so we need to create a helper
+  function that takes in two arguments and also create another helper function
+  to find the max coin.</li>
+  <li>Partition size is not linear. To get the next partition you need to call
+  <code>get_larger_coin</code> if you are counting up (i.e. from the smallest coin to the
+  largest coin), or <code>get_smaller_coin</code> if you are counting down.</li>
+</ul>
+
+</div>
+
+
+<h2 id="optional-questions">Optional Questions</h2>
+
+<p>Homework assignments will also contain prior exam-level questions for you to take a look at.
+ These questions have no submission component; feel free to attempt them if you'd like a challenge!</p>
+
+<ol>
+  <li>Fall 2017 MT1 Q4a: <a href="https://inst.eecs.berkeley.edu/~cs61a/fa21/exam/fa17/mt1/61a-fa17-mt1.pdf#page=5">Digital</a></li>
+  <li>Summer 2018 MT1 Q5a: <a href="https://inst.eecs.berkeley.edu/~cs61a/su18/assets/pdfs/61a-su18-mt.pdf#page=5">Won't You Be My Neighbor?</a></li>
+  <li>Fall 2019 Final Q6b: <a href="https://inst.eecs.berkeley.edu/~cs61a/sp21/exam/fa19/final/61a-fa19-final.pdf#page=6">Palindromes</a></li>
+</ol>
+
+<!--
+The questions below are out of scope for 61A. You can try them if you want an extra challenge, but they're just puzzles that are not required or recommended at all. Almost all students will skip them, and that's fine.-->
+
+<!--<include topics/recursion/medium/towers-of-hanoi.md>-->
+
+<!--<include topics/recursion/difficult/anonymous-factorial.md>-->
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/hw/sol-hw03/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/hw/sol-hw03/#getting-started-videos">Getting Started Videos</a></li>
+    <li><a href="https://cs61a.org/hw/sol-hw03/#parsons-problems">Parsons Problems</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/sol-hw03/#q1-neighbor-digits">Q1: Neighbor Digits</a></li>
+      <li><a href="https://cs61a.org/hw/sol-hw03/#q2-has-subsequence">Q2: Has Subsequence</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/sol-hw03/#code-writing-questions">Code Writing Questions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/hw/sol-hw03/#q3-num-eights">Q3: Num eights</a></li>
+      <li><a href="https://cs61a.org/hw/sol-hw03/#q4-ping-pong">Q4: Ping-pong</a></li>
+      <li><a href="https://cs61a.org/hw/sol-hw03/#q5-count-coins">Q5: Count coins</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/hw/sol-hw03/#optional-questions">Optional Questions</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Homework 3 Solutions _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Homework 3 Solutions _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

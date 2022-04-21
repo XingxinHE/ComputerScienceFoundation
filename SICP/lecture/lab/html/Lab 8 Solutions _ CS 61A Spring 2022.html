@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://cs61a.org/lab/sol-lab08/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/jquery.min.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/bootstrap.min.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/hl.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/toggledarkmode.js.下载"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/dark-mode.js.下载"></script>
+    <link rel="stylesheet" href="./Lab 8 Solutions _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Lab 8 Solutions _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Lab 8 Solutions _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Lab 8 Solutions _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Lab 8 Solutions _ CS 61A Spring 2022_files/lab.css">
+
+
+    <title>
+Lab 8 Solutions | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1057.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Lab 8 Solutions _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/sol-lab08/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/sol-lab08/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/sol-lab08/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Lab 8 Solutions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/lab/sol-lab08/lab08.zip" class="label label-outline">lab08.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<h2>Solution Files</h2>
+
+
+    
+<h1 id="topics">Topics</h1>
+
+
+<p>Consult this section if you need a refresher on the material for this lab. It's okay to skip directly to <a href="https://cs61a.org/lab/sol-lab08/#required-questions">the questions</a> and refer back here should you get stuck.</p>
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle">
+        Iterators<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="iterators">Iterators</h2>
+
+
+<!-- In lecture, we studied several Python object interfaces, or _protocols_. In this
+lab, we will study a new protocol, the _iterator protocol_. Implementing this
+protocol allows us to use our objects in for loops! Remember the <code>for</code> loop?
+(We really hope so!) -->
+
+<p>An iterable is any object that can be iterated through, or gone through one
+element at a time. One construct that we've used to iterate through an
+iterable is a for loop:</p>
+
+<pre><code class="hljs sql">for elem in iterable:
+    <span class="hljs-comment"># do something</span></code></pre>
+
+<p><code>for</code> loops work on any object that is <em>iterable</em>. We previously described it
+as working with any sequence -- all sequences are iterable, but there are other
+objects that are also iterable! We define an <strong>iterable</strong> as an object on which
+calling the built-in <code>iter</code> function returns an <em>iterator</em>. An
+<strong>iterator</strong> is another type of object that allows us to iterate through an
+iterable by keeping track of which element is next in the sequence.</p>
+
+<p>To illustrate this, consider the following block of code, which does the exact
+same thing as the <code>for</code> statement above:</p>
+
+<pre><code class="hljs python">iterator = iter(iterable)
+<span class="hljs-keyword">try</span>:
+    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
+        elem = next(iterator)
+        <span class="hljs-comment"># do something</span>
+<span class="hljs-keyword">except</span> StopIteration:
+    <span class="hljs-keyword">pass</span></code></pre>
+
+<p>Here's a breakdown of what's happening:</p>
+
+<ul>
+  <li>First, the built-in <code>iter</code> function is called on the iterable to create a
+  corresponding <em>iterator</em>.</li>
+  <li>To get the next element in the sequence, the built-in <code>next</code> function is
+  called on this iterator.</li>
+  <li>When <code>next</code> is called but there are no elements left in the iterator, a
+  <code>StopIteration</code> error is raised. In the for loop construct, this exception is
+  caught and execution can continue.</li>
+</ul>
+
+<p>Calling <code>iter</code> on an iterable multiple times returns a new iterator each time
+with distinct states (otherwise, you'd never be able to iterate through a
+iterable more than once). You can also call <code>iter</code> on the iterator itself, which
+will just return the same iterator without changing its state. However, note
+that you cannot call <code>next</code> directly on an iterable.</p>
+
+<p>Let's see the <code>iter</code> and <code>next</code> functions in action with an iterable we're
+already familiar with -- a list.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>lst = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(lst)             <span class="hljs-comment"># Calling next on an iterable</span>
+TypeError: <span class="hljs-string">'list'</span> object <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> an iterator
+<span class="hljs-meta">&gt;&gt;&gt; </span>list_iter = iter(lst) <span class="hljs-comment"># Creates an iterator for the list</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>list_iter
+&lt;list_iterator object ...&gt;
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(list_iter)       <span class="hljs-comment"># Calling next on an iterator</span>
+<span class="hljs-number">1</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(list_iter)       <span class="hljs-comment"># Calling next on the same iterator</span>
+<span class="hljs-number">2</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(iter(list_iter)) <span class="hljs-comment"># Calling iter on an iterator returns itself</span>
+<span class="hljs-number">3</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>list_iter2 = iter(lst)
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(list_iter2)      <span class="hljs-comment"># Second iterator has new state</span>
+<span class="hljs-number">1</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(list_iter)       <span class="hljs-comment"># First iterator is unaffected by second iterator</span>
+<span class="hljs-number">4</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(list_iter)       <span class="hljs-comment"># No elements left!</span>
+StopIteration
+<span class="hljs-meta">&gt;&gt;&gt; </span>lst                   <span class="hljs-comment"># Original iterable is unaffected</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]</code></pre>
+
+<p>Since you can call <code>iter</code> on iterators, this tells us that that they are also
+iterables! Note that while all iterators are iterables, the converse is not
+true - that is, not all iterables are iterators. You can use iterators wherever
+you can use iterables, but note that since iterators keep their state, they're
+only good to iterate through an iterable once:</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>list_iter = iter([<span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>])
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> e <span class="hljs-keyword">in</span> list_iter:
+<span class="hljs-meta">... </span>    print(e)
+<span class="hljs-number">4</span>
+<span class="hljs-number">3</span>
+<span class="hljs-number">2</span>
+<span class="hljs-number">1</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> e <span class="hljs-keyword">in</span> list_iter:
+<span class="hljs-meta">... </span>    print(e)</code></pre>
+
+<blockquote><p><strong>Analogy</strong>: An iterable is like a book (one can flip through the
+pages) and an iterator for a book would be a bookmark (saves the position and
+can locate the next page).  Calling <code>iter</code> on a book gives you a new bookmark
+independent of other bookmarks, but calling <code>iter</code> on a bookmark gives you the
+bookmark itself, without changing its position at all. Calling <code>next</code> on the
+bookmark moves it to the next page, but does not change the pages in the book.
+Calling <code>next</code> on the book wouldn't make sense semantically. We can also have
+multiple bookmarks, all independent of each other.</p></blockquote>
+
+
+<h3 id="iterable-uses">Iterable Uses</h3>
+
+
+<p>We know that lists are one type of built-in iterable objects. You may have also
+encountered the <code>range(start, end)</code> function, which creates an iterable of
+ascending integers from start (inclusive) to end (exclusive).</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> range(<span class="hljs-number">2</span>, <span class="hljs-number">6</span>):
+<span class="hljs-meta">... </span>    print(x)
+...
+<span class="hljs-number">2</span>
+<span class="hljs-number">3</span>
+<span class="hljs-number">4</span>
+<span class="hljs-number">5</span></code></pre>
+
+<p>Ranges are useful for many things, including performing some operations for a
+particular number of iterations or iterating through the indices of a list.</p>
+
+<p>There are also some built-in functions that take in iterables and return useful
+results:</p>
+
+<ul>
+  <li><code>map(f, iterable)</code> - Creates an iterator over <code>f(x)</code> for <code>x</code> in <code>iterable</code>. In some cases, computing a list of the values in this iterable will give us the same result as
+  [<code>func(x)</code> for <code>x</code> in <code>iterable</code>]. However, it's important to keep in mind that iterators can potentially have infinite values because they are evaluated lazily, while lists cannot have infinite elements.</li>
+  <li><code>filter(f, iterable)</code> - Creates an iterator over <code>x</code> for each <code>x</code> in <code>iterable</code>
+  if <code>f(x)</code></li>
+  <li><code>zip(iterables*)</code> - Creates an iterator over co-indexed tuples with elements from each of the <code>iterables</code></li>
+  <li><code>reversed(iterable)</code> - Creates an iterator over all the elements in the input
+  iterable in reverse order</li>
+  <li><code>list(iterable)</code> - Creates a list containing all the elements in the input <code>iterable</code></li>
+  <li><code>tuple(iterable)</code> - Creates a tuple containing all the elements in the input <code>iterable</code></li>
+  <li><code>sorted(iterable)</code> - Creates a sorted list containing all the elements in the
+  input <code>iterable</code></li>
+  <li><code>reduce(f, iterable)</code> - Must be imported with <code>functools</code>. Apply function of two arguments <code>f</code> cumulatively to the items of <code>iterable</code>, from left to right, so as to reduce the sequence to a single value.</li>
+</ul>
+
+<!--
+How does <code>iter</code> work? It just calls the <code>__iter__</code> magic method on its argument,
+so <code>iter(something_iterable)</code> is equivalent to <code>something_iterable.__iter__()</code>.
+So, any object is iterable if it implements this magic method, and this method
+must return an iterator.
+
+How does <code>next</code> work? It just calls the <code>__next__</code> magic method on its argument,
+so <code>next(the_iterator)</code> is equivalent to <code>the_iterator.__next__()</code>. So, to
+implement the iterator protocol, we must implement this method. This method
+eithers returns the next element in our iteration (so it's usually non-pure!),
+or raises <code>StopIteration</code> when there are no elements left.-->
+
+<!--
+Here is a table summarizing the required methods on iterables and iterators.
+Python also has more
+<a href="https://docs.python.org/3/library/stdtypes.html#typeiter">documentation</a> about
+<a href="https://docs.python.org/3/glossary.html#term-iterable">iterable</a> and
+<a href="https://docs.python.org/3/glossary.html#term-iterator">iterator</a> types.
+
+<div class = "table-responsive">
+  <table class='table table-bordered'>
+    <tr>
+      <th>Iterable</th>
+      <th>Iterator</th>
+    </tr>
+    <tr>
+      <td><code>__iter__</code>: returns an iterator</td>
+      <td><code>__iter__</code>: returns an iterator, which is generally itself</td>
+    <tr>
+      <td><code>__next__</code>: (optional) need not be defined </td>
+      <td><code>__next__</code>: returns the next element, or raises
+      <code>StopIteration</code> if no more values left to produce</td>
+    </tr>
+  </table>
+</div>
+
+-->
+
+<!--
+Normally, when implementing a protocol, we create objects that are *both*
+iterable and an iterator, so it will have both the <code>__iter__</code> and <code>__next__</code>
+methods implemented. This is more convenient than creating two separate objects,
+so it is good to do this whenever possible. Here is an example of a class
+definition for an object that implements both the iterable and iterator
+interfaces:
+
+<pre><code>class Skipper:
+    def __init__(self, seq):
+        self.seq = seq
+        self.step = 1
+        self.current = 0
+
+    def __next__(self):
+        if self.current &gt;= len(self.seq):
+            raise StopIteration
+        val = self.seq[self.current]
+        self.current += self.step
+        self.step += 1
+        return val
+
+    def __iter__(self):
+        return self</code></pre>
+
+Let's go ahead and try out our new toy.
+
+<pre><code>&gt;&gt;&gt; for num in Skipper([3, 4, 5, 6, 7, 8, 9, 10]):
+...     print(num)
+3
+4
+6
+9</code></pre>
+
+That is, we skip through the elements of some sequence in ever-larger steps.
+-->
+
+<!--
+We can also use <code>Skipper</code> to create a new kind of iterable list:
+
+<pre><code>class SkippingList(list):
+
+    def __iter__(self):
+        return Skipper(self)</code></pre>
+
+and now we can write:
+
+<pre><code>&gt;&gt;&gt; aList = SkippingList([3, 4, 5, 6, 7, 8, 9, 10])
+&gt;&gt;&gt; for num in aList:
+...     print(num)
+3
+4
+6
+9</code></pre>
+
+-->
+</div>
+<br>
+
+<br>
+
+        <button id="toggle-2" class="btn btn-outline btn-lg alwaystoggle toggle">
+        Generators<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+
+<h2 id="generators">Generators</h2>
+
+
+<p>We can create our own custom iterators by writing a <em>generator function</em>, which
+returns a special type of iterator called a <strong>generator</strong>.  Generator functions
+have <code>yield</code> statements within the body of the function instead of <code>return</code>
+statements.  Calling a generator function will return a generator object and
+will <em>not</em> execute the body of the function.</p>
+
+<p>For example, let's consider the following generator function:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">countdown</span><span class="hljs-params">(n)</span>:</span>
+    print(<span class="hljs-string">"Beginning countdown!"</span>)
+    <span class="hljs-keyword">while</span> n &gt;= <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">yield</span> n
+        n -= <span class="hljs-number">1</span>
+    print(<span class="hljs-string">"Blastoff!"</span>)</code></pre>
+
+<p>Calling <code>countdown(k)</code> will return a generator object that counts down from <code>k</code>
+to 0.  Since generators are iterators, we can call <code>iter</code> on the resulting
+object, which will simply return the same object.  Note that the body is not
+executed at this point; nothing is printed and no numbers are outputted.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>c = countdown(<span class="hljs-number">5</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>c
+&lt;generator object countdown ...&gt;
+<span class="hljs-meta">&gt;&gt;&gt; </span>c <span class="hljs-keyword">is</span> iter(c)
+<span class="hljs-literal">True</span></code></pre>
+
+<p>So how is the counting done? Again, since generators are iterators, we call
+<code>next</code> on them to get the next element!  The first time <code>next</code> is called,
+execution begins at the first line of the function body and continues until the
+<code>yield</code> statement is reached. The result of evaluating the expression in the
+<code>yield</code> statement is returned.  The following interactive session continues
+from the one above.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>next(c)
+Beginning countdown!
+<span class="hljs-number">5</span></code></pre>
+
+<p>Unlike functions we've seen before in this course, generator functions can
+remember their state. On any consecutive calls to <code>next</code>, execution picks up
+from the line after the <code>yield</code> statement that was previously executed. Like
+the first call to <code>next</code>, execution will continue until the next <code>yield</code>
+statement is reached. Note that because of this, <code>Beginning countdown!</code> doesn't
+get printed again.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>next(c)
+<span class="hljs-number">4</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(c)
+<span class="hljs-number">3</span></code></pre>
+
+<p>The next 3 calls to <code>next</code> will continue to yield consecutive descending
+integers until 0.  On the following call, a <code>StopIteration</code> error will be
+raised because there are no more values to yield (i.e. the end of the function
+body was reached before hitting a <code>yield</code> statement).</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>next(c)
+<span class="hljs-number">2</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(c)
+<span class="hljs-number">1</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(c)
+<span class="hljs-number">0</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(c)
+Blastoff!
+StopIteration</code></pre>
+
+<p>Separate calls to <code>countdown</code> will create distinct generator objects with their
+own state. Usually, generators shouldn't restart. If you'd like to reset the
+sequence, create another generator object by calling the generator function
+again.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>c1, c2 = countdown(<span class="hljs-number">5</span>), countdown(<span class="hljs-number">5</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>c1 <span class="hljs-keyword">is</span> c2
+<span class="hljs-literal">False</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(c1)
+<span class="hljs-number">5</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(c2)
+<span class="hljs-number">5</span></code></pre>
+
+<p>Here is a summary of the above:</p>
+
+<ul>
+  <li>A <em>generator function</em> has a <code>yield</code> statement and returns a <em>generator object</em>.</li>
+  <li>Calling the <code>iter</code> function on a generator object returns the same object
+  without modifying its current state.</li>
+  <li>The body of a generator function is not evaluated until <code>next</code> is called on
+  a resulting generator object. Calling the <code>next</code> function on a generator
+  object computes and returns the next object in its sequence. If the sequence
+  is exhausted, <code>StopIteration</code> is raised.</li>
+  <li><p>A generator "remembers" its state for the next <code>next</code> call. Therefore,</p>
+
+  <ul>
+    <li><p>the first <code>next</code> call works like this:</p>
+
+    <ol>
+      <li>Enter the function and run until the line with <code>yield</code>.</li>
+      <li>Return the value in the <code>yield</code> statement, but remember the state of the
+      function for future <code>next</code> calls.</li>
+    </ol></li>
+    <li><p>And subsequent <code>next</code> calls work like this:</p>
+
+    <ol>
+      <li>Re-enter the function, start at <strong>the line after the <code>yield</code> statement that
+      was previously executed</strong>, and run until the next <code>yield</code> statement.</li>
+      <li>Return the value in the <code>yield</code> statement, but remember the state of the
+      function for future <code>next</code> calls.</li>
+    </ol></li>
+  </ul></li>
+  <li>Calling a generator function returns a brand new generator object (like
+  calling <code>iter</code> on an iterable object).</li>
+  <li>A generator should not restart unless it's defined that way. To start over
+  from the first element in a generator, just call the generator function again
+  to create a new generator.</li>
+</ul>
+
+<p>Another useful tool for generators is the <code>yield from</code> statement. <code>yield from</code>
+will yield all values from an iterator or iterable.</p>
+
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">gen_list</span><span class="hljs-params">(lst)</span>:</span>
+<span class="hljs-meta">... </span>    <span class="hljs-keyword">yield</span> <span class="hljs-keyword">from</span> lst
+...
+<span class="hljs-meta">&gt;&gt;&gt; </span>g = gen_list([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(g)
+<span class="hljs-number">1</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(g)
+<span class="hljs-number">2</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(g)
+<span class="hljs-number">3</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(g)
+<span class="hljs-number">4</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>next(g)
+StopIteration</code></pre>
+
+</div>
+<br>
+
+
+<h1 id="required-questions">Required Questions</h1>
+
+
+
+<h2 id="iterators-amp-generators">Iterators &amp; Generators</h2>
+
+
+
+<h3 id="q1-repeated">Q1: Repeated</h3>
+
+
+<p>Implement <code>repeated</code>,
+which takes in an iterator <code>t</code> and returns the first value in <code>t</code>
+that appears <code>k</code> times in a row.</p>
+
+<blockquote><p><strong>Note:</strong>
+You can assume that the iterator <code>t</code> will have a value
+that appears at least <code>k</code> times in a row.
+If you are receiving a <code>StopIteration</code>,
+your <code>repeated</code> function is likely not identifying the correct value.</p></blockquote>
+
+<p>Your implementation should iterate through the items in a way such that
+if the same iterator is passed into <code>repeated</code> twice,
+it should continue in the second call at the point it left off in the first.
+An example of this behavior is in the doctests.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">repeated</span><span class="hljs-params">(t, k)</span>:</span>
+    <span class="hljs-string">"""Return the first value in iterator T that appears K times in a row.
+    Iterate through the items such that if the same iterator is passed into
+    the function twice, it continues in the second call at the point it left
+    off in the first.
+
+    &gt;&gt;&gt; s = iter([10, 9, 10, 9, 9, 10, 8, 8, 8, 7])
+    &gt;&gt;&gt; repeated(s, 2)
+    9
+    &gt;&gt;&gt; s2 = iter([10, 9, 10, 9, 9, 10, 8, 8, 8, 7])
+    &gt;&gt;&gt; repeated(s2, 3)
+    8
+    &gt;&gt;&gt; s = iter([3, 2, 2, 2, 1, 2, 1, 4, 4, 5, 5, 5])
+    &gt;&gt;&gt; repeated(s, 3)
+    2
+    &gt;&gt;&gt; repeated(s, 3)
+    5
+    &gt;&gt;&gt; s2 = iter([4, 1, 6, 6, 7, 7, 8, 8, 2, 2, 2, 5])
+    &gt;&gt;&gt; repeated(s2, 3)
+    2
+    """</span>
+    <span class="hljs-keyword">assert</span> k &gt; <span class="hljs-number">1</span>
+<div class="sol-highlight">    count = <span class="hljs-number">1</span>
+    last_item = <span class="hljs-literal">None</span>
+    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
+        item = next(t)
+        <span class="hljs-keyword">if</span> item == last_item:
+            count += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">else</span>:
+            last_item = item
+            count = <span class="hljs-number">1</span>
+        <span class="hljs-keyword">if</span> count == k:
+            <span class="hljs-keyword">return</span> item</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q repeated</code><button id="copy-code-python3ok-qrepeated" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qrepeated").onclick = () => copyCode('python3 ok -q repeated', "copy-code-python3ok-qrepeated");
+        </script>
+        <br>
+
+
+<h3 id="q2-merge">Q2: Merge</h3>
+
+
+<p>Implement <code>merge(incr_a, incr_b)</code>, which takes two iterables <code>incr_a</code> and <code>incr_b</code> whose
+elements are ordered. <code>merge</code> yields elements from <code>incr_a</code> and <code>incr_b</code> in sorted
+order, eliminating repetition.  You may assume <code>incr_a</code> and <code>incr_b</code> themselves do not
+contain repeats, and that none of the elements of either are <code>None</code>.
+You may <strong>not</strong> assume that the iterables are finite; either may produce an infinite
+stream of results.</p>
+
+<p>You will probably find it helpful to use the two-argument version of the built-in
+<code>next</code> function: <code>next(incr, v)</code> is the same as <code>next(incr)</code>, except that instead of
+raising <code>StopIteration</code> when <code>incr</code> runs out of elements, it returns <code>v</code>.</p>
+
+<p>See the doctest for examples of behavior.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">merge</span><span class="hljs-params">(incr_a, incr_b)</span>:</span>
+    <span class="hljs-string">"""Yield the elements of strictly increasing iterables incr_a and incr_b, removing
+    repeats. Assume that incr_a and incr_b have no repeats. incr_a or incr_b may or may not
+    be infinite sequences.
+
+    &gt;&gt;&gt; m = merge([0, 2, 4, 6, 8, 10, 12, 14], [0, 3, 6, 9, 12, 15])
+    &gt;&gt;&gt; type(m)
+    &lt;class 'generator'&gt;
+    &gt;&gt;&gt; list(m)
+    [0, 2, 3, 4, 6, 8, 9, 10, 12, 14, 15]
+    &gt;&gt;&gt; def big(n):
+    ...    k = 0
+    ...    while True: yield k; k += n
+    &gt;&gt;&gt; m = merge(big(2), big(3))
+    &gt;&gt;&gt; [next(m) for _ in range(11)]
+    [0, 2, 3, 4, 6, 8, 9, 10, 12, 14, 15]
+    """</span>
+    iter_a, iter_b = iter(incr_a), iter(incr_b)
+    next_a, next_b = next(iter_a, <span class="hljs-literal">None</span>), next(iter_b, <span class="hljs-literal">None</span>)
+<div class="sol-highlight">    <span class="hljs-keyword">while</span> next_a <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> next_b <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+        <span class="hljs-keyword">if</span> next_a <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> next_b <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> next_b &lt; next_a:
+            <span class="hljs-keyword">yield</span> next_b
+            next_b = next(iter_b, <span class="hljs-literal">None</span>)
+        <span class="hljs-keyword">elif</span> next_b <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> next_a <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> next_a &lt; next_b:
+            <span class="hljs-keyword">yield</span> next_a
+            next_a = next(iter_a, <span class="hljs-literal">None</span>)
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-keyword">yield</span> next_a
+            next_a, next_b = next(iter_a, <span class="hljs-literal">None</span>), next(iter_b, <span class="hljs-literal">None</span>)</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q merge</code><button id="copy-code-python3ok-qmerge" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qmerge").onclick = () => copyCode('python3 ok -q merge', "copy-code-python3ok-qmerge");
+        </script>
+        <br>
+
+
+<h2 id="linked-lists-amp-trees">Linked Lists &amp; Trees</h2>
+
+
+
+<h3 id="q3-deep-linked-list-length">Q3: Deep Linked List Length</h3>
+
+
+<p>A linked list that contains one or more linked lists as elements is called a
+<em>deep</em> linked list. Write a function <code>deep_len</code> that takes in a (possibly deep)
+linked list and returns the <em>deep length</em> of that linked list. The deep length of
+a linked list is the total number of non-link elements in the list, as well as the
+total number of elements contained in all contained lists. See the function's doctests
+for examples of the deep length of linked lists.</p>
+
+<blockquote><p><strong>Hint:</strong> Use <code>isinstance</code> to check if something is an instance of an object.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">deep_len</span><span class="hljs-params">(lnk)</span>:</span>
+    <span class="hljs-string">""" Returns the deep length of a possibly deep linked list.
+
+    &gt;&gt;&gt; deep_len(Link(1, Link(2, Link(3))))
+    3
+    &gt;&gt;&gt; deep_len(Link(Link(1, Link(2)), Link(3, Link(4))))
+    4
+    &gt;&gt;&gt; levels = Link(Link(Link(1, Link(2)), \
+            Link(3)), Link(Link(4), Link(5)))
+    &gt;&gt;&gt; print(levels)
+    &lt;&lt;&lt;1 2&gt; 3&gt; &lt;4&gt; 5&gt;
+    &gt;&gt;&gt; deep_len(levels)
+    5
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">if</span> lnk <span class="hljs-keyword">is</span> Link.empty:</div>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+<div class="sol-highlight">    <span class="hljs-keyword">elif</span> <span class="hljs-keyword">not</span> isinstance(lnk, Link):</div>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+    <span class="hljs-keyword">else</span>:
+<div class="sol-highlight">        <span class="hljs-keyword">return</span> deep_len(lnk.first) + deep_len(lnk.rest)</div></code></pre>
+
+</solution>
+
+<div class="sol-highlight">
+	Video Walkthrough: <p><a href="https://youtu.be/pbMeCRUU7yw?t=2m28s"> YouTube link </a></p>
+</div>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q deep_len</code><button id="copy-code-python3ok-qdeep_len" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qdeep_len").onclick = () => copyCode('python3 ok -q deep_len', "copy-code-python3ok-qdeep_len");
+        </script>
+        <br>
+
+
+<h3 id="q4-add-leaves">Q4: Add Leaves</h3>
+
+
+<p>Implement <code>add_d_leaves</code>, a function that takes in a <code>Tree</code> instance <code>t</code> and a number <code>v</code>.</p>
+
+<p>We define the depth of a node in <code>t</code> to be the number of edges from the root to that node. The depth of root is therefore 0.</p>
+
+<p>For each node in the tree, you should add <code>d</code> leaves to it, where <code>d</code> is the depth of the node. Every added leaf should have a label of <code>v</code>. If the node at this depth has existing branches, you should add these leaves to the end of that list of branches.</p>
+
+<p>For example, you should be adding 1 leaf with label <code>v</code> to each node at depth 1, 2 leaves to each node at depth 2, and so on.</p>
+
+<p>Here is an example of a tree <code>t</code>(shown on the left) and the result after <code>add_d_leaves</code> is applied with <code>v</code> as 5.
+<img class="img-responsive center-block" src="./Lab 8 Solutions _ CS 61A Spring 2022_files/add_leaves.png" alt="add" width="" height=""></p>
+
+<blockquote><p>Try drawing out the second doctest to visualize how the function is mutating <code>t3</code>.</p></blockquote>
+
+<!-- hack for separate blockquotes -->
+
+<blockquote><p><strong>Hint:</strong> Use a helper function to keep track of the depth!</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_d_leaves</span><span class="hljs-params">(t, v)</span>:</span>
+    <span class="hljs-string">"""Add d leaves containing v to each node at every depth d.
+
+    &gt;&gt;&gt; t_one_to_four = Tree(1, [Tree(2), Tree(3, [Tree(4)])])
+    &gt;&gt;&gt; print(t_one_to_four)
+    1
+      2
+      3
+        4
+    &gt;&gt;&gt; add_d_leaves(t_one_to_four, 5)
+    &gt;&gt;&gt; print(t_one_to_four)
+    1
+      2
+        5
+      3
+        4
+          5
+          5
+        5
+
+    &gt;&gt;&gt; t1 = Tree(1, [Tree(3)])
+    &gt;&gt;&gt; add_d_leaves(t1, 4)
+    &gt;&gt;&gt; t1
+    Tree(1, [Tree(3, [Tree(4)])])
+    &gt;&gt;&gt; t2 = Tree(2, [Tree(5), Tree(6)])
+    &gt;&gt;&gt; t3 = Tree(3, [t1, Tree(0), t2])
+    &gt;&gt;&gt; print(t3)
+    3
+      1
+        3
+          4
+      0
+      2
+        5
+        6
+    &gt;&gt;&gt; add_d_leaves(t3, 10)
+    &gt;&gt;&gt; print(t3)
+    3
+      1
+        3
+          4
+            10
+            10
+            10
+          10
+          10
+        10
+      0
+        10
+      2
+        5
+          10
+          10
+        6
+          10
+          10
+        10
+    """</span>
+<div class="sol-highlight">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_leaves</span><span class="hljs-params">(t, d)</span>:</span>
+        <span class="hljs-keyword">for</span> b <span class="hljs-keyword">in</span> t.branches:
+            add_leaves(b, d + <span class="hljs-number">1</span>)
+        t.branches.extend([Tree(v) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(d)])
+    add_leaves(t, <span class="hljs-number">0</span>)</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q add_d_leaves</code><button id="copy-code-python3ok-qadd_d_leaves" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qadd_d_leaves").onclick = () => copyCode('python3 ok -q add_d_leaves', "copy-code-python3ok-qadd_d_leaves");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+A first thought is to recursively call <code>add_d_leaves</code> on each branch to add the
+leaves to the branches. However, notice that each recursive call would need to
+know what the current depth is in order to add that many leaves. We could try
+initializing a variable within the body of the function, but by now we know
+that in order to keep track of changing values across recursive calls we should
+use a helper function!
+
+<p>The helper function should take in a tree and a depth value, and we will define
+it as a function that adds <code>d</code> leaves to the branches of the root node, <code>d + 1</code>
+leaves to the branches of each of the root node's branches, and so on:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_leaves</span><span class="hljs-params">(t, d)</span>:</span>
+    <span class="hljs-string">"""Adds a number of leaves to each node in t equivalent to the depth of
+    the node, assuming that the root node is at depth d, the children of
+    the root node are at depth d + 1, and so on."""</span>
+    ...</code></pre>
+
+<p>We don't need a parameter for <code>v</code> since that value won't change and we can
+access it from the parent frame. With this function defined as such, we can
+call <code>add_leaves</code> with arguments <code>t</code> and 0 to add leaves starting at depth 0.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_d_leaves</span><span class="hljs-params">(t, v)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_leaves</span><span class="hljs-params">(t, d)</span>:</span>
+        <span class="hljs-string">"""Adds a number of leaves to each node in t equivalent to the depth of
+        the node, assuming that the root node is at depth d, the children of
+        the root node are at depth d + 1, and so on."""</span>
+        ...
+    add_leaves(t, <span class="hljs-number">0</span>)</code></pre>
+
+<p>Inside the helper function, we can now call it recursively on each branch.
+Each node's branch is one depth level greater than the node itself, so we
+should update <code>d</code> to <code>d + 1</code>:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_leaves</span><span class="hljs-params">(t, d)</span>:</span>
+    <span class="hljs-keyword">for</span> b <span class="hljs-keyword">in</span> t.branches:
+        add_leaves(b, d + <span class="hljs-number">1</span>)
+    ...</code></pre>
+
+<p>Now that we've made these recursive calls, let's take a step back and look
+at our progress. Taking the leap of faith, we know that each recursive call
+should've successfully added the correct number of leaves at each node in
+each branch. That means that the only step left is to add the correct number
+of leaves to the current node!</p>
+
+<p>The parameter <code>d</code> tells us how many leaves to add at this node. Since we are
+mutating <code>t</code> to add these leaves, we need to mutate the list of <code>t</code>'s branches.
+We know a few different ways to mutatively add elements to a list:<code>insert</code>,
+<code>append</code>, and <code>extend</code>. Which one makes most sense to use here? Well, we know that
+we have to add <code>d</code> elements to the end of <code>t.branches</code>. Index doesn't matter
+so we can rule out <code>insert</code>. <code>append</code> is good for adding a single element, while
+<code>extend</code> is useful for adding multiple elements contained in a list, so let's
+use <code>extend</code>!</p>
+
+<p>The input to <code>extend</code> should be a list, so how do we create a list with the
+leaves that we need? The most concise way is with a list comprehension. To
+create each leaf, we call <code>Tree(v)</code>:</p>
+
+<pre><code class="hljs scheme">[<span class="hljs-name">Tree</span>(<span class="hljs-name">v</span>) for _ in range(<span class="hljs-name">d</span>)]</code></pre>
+
+<p>Now, we just have to extend <code>t.branches</code> by this list:</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_leaves</span><span class="hljs-params">(t, d)</span>:</span>
+    <span class="hljs-keyword">for</span> b <span class="hljs-keyword">in</span> t.branches:
+        add_leaves(b, d + <span class="hljs-number">1</span>)
+    t.branches.extend([Tree(v) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(d)])</code></pre>
+
+<p>Do we need an explicitly base case? Let's take a look at what happens when <code>t</code>
+is a leaf. In that case, <code>t.branches</code> would be an empty list, so we would not
+enter the <code>for</code> loop. Then, the function will extend <code>t.branches</code>, which is an
+empty list, by a list containing the new leaves. This is exactly the desired
+result, so no base case is needed!
+</p></div><p></p>
+
+
+<h2 id="efficiency">Efficiency</h2>
+
+
+
+<h3 id="q5-efficiency-practice">Q5: Efficiency Practice</h3>
+
+
+<p>Choose the term that fills in the blank for the functions defined below:
+<code>&lt;function&gt;</code> runs in <code>____</code> time in the length of its input.</p>
+
+<ul>
+  <li>Constant</li>
+  <li>Logarithmic</li>
+  <li>Linear</li>
+  <li>Quadratic</li>
+  <li>Exponential</li>
+  <li>None of these</li>
+</ul>
+
+<p>Assume that <code>len</code> runs in constant time
+and <code>all</code> runs in linear time in the length of its input.
+Selecting an element of a list by its index requires constant time.
+Constructing a range requires constant time.</p>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">count_partitions</span><span class="hljs-params">(n, m)</span>:</span>
+    <span class="hljs-string">"""Counts the number of partitions of a positive integer n, 
+    using parts up to size m."""</span>
+    <span class="hljs-keyword">if</span> n == <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+    <span class="hljs-keyword">elif</span> n &lt; <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+    <span class="hljs-keyword">elif</span> m == <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+    <span class="hljs-keyword">else</span>:
+        with_m = count_partitions(n-m, m)
+        without_m = count_partitions(n, m<span class="hljs-number">-1</span>)
+        <span class="hljs-keyword">return</span> with_m + without_m
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">is_palindrome</span><span class="hljs-params">(s)</span>:</span>
+    <span class="hljs-string">"""Return whether a list of numbers s is a palindrome."""</span>
+    <span class="hljs-keyword">return</span> all([s[i] == s[len(s) - i - <span class="hljs-number">1</span>] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(s))])
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">binary_search</span><span class="hljs-params">(lst, n)</span>:</span>
+    <span class="hljs-string">"""Takes in a sorted list lst and returns the index where integer n
+    is contained in lst. Returns -1 if n does not exist in lst."""</span>
+    low = <span class="hljs-number">0</span>
+    high = len(lst)
+    <span class="hljs-keyword">while</span> low &lt;= high:
+        middle = (low + high) // <span class="hljs-number">2</span>
+        <span class="hljs-keyword">if</span> lst[middle] == n:
+            <span class="hljs-keyword">return</span> middle
+        <span class="hljs-keyword">elif</span> n &lt; lst[middle]:
+            high = middle - <span class="hljs-number">1</span>
+        <span class="hljs-keyword">else</span>:
+            low = middle + <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span></code></pre>
+
+
+
+<blockquote><p>The <code>is_palindrome</code> question was reformatted from question 6(d) on fall 2019's
+<a href="https://cs61a.org/exam/fa19/final/61a-fa19-final.pdf#page=7">final</a>.</p></blockquote>
+
+<p>Use Ok to test your understanding:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q efficiency_practice -u</code><button id="copy-code-python3ok-qefficiency_practice-u" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qefficiency_practice-u").onclick = () => copyCode('python3 ok -q efficiency_practice -u', "copy-code-python3ok-qefficiency_practice-u");
+        </script>
+        <br>
+
+<div class="sol-highlight">
+
+<blockquote><p><strong>count_partitions: exponential.</strong></p></blockquote>
+
+<p><code>count_partitions</code> takes two inputs <code>n</code> and <code>m</code> so the runtime depends on both inputs. However, when determining what the order of growth is, we're mostly concerned with what happens to the runtime for larger values of <code>n</code> and <code>m</code>.</p>
+
+<p>The conditional statements such as <code>if n == 0</code> are logical comparisons that take constant time. Therefore, what affects our runtime the most are the number of recursive calls we to <code>count_partitions</code>. For every function call to <code>count_partitions</code> we make two more recursive calls; one that uses <code>m</code> as a partition, and one that does not.</p>
+
+<p>Visualizing the tree of recursive calls for this function, we'll see that the number of function calls at each level doubles. Thus, the runtime for <code>count_partitions</code> is exponential.</p>
+
+<blockquote><p><strong>is_palindrome: linear.</strong></p></blockquote>
+
+<p>We're interested in seeing how the function runs in relation to
+the length of its input, which is <code>len(s)</code>.</p>
+
+<p>In <code>is_palindrome</code>, it takes constant time to calculate <code>len(s)</code>
+and then to construct a range from 0 to <code>len(s)</code> (exclusive).</p>
+
+<p>For each element in this range, we will select two elements from <code>s</code>
+(<code>s[i]</code> and <code>s[len(s)-i-1]</code>) and compare them, which takes some
+constant time for each element.
+Once we've done this for all the elements,
+we will have built up the input list to <code>all</code> in linear time in relation
+to the length of <code>is_palindrome</code>'s input.</p>
+
+<p>We assume that <code>all</code> runs in linear time in the length of <em>its</em> input,
+which is the length of the list we've just built and the same as
+the length of <code>is_palindrome</code>'s input.</p>
+
+<p>Overall, <code>is_palindrome</code> will therefore take linear time
+in relation to the length of its input.</p>
+
+<blockquote><p><strong>binary_search: logarithmic.</strong></p></blockquote>
+
+<p>The <code>binary_search</code> algorithm's runtime is dependent on the length of <code>lst</code> because we are searching through it to find some integer <code>n</code>.</p>
+
+<p>Again, assuming <code>len(lst)</code> and logical comparisons take constant time to calculate, we look at how many iterations of the while loop we might go through before completing the function call. First we check the element at the middle of our sorted list. If <code>lst[middle]</code> is not equal to <code>n</code>, the function determines whether <code>lst[middle]</code> is less than or greater than <code>n</code> and narrows our search down to either the lower half or upper half of <code>lst</code>, respectively.</p>
+
+<p>For every iteration of the while loop, <code>binary_search</code> cuts down the number of elements in the input <code>lst</code> we are searching through by half. Thus, the maximum number of iterations for the while loop before returning an index or <code>-1</code>  is log(len(lst)) in base 2. <code>binary_search</code> takes logarithmic time in relation to the length of its input <code>lst</code>.</p>
+
+</div>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+
+<h1 id="extra-practice">Extra Practice</h1>
+
+
+
+<h2 id="recursion-and-tree-recursion">Recursion and Tree Recursion</h2>
+
+
+
+<h3 id="q6-subsequences">Q6: Subsequences</h3>
+
+
+<p>A subsequence of a sequence <code>S</code> is a subset of elements from <code>S</code>, in the same
+order they appear in <code>S</code>. Consider the list <code>[1, 2, 3]</code>. Here are a few of it's
+subsequences <code>[]</code>, <code>[1, 3]</code>, <code>[2]</code>, and <code>[1, 2, 3]</code>.</p>
+
+<p>Write a function that takes in a list and returns all possible subsequences of that list.
+The subsequences should be returned as a list of lists, where each nested list is a
+subsequence of the original input.</p>
+
+<p>In order to accomplish this, you might first want to write a function <code>insert_into_all</code>
+that takes an item and a list of lists, adds the item to the beginning of each nested list,
+and returns the resulting list.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">insert_into_all</span><span class="hljs-params">(item, nested_list)</span>:</span>
+    <span class="hljs-string">"""Return a new list consisting of all the lists in nested_list,
+    but with item added to the front of each. You can assume that
+     nested_list is a list of lists.
+
+    &gt;&gt;&gt; nl = [[], [1, 2], [3]]
+    &gt;&gt;&gt; insert_into_all(0, nl)
+    [[0], [0, 1, 2], [0, 3]]
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">return</span> [[item] + lst <span class="hljs-keyword">for</span> lst <span class="hljs-keyword">in</span> nested_list]</div>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">subseqs</span><span class="hljs-params">(s)</span>:</span>
+    <span class="hljs-string">"""Return a nested list (a list of lists) of all subsequences of S.
+    The subsequences can appear in any order. You can assume S is a list.
+
+    &gt;&gt;&gt; seqs = subseqs([1, 2, 3])
+    &gt;&gt;&gt; sorted(seqs)
+    [[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]
+    &gt;&gt;&gt; subseqs([])
+    [[]]
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> s:</div><div class="sol-highlight">        <span class="hljs-keyword">return</span> [[]]</div>    <span class="hljs-keyword">else</span>:
+<div class="sol-highlight">        subset = subseqs(s[<span class="hljs-number">1</span>:])</div><div class="sol-highlight">        <span class="hljs-keyword">return</span> insert_into_all(s[<span class="hljs-number">0</span>], subset) + subset</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q subseqs</code><button id="copy-code-python3ok-qsubseqs" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qsubseqs").onclick = () => copyCode('python3 ok -q subseqs', "copy-code-python3ok-qsubseqs");
+        </script>
+        <br>
+
+
+<h3 id="q7-non-decreasing-subsequences">Q7: Non-Decreasing Subsequences</h3>
+
+
+<p>Just like the last question, we want to write a function that takes a list and
+returns a list of lists, where each individual list is a subsequence of the
+original input.</p>
+
+<p>This time we have another condition: we only want the subsequences for which
+consecutive elements are <em>nondecreasing</em>.  For example, <code>[1, 3, 2]</code> is a
+subsequence of <code>[1, 3, 2, 4]</code>, but since 2 &lt; 3, this subsequence would <em>not</em>
+be included in our result.</p>
+
+<p><strong>Fill in the blanks</strong> to complete the implementation of the <code>non_decrease_subseqs</code>
+function. You may assume that the input list contains no negative elements.</p>
+
+<p>You may use the provided helper function <code>insert_into_all</code>, which takes in an
+<code>item</code> and a list of lists and inserts the <code>item</code> to the front of each list.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">non_decrease_subseqs</span><span class="hljs-params">(s)</span>:</span>
+    <span class="hljs-string">"""Assuming that S is a list, return a nested list of all subsequences
+    of S (a list of lists) for which the elements of the subsequence
+    are strictly nondecreasing. The subsequences can appear in any order.
+
+    &gt;&gt;&gt; seqs = non_decrease_subseqs([1, 3, 2])
+    &gt;&gt;&gt; sorted(seqs)
+    [[], [1], [1, 2], [1, 3], [2], [3]]
+    &gt;&gt;&gt; non_decrease_subseqs([])
+    [[]]
+    &gt;&gt;&gt; seqs2 = non_decrease_subseqs([1, 1, 2])
+    &gt;&gt;&gt; sorted(seqs2)
+    [[], [1], [1], [1, 1], [1, 1, 2], [1, 2], [1, 2], [2]]
+    """</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">subseq_helper</span><span class="hljs-params">(s, prev)</span>:</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> s:
+<div class="sol-highlight">            <span class="hljs-keyword">return</span> [[]]</div>        <span class="hljs-keyword">elif</span> s[<span class="hljs-number">0</span>] &lt; prev:
+<div class="sol-highlight">            <span class="hljs-keyword">return</span> subseq_helper(s[<span class="hljs-number">1</span>:], prev)</div>        <span class="hljs-keyword">else</span>:
+<div class="sol-highlight">            a = subseq_helper(s[<span class="hljs-number">1</span>:], s[<span class="hljs-number">0</span>])</div><div class="sol-highlight">            b = subseq_helper(s[<span class="hljs-number">1</span>:], prev)</div><div class="sol-highlight">            <span class="hljs-keyword">return</span> insert_into_all(s[<span class="hljs-number">0</span>], a) + b</div><div class="sol-highlight">    <span class="hljs-keyword">return</span> subseq_helper(s, <span class="hljs-number">0</span>)</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q non_decrease_subseqs</code><button id="copy-code-python3ok-qnon_decrease_subseqs" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qnon_decrease_subseqs").onclick = () => copyCode('python3 ok -q non_decrease_subseqs', "copy-code-python3ok-qnon_decrease_subseqs");
+        </script>
+        <br>
+
+
+<h2 id="mutable-lists">Mutable Lists</h2>
+
+
+
+<h3 id="q8-shuffle">Q8: Shuffle</h3>
+
+
+<p>Define a function <code>shuffle</code> that takes a sequence with an even number of
+elements (cards) and creates a new list that interleaves the elements
+of the first half with the elements of the second half.</p>
+
+<p>To interleave two sequences <code>s0</code> and <code>s1</code> is to create a new sequence such that the new sequence contains (in this order) the first element of <code>s0</code>,  the first element of <code>s1</code>, the second element of <code>s0</code>, the second element of <code>s1</code>, and so on. If the two lists are not the same length, then the leftover elements of the longer list should still appear at the end.</p>
+
+<blockquote><p><strong>Note:</strong>
+If you're running into an issue where the special
+heart / diamond / spades / clubs symbols are erroring in the doctests,
+feel free to copy paste the below doctests into your file
+as these don't use the special characters and should not give
+an "illegal multibyte sequence" error.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">card</span><span class="hljs-params">(n)</span>:</span>
+    <span class="hljs-string">"""Return the playing card numeral as a string for a positive n &lt;= 13."""</span>
+    <span class="hljs-keyword">assert</span> type(n) == int <span class="hljs-keyword">and</span> n &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> n &lt;= <span class="hljs-number">13</span>, <span class="hljs-string">"Bad card n"</span>
+    specials = {<span class="hljs-number">1</span>: <span class="hljs-string">'A'</span>, <span class="hljs-number">11</span>: <span class="hljs-string">'J'</span>, <span class="hljs-number">12</span>: <span class="hljs-string">'Q'</span>, <span class="hljs-number">13</span>: <span class="hljs-string">'K'</span>}
+    <span class="hljs-keyword">return</span> specials.get(n, str(n))
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">shuffle</span><span class="hljs-params">(cards)</span>:</span>
+    <span class="hljs-string">"""Return a shuffled list that interleaves the two halves of cards.
+
+    &gt;&gt;&gt; shuffle(range(6))
+    [0, 3, 1, 4, 2, 5]
+    &gt;&gt;&gt; suits = ['H', 'D', 'S', 'C']
+    &gt;&gt;&gt; cards = [card(n) + suit for n in range(1,14) for suit in suits]
+    &gt;&gt;&gt; cards[:12]
+    ['AH', 'AD', 'AS', 'AC', '2H', '2D', '2S', '2C', '3H', '3D', '3S', '3C']
+    &gt;&gt;&gt; cards[26:30]
+    ['7S', '7C', '8H', '8D']
+    &gt;&gt;&gt; shuffle(cards)[:12]
+    ['AH', '7S', 'AD', '7C', 'AS', '8H', 'AC', '8D', '2H', '8S', '2D', '8C']
+    &gt;&gt;&gt; shuffle(shuffle(cards))[:12]
+    ['AH', '4D', '7S', '10C', 'AD', '4S', '7C', 'JH', 'AS', '4C', '8H', 'JD']
+    &gt;&gt;&gt; cards[:12]  # Should not be changed
+    ['AH', 'AD', 'AS', 'AC', '2H', '2D', '2S', '2C', '3H', '3D', '3S', '3C']
+    """</span>
+    <span class="hljs-keyword">assert</span> len(cards) % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>, <span class="hljs-string">'len(cards) must be even'</span>
+<div class="sol-highlight">    half = len(cards) // <span class="hljs-number">2</span></div>    shuffled = []
+<div class="sol-highlight">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(half):</div><div class="sol-highlight">        shuffled.append(cards[i])</div><div class="sol-highlight">        shuffled.append(cards[half+i])</div>    <span class="hljs-keyword">return</span> shuffled</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q shuffle</code><button id="copy-code-python3ok-qshuffle" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qshuffle").onclick = () => copyCode('python3 ok -q shuffle', "copy-code-python3ok-qshuffle");
+        </script>
+        <br>
+
+
+<h2 id="generators-amp-iterators">Generators &amp; Iterators</h2>
+
+
+
+<h3 id="q9-pairs-generator">Q9: Pairs (generator)</h3>
+
+
+<p>Write a generator function <code>pairs</code> that takes a list and yields all the
+possible pairs of elements from that list.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pairs</span><span class="hljs-params">(lst)</span>:</span>
+    <span class="hljs-string">"""
+    &gt;&gt;&gt; type(pairs([3, 4, 5]))
+    &lt;class 'generator'&gt;
+    &gt;&gt;&gt; for x, y in pairs([3, 4, 5]):
+    ...     print(x, y)
+    ...
+    3 3
+    3 4
+    3 5
+    4 3
+    4 4
+    4 5
+    5 3
+    5 4
+    5 5
+    """</span>
+<div class="sol-highlight">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> lst:
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> lst:
+            <span class="hljs-keyword">yield</span> i, j</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q pairs</code><button id="copy-code-python3ok-qpairs" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qpairs").onclick = () => copyCode('python3 ok -q pairs', "copy-code-python3ok-qpairs");
+        </script>
+        <br>
+
+
+<h3 id="q10-pairs-iterator">Q10: Pairs (iterator)</h3>
+
+
+<blockquote><p><strong>Important note (March 14):</strong>
+This question is <strong>not</strong> in scope for this semester (Spring 2022),
+as it involves <code>__iter__</code> and <code>__next__</code>.</p></blockquote>
+
+<p>Now write an iterator that does the same thing. You are only allowed
+to use a linear amount of space - so computing a list of all of the
+possible pairs is not a valid answer. Notice how much harder it is -
+this is why generators are useful.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PairsIterator</span>:</span>
+    <span class="hljs-string">"""
+    &gt;&gt;&gt; for x, y in PairsIterator([3, 4, 5]):
+    ...     print(x, y)
+    ...
+    3 3
+    3 4
+    3 5
+    4 3
+    4 4
+    4 5
+    5 3
+    5 4
+    5 5
+    """</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, lst)</span>:</span>
+<div class="sol-highlight">        self.lst = lst
+        self.i = <span class="hljs-number">0</span>
+        self.j = <span class="hljs-number">0</span></div>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__next__</span><span class="hljs-params">(self)</span>:</span>
+<div class="sol-highlight">        <span class="hljs-keyword">if</span> self.i == len(self.lst):
+            <span class="hljs-keyword">raise</span> StopIteration
+        result = (self.lst[self.i], self.lst[self.j])
+        <span class="hljs-keyword">if</span> self.j == len(self.lst) - <span class="hljs-number">1</span>:
+            self.i += <span class="hljs-number">1</span>
+            self.j = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">else</span>:
+            self.j += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">return</span> result</div>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__iter__</span><span class="hljs-params">(self)</span>:</span>
+<div class="sol-highlight">        <span class="hljs-keyword">return</span> self</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q PairsIterator</code><button id="copy-code-python3ok-qPairsIterator" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qPairsIterator").onclick = () => copyCode('python3 ok -q PairsIterator', "copy-code-python3ok-qPairsIterator");
+        </script>
+        <br>
+
+
+<h2 id="trees">Trees</h2>
+
+
+
+<h3 id="q11-long-paths">Q11: Long Paths</h3>
+
+
+<p>Implement <code>long_paths</code>, which returns a list of all <em>paths</em> in a tree with
+length at least <code>n</code>. A path in a tree is a linked list of node values that
+starts with the root and ends at a leaf. Each subsequent element must be from a
+child of the previous value's node. The <em>length</em> of a path is the number of
+edges in the path (i.e. one less than the number of nodes in the path).
+Paths are listed in order from left to right. See the doctests for some
+examples.</p>
+
+<solution>
+
+<pre><code class="hljs sql">def long_paths(tree, n):
+    """Return a list of all paths in tree <span class="hljs-keyword">with</span> <span class="hljs-keyword">length</span> <span class="hljs-keyword">at</span> <span class="hljs-keyword">least</span> n.
+
+    &gt;&gt;&gt; t = Tree(<span class="hljs-number">3</span>, [Tree(<span class="hljs-number">4</span>), Tree(<span class="hljs-number">4</span>), Tree(<span class="hljs-number">5</span>)])
+    &gt;&gt;&gt; <span class="hljs-keyword">left</span> = Tree(<span class="hljs-number">1</span>, [Tree(<span class="hljs-number">2</span>), t])
+    &gt;&gt;&gt; <span class="hljs-keyword">mid</span> = Tree(<span class="hljs-number">6</span>, [Tree(<span class="hljs-number">7</span>, [Tree(<span class="hljs-number">8</span>)]), Tree(<span class="hljs-number">9</span>)])
+    &gt;&gt;&gt; <span class="hljs-keyword">right</span> = Tree(<span class="hljs-number">11</span>, [Tree(<span class="hljs-number">12</span>, [Tree(<span class="hljs-number">13</span>, [Tree(<span class="hljs-number">14</span>)])])])
+    &gt;&gt;&gt; whole = Tree(<span class="hljs-number">0</span>, [<span class="hljs-keyword">left</span>, Tree(<span class="hljs-number">13</span>), <span class="hljs-keyword">mid</span>, <span class="hljs-keyword">right</span>])
+    &gt;&gt;&gt; <span class="hljs-keyword">for</span> <span class="hljs-keyword">path</span> <span class="hljs-keyword">in</span> long_paths(whole, <span class="hljs-number">2</span>):
+    ...     print(<span class="hljs-keyword">path</span>)
+    ...
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">6</span> <span class="hljs-number">9</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">11</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">14</span>&gt;
+    &gt;&gt;&gt; <span class="hljs-keyword">for</span> <span class="hljs-keyword">path</span> <span class="hljs-keyword">in</span> long_paths(whole, <span class="hljs-number">3</span>):
+    ...     print(<span class="hljs-keyword">path</span>)
+    ...
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span>&gt;
+    &lt;<span class="hljs-number">0</span> <span class="hljs-number">11</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">14</span>&gt;
+    &gt;&gt;&gt; long_paths(whole, <span class="hljs-number">4</span>)
+    [<span class="hljs-keyword">Link</span>(<span class="hljs-number">0</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">11</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">12</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">13</span>, <span class="hljs-keyword">Link</span>(<span class="hljs-number">14</span>)))))]
+    <span class="hljs-string">"""
+</span><div class="sol-highlight"><span class="hljs-string">    paths = []
+    if n &lt;= 0 and tree.is_leaf():
+        paths.append(Link(tree.label))
+    for b in tree.branches:
+        for path in long_paths(b, n - 1):
+            paths.append(Link(tree.label, path))
+    return paths</span></div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q long_paths</code><button id="copy-code-python3ok-qlong_paths" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qlong_paths").onclick = () => copyCode('python3 ok -q long_paths', "copy-code-python3ok-qlong_paths");
+        </script>
+        <br>
+
+
+<h2 id="linked-lists">Linked Lists</h2>
+
+
+
+<h3 id="q12-flip-two">Q12: Flip Two</h3>
+
+
+<p>Write a recursive function <code>flip_two</code> that takes as input a
+linked list <code>s</code> and mutates <code>s</code> so that every pair of values in the linked list
+is flipped.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">flip_two</span><span class="hljs-params">(s)</span>:</span>
+    <span class="hljs-string">"""
+    &gt;&gt;&gt; one_lnk = Link(1)
+    &gt;&gt;&gt; flip_two(one_lnk)
+    &gt;&gt;&gt; one_lnk
+    Link(1)
+    &gt;&gt;&gt; lnk = Link(1, Link(2, Link(3, Link(4, Link(5)))))
+    &gt;&gt;&gt; flip_two(lnk)
+    &gt;&gt;&gt; lnk
+    Link(2, Link(1, Link(4, Link(3, Link(5)))))
+    """</span>
+<div class="sol-highlight">    <span class="hljs-comment"># Recursive solution:</span>
+    <span class="hljs-keyword">if</span> s <span class="hljs-keyword">is</span> Link.empty <span class="hljs-keyword">or</span> s.rest <span class="hljs-keyword">is</span> Link.empty:
+        <span class="hljs-keyword">return</span>
+    s.first, s.rest.first = s.rest.first, s.first
+    flip_two(s.rest.rest)</div>
+    <span class="hljs-comment"># For an extra challenge, try writing out an iterative approach as well below!</span>
+<div class="sol-highlight">    <span class="hljs-keyword">return</span> <span class="hljs-comment"># separating recursive and iterative implementations</span>
+
+    <span class="hljs-comment"># Iterative approach</span>
+    <span class="hljs-keyword">while</span> s <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> Link.empty <span class="hljs-keyword">and</span> s.rest <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> Link.empty:
+        s.first, s.rest.first = s.rest.first, s.first
+        s = s.rest.rest</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q flip_two</code><button id="copy-code-python3ok-qflip_two" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qflip_two").onclick = () => copyCode('python3 ok -q flip_two', "copy-code-python3ok-qflip_two");
+        </script>
+        <br>
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/lab/sol-lab08/#topics">Topics</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/sol-lab08/#iterators">Iterators</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#iterable-uses">Iterable Uses</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#generators">Generators</a></li>
+  </ul>
+  <li><a href="https://cs61a.org/lab/sol-lab08/#required-questions">Required Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/sol-lab08/#iterators-amp-generators">Iterators &amp; Generators</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q1-repeated">Q1: Repeated</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q2-merge">Q2: Merge</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#linked-lists-amp-trees">Linked Lists &amp; Trees</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q3-deep-linked-list-length">Q3: Deep Linked List Length</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q4-add-leaves">Q4: Add Leaves</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#efficiency">Efficiency</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q5-efficiency-practice">Q5: Efficiency Practice</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#submit">Submit</a></li>
+  </ul>
+  <li><a href="https://cs61a.org/lab/sol-lab08/#extra-practice">Extra Practice</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/sol-lab08/#recursion-and-tree-recursion">Recursion and Tree Recursion</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q6-subsequences">Q6: Subsequences</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q7-non-decreasing-subsequences">Q7: Non-Decreasing Subsequences</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#mutable-lists">Mutable Lists</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q8-shuffle">Q8: Shuffle</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#generators-amp-iterators">Generators &amp; Iterators</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q9-pairs-generator">Q9: Pairs (generator)</a></li>
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q10-pairs-iterator">Q10: Pairs (iterator)</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#trees">Trees</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q11-long-paths">Q11: Long Paths</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/sol-lab08/#linked-lists">Linked Lists</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/sol-lab08/#q12-flip-two">Q12: Flip Two</a></li>
+    </ul>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/loader.min.js.下载"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Lab 8 Solutions _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/jsplumb.min.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/network_storage.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/storable.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/editor.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/copy-button.js.下载"></script>
+    <script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/env-diagram.js.下载"></script>
+    
+<script src="./Lab 8 Solutions _ CS 61A Spring 2022_files/sketchy.js.下载"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
