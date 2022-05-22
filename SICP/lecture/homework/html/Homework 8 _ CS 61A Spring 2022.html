@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<!-- saved from url=(0026)https://cs61a.org/hw/hw08/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/jquery.min.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/bootstrap.min.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/hl.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/toggledarkmode.js.download"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/dark-mode.js.download"></script>
+    <link rel="stylesheet" href="./Homework 8 _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Homework 8 _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Homework 8 _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Homework 8 _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="./Homework 8 _ CS 61A Spring 2022_files/hw.css">
+
+
+    <title>
+Homework 8 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1062.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Homework 8 _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw08/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw08/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/hw/hw08/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Homework 8: Regular Expressions, BNF
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/hw/hw08/hw08.zip" class="label label-outline">hw08.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><em>Due by 11:59pm on Thursday, April 28</em></p>
+
+
+
+
+
+<h2>Instructions</h2>
+
+<p>Download <a href="https://cs61a.org/hw/hw08/hw08.zip">hw08.zip</a>.</p>
+
+<p><strong>Submission:</strong> When you are done, submit with <code>python3 ok
+  --submit</code>.  You may submit more than once before the deadline; only the
+final submission will be scored. Check that you have successfully submitted
+your code on <a href="https://okpy.org/">okpy.org</a>.  See <a href="https://cs61a.org/lab/lab00#submitting-the-assignment">Lab 0</a> for more instructions on
+submitting assignments.</p>
+
+<p><strong>Using Ok:</strong> If you have any questions about using Ok, please
+refer to <a href="https://cs61a.org/articles/using-ok">this guide.</a>
+
+
+
+</p><p><strong>Grading:</strong> Homework is graded based on
+correctness. Each incorrect problem will decrease the total score by one point. There is a homework recovery policy as stated in the syllabus.
+<strong>This homework is out of 2 points.</strong>
+
+
+
+
+    
+</p><h1 id="questions">Questions</h1>
+
+
+
+<h2 id="regex">RegEx</h2>
+
+
+
+<h3 id="q1-cs-classes">Q1: CS Classes</h3>
+
+
+<p>On reddit.com, there is an /r/berkeley subreddit for discussions about everything UC Berkeley.
+However, there is such a large amount of EE and CS-related posts that those posts are auto-tagged
+so that readers can choose to ignore them or read only them.</p>
+
+<p>Write a regular expression that finds strings that resemble a CS or EE class-
+starting with "CS" or "EE", followed by a number, and then optionally followed by "A", "B", or "C".
+Your search should be case insensitive, so both "CS61A" and "cs61a" would match.</p>
+
+<solution>
+
+<pre><code class="hljs sql">import re
+
+def cs_classes(post):
+    """
+    Returns strings that look like a Berkeley CS or EE class,
+    starting <span class="hljs-keyword">with</span> <span class="hljs-string">"CS"</span> <span class="hljs-keyword">or</span> <span class="hljs-string">"EE"</span>, followed <span class="hljs-keyword">by</span> a <span class="hljs-built_in">number</span>, <span class="hljs-keyword">optionally</span> ending <span class="hljs-keyword">with</span> A, B, <span class="hljs-keyword">or</span> C
+    <span class="hljs-keyword">and</span> potentially <span class="hljs-keyword">with</span> a <span class="hljs-keyword">space</span> <span class="hljs-keyword">between</span> <span class="hljs-string">"CS"</span> <span class="hljs-keyword">or</span> <span class="hljs-string">"EE"</span> <span class="hljs-keyword">and</span> the number.
+    <span class="hljs-keyword">Case</span> insensitive.
+
+    &gt;&gt;&gt; cs_classes(<span class="hljs-string">"Is it unreasonable to take CS61A, CS61B, CS70, and EE16A in the summer?"</span>)
+    <span class="hljs-literal">True</span>
+    &gt;&gt;&gt; cs_classes(<span class="hljs-string">"how do I become a TA for cs61a? that job sounds so fun"</span>)
+    <span class="hljs-literal">True</span>
+    &gt;&gt;&gt; cs_classes(<span class="hljs-string">"Can I take ECON101 as a CS major?"</span>)
+    <span class="hljs-literal">False</span>
+    &gt;&gt;&gt; cs_classes(<span class="hljs-string">"Should I do the lab lites or regular labs in EE16A?"</span>)
+    <span class="hljs-literal">True</span>
+    &gt;&gt;&gt; cs_classes(<span class="hljs-string">"thoughts on ee127?"</span>)
+    <span class="hljs-literal">True</span>
+    &gt;&gt;&gt; cs_classes(<span class="hljs-string">"Is 70 considered an EECS class?"</span>)
+    <span class="hljs-literal">False</span>
+    &gt;&gt;&gt; cs_classes(<span class="hljs-string">"What are some good CS upper division courses? I was thinking about CS 161 or CS 169a"</span>)
+    <span class="hljs-literal">True</span>
+    <span class="hljs-string">"""
+    return bool(re.search(__________, post))
+</span></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q cs_classes</code><button id="copy-code-python3ok-qcs_classes" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcs_classes").onclick = () => copyCode('python3 ok -q cs_classes', "copy-code-python3ok-qcs_classes");
+        </script>
+        <br>
+
+
+<h3 id="q2-time-for-times">Q2: Time for Times</h3>
+
+
+<p>You're given a body of text and told that within it are some times.
+Times can be written in two different ways:</p>
+
+<ul>
+  <li>12-hour AM/PM clock: 07:23AM, 05:24PM</li>
+  <li>24-hour clock: 23:59, 12:22, 00:00</li>
+</ul>
+
+<p>Write a regular expression which, for a few examples, would match the following:</p>
+
+<p><code>['07:23AM', '05:24PM', '23:59', '12:22', '00:00']</code></p>
+
+<p>but would not match these invalid "times"</p>
+
+<p><code>['05:64', '70:23']</code></p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> re
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">match_time</span><span class="hljs-params">(text)</span>:</span>
+    <span class="hljs-string">"""
+    &gt;&gt;&gt; match_time("At 07:23AM, I woke up and had some coffee.")
+    True
+    &gt;&gt;&gt; match_time("I looked at my phone at 12:22 to check the weather.")
+    True
+    &gt;&gt;&gt; match_time("At 05:24PM, I had sesame bagels with cream cheese.")
+    True
+    &gt;&gt;&gt; match_time("At 23:59 I was sound asleep.")
+    True
+    &gt;&gt;&gt; match_time("After, the clocked turned to 00:00.")
+    True
+    &gt;&gt;&gt; match_time("Mix water in a 1:2 ratio with chicken stock.")
+    False
+    &gt;&gt;&gt; match_time("At work, I pinged 127.0.0.1:80.")
+    False
+    &gt;&gt;&gt; match_time("The tennis score was 40:30.")
+    False
+    """</span>
+    <span class="hljs-keyword">return</span> bool(re.search(__________, text))
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q match_time</code><button id="copy-code-python3ok-qmatch_time" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qmatch_time").onclick = () => copyCode('python3 ok -q match_time', "copy-code-python3ok-qmatch_time");
+        </script>
+        <br>
+
+
+<h2 id="bnf">BNF</h2>
+
+
+
+<h3 id="q3-linked-list-bnf">Q3: Linked List BNF</h3>
+
+
+<blockquote><p>For the next two problems, you can test your code on <a href="https://code.cs61a.org/">code.cs61a.org</a> by adding the following line at the beginning before the problem's skeleton code:</p>
+
+<pre><code class="hljs sql">?<span class="hljs-keyword">start</span>: <span class="hljs-keyword">link</span>
+<span class="hljs-comment">-- replace link with tree_node for the next question</span></code></pre></blockquote>
+
+<p>In this problem, we're going to define a BNF that parses integer Linked Lists created in Python. We won't be handling <code>Link.empty</code>.</p>
+
+<p>For reference, here are some examples of Linked Lists:</p>
+
+<p><em>Your implementation should be able to handle nested Linked Lists, such as the third example below.</em></p>
+
+<ul>
+  <li><code>Link(2)</code></li>
+  <li><code>Link(12, Link(2))</code></li>
+  <li><code>Link(5, Link(7, Link(Link(8, Link(9)))))</code></li>
+</ul>
+
+<solution>
+
+<pre><code class="hljs">link: "null"
+
+?link_first: "null"
+
+?link_rest: "null"
+
+%ignore /\s+/
+%import common.NUMBER</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q linked_list</code><button id="copy-code-python3ok-qlinked_list" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qlinked_list").onclick = () => copyCode('python3 ok -q linked_list', "copy-code-python3ok-qlinked_list");
+        </script>
+        <br>
+
+
+
+
+<h3 id="q4-tree-bnf">Q4: Tree BNF</h3>
+
+
+<p>Now, we will define a BNF to parse Trees with integer leaves created in Python.</p>
+
+<p>Here are some examples of Trees:</p>
+
+<p><em>Your implementation should be able to handle Trees with no branches and one or more branches.</em></p>
+
+<ul>
+  <li><code>Tree(2)</code></li>
+  <li><code>Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])</code></li>
+</ul>
+
+<solution>
+
+<pre><code class="hljs">tree_node: "null"
+
+?label: "null"
+
+branches: "null"
+
+%ignore /\s+/
+%import common.NUMBER</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q tree</code><button id="copy-code-python3ok-qtree" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qtree").onclick = () => copyCode('python3 ok -q tree', "copy-code-python3ok-qtree");
+        </script>
+        <br>
+
+
+<h3 id="regex-parser">Regex Parser</h3>
+
+
+<p>Previously in CS61A you studied regular expressions (regex), a grammar for pattern matching in strings. In this question you will create a BNF grammar for parsing through regular expression patterns, which we will denote as an <code>rstring</code>. Below, we've defined the following skeleton for <code>rstring</code> grammar:</p>
+
+<pre><code class="hljs">rstring: "r\"" regex* "\""
+
+?regex: character | word
+
+character: LETTER | NUMBER
+word: WORD
+
+%ignore /\s+/
+%import common.LETTER
+%import common.NUMBER
+%import common.WORD</code></pre>
+
+<p>The current implementation is very limited, and can only support alphanumeric patterns which directly match the input. In the following questions, you will implement support for a limited subset of regular expression features.</p>
+
+<blockquote><p>NOTE: for the purposes of testing, we require that your syntax trees match the doctests'. Be sure to define all expressions as noted in the question, and prefix all extra expressions not mentioned in the question with a <code>?</code> (such as <code>?rstring</code>).</p></blockquote>
+
+
+<h3 id="q5-grouping-and-pipes">Q5: Grouping and Pipes</h3>
+
+
+<p>In this question, you will add support for grouping and piping.</p>
+
+<p>Recall that grouping allows for an entire regular expression to be treated as a single unit, and piping allows for a pattern to match an expression on either side. Combined, these will let us create patterns which match multiple strings!</p>
+
+<p>Define the <code>group</code> and <code>pipe</code> expressions in your grammar.</p>
+
+<ol>
+  <li>A <strong><code>group</code></strong> consists of any <code>regex</code> expression surrounded by parentheses (<code>()</code>).</li>
+  <li>A <strong><code>pipe</code></strong> operator consists of a <code>regex</code> expression, followed by a pipe (<code>|</code>) character, and lastly followed by another <code>regex</code> expression.</li>
+</ol>
+
+<p>For example, <code>r"apples"</code> would match exactly the phrase "apples" in an input. If we wanted our pattern from before to match "oranges" as well, we could expand our <code>rstring</code> to do so using groupings and pipes: <code>r"(apples)|(oranges)"</code>.</p>
+
+<blockquote><p>Hint: note that <code>group</code>s and <code>pipe</code>s are valid <code>regex</code> expressions on their own! You may need to update a previously defined expression.</p></blockquote>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q regex_grouping</code><button id="copy-code-python3ok-qregex_grouping" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qregex_grouping").onclick = () => copyCode('python3 ok -q regex_grouping', "copy-code-python3ok-qregex_grouping");
+        </script>
+        <br>
+
+
+<h3 id="q6-classes">Q6: Classes</h3>
+
+
+<p>Now, we will add support for character classes.</p>
+
+<p>Recall that character classes allow for the pattern to match any singular <code>character</code> defined within the class. The class itself consists either of individual <code>character</code>s, or <code>range</code>s of <code>characters</code>.</p>
+
+<p>Specifically, we define the following:</p>
+
+<ol>
+  <li>A <strong><code>range</code></strong> consists of either <code>NUMBER</code>s or <code>LETTER</code>s separated by a hyphen (<code>-</code>).</li>
+  <li>A <strong><code>class</code></strong> expression consists of any number of <code>character</code>s or character <code>range</code>s surrounded by square brackets (<code>[]</code>).</li>
+</ol>
+
+<p>Note that for this question, a range may only consist of either <code>NUMBER</code>s or <code>LETTER</code>s; this means that while <code>[0-9]</code> and <code>[A-Z]</code> are valid ranges, <code>[0-Z]</code> would not be a valid range. In addition, the <code>character</code>s and <code>range</code>s in a <code>class</code> may appear in any order and any number of times. For example, <code>[ad-fc0-9]</code>, <code>[ad-f0-9c]</code>, <code>[a0-9d-fc]</code>, and <code>[0-9ad-fc]</code> are all valid classes.</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q regex_classes</code><button id="copy-code-python3ok-qregex_classes" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qregex_classes").onclick = () => copyCode('python3 ok -q regex_classes', "copy-code-python3ok-qregex_classes");
+        </script>
+        <br>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li><a href="https://cs61a.org/hw/hw08/#questions">Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li class=""><a href="https://cs61a.org/hw/hw08/#regex">RegEx</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class=""><a href="https://cs61a.org/hw/hw08/#q1-cs-classes">Q1: CS Classes</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw08/#q2-time-for-times">Q2: Time for Times</a></li>
+    </ul>
+    <li class=""><a href="https://cs61a.org/hw/hw08/#bnf">BNF</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class=""><a href="https://cs61a.org/hw/hw08/#q3-linked-list-bnf">Q3: Linked List BNF</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw08/#q4-tree-bnf">Q4: Tree BNF</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw08/#regex-parser">Regex Parser</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw08/#q5-grouping-and-pipes">Q5: Grouping and Pipes</a></li>
+      <li class=""><a href="https://cs61a.org/hw/hw08/#q6-classes">Q6: Classes</a></li>
+    </ul>
+    <li class=""><a href="https://cs61a.org/hw/hw08/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/loader.min.js.download"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Homework 8 _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/jsplumb.min.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/network_storage.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/storable.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/editor.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/copy-button.js.download"></script>
+    <script src="./Homework 8 _ CS 61A Spring 2022_files/env-diagram.js.download"></script>
+    
+<script src="./Homework 8 _ CS 61A Spring 2022_files/sketchy.js.download"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

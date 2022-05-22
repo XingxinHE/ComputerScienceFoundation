@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)https://cs61a.org/lab/lab13/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="CS 61A: Structure and Interpretation of Computer Programs">
+    <meta name="keywords" content="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS">
+    <meta name="author" content="Pamela Fox">
+    
+    <meta name="viewport" content="width=device-width">
+
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/jquery.min.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/jquery.ba-throttle-debounce.min.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/bootstrap.min.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/hl.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/toggledarkmode.js.download"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/dark-mode.js.download"></script>
+    <link rel="stylesheet" href="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/css">
+    <link rel="stylesheet" href="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/style.css">
+    <link rel="stylesheet" href="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/mono-blue.css">
+    <link rel="icon" href="https://cs61a.org/assets/images/favicon.ico">
+
+    
+
+    <title>
+Lab 13: Regular Expressions | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home" data-new-gr-c-s-check-loaded="14.1062.0" data-gr-ext-installed="">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://cs61a.org/">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/logo.png">
+          </a>
+        <button type="button" class="btn btn-primary" style="float: left; margin-top: 8px;"><span style="filter: grayscale(100%);">✏️</span></button></div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab13/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+                <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab13/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/instructor">Instructors</a></li>
+                <li><a href="https://cs61a.org/TAs">TAs</a></li>
+                <li><a href="https://cs61a.org/tutors">Tutors</a></li>
+                <li><a href="https://cs61a.org/academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://cs61a.org/lab/lab13/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="https://cs61a.org/resources/">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="https://cs61a.org/articles/campus-res/">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="https://cs61a.org/articles/about">Syllabus</a></li>
+            <li><a href="https://cs61a.org/contact/">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class="row">
+  <div class="col-md-9">
+    <header>
+      <h1>
+        
+Lab 13: Regular Expressions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="https://cs61a.org/lab/lab13/lab13.zip" class="label label-outline">lab13.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><i>Due by 11:59pm on Wednesday, April 20.</i></p>
+
+
+
+
+
+
+<h2 id="starter-files">Starter Files</h2>
+
+<p>Download <a href="https://cs61a.org/lab/lab13/lab13.zip">lab13.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="https://cs61a.org/lab/lab13/ok">Ok</a> autograder.</p>
+
+
+
+
+
+
+
+
+    
+<h1 id="topics">Topics</h1>
+
+
+<p>Consult this section if you need a refresher on the material for this lab. It's okay to skip directly to the questions and refer back here should you get stuck.</p>
+
+<br>
+
+        <button id="toggle-1" class="btn btn-outline btn-lg alwaystoggle toggle" style="display: inline-block;">
+        Regular Expressions<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="regular-expressions">Regular Expressions</h2>
+
+
+<p>Regular expressions are a way to describe sets of strings that meet certain criteria, and are incredibly useful for pattern matching.</p>
+
+<p>The simplest regular expression is one that matches a sequence of characters, like <code>aardvark</code> to match any "aardvark" substrings in a string.</p>
+
+<p>However, you typically want to look for more interesting patterns. We recommend using an online tool like <a href="https://regexr.com/">regexr.com</a> or <a href="https://regex101.com/">regex101.com</a> for trying out patterns, since you'll get instant feedback on the match results.</p>
+
+
+<h3 id="character-classes">Character classes</h3>
+
+
+<p>A character class makes it possible to search for any one of a set of characters. You can specify the set or use pre-defined sets.</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tbody><tr>
+    <th>Class</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>[abc]</code></td>
+    <td>Matches a, b, or c</td>
+  </tr>
+  <tr>
+    <td><code>[a-z]</code></td>
+    <td>Matches any character between a and z</td>
+  </tr>
+  <tr>
+    <td><code>[^A-Z]</code></td>
+    <td>Matches any character that is not between A and Z.</td>
+  </tr>
+  <tr>
+    <td><code>\w</code></td>
+    <td>Matches any "word" character. Equivalent to <code>[A-Za-z0-9_]</code>.</td>
+  </tr>
+  <tr>
+    <td><code>\d</code></td>
+    <td>Matches any digit. Equivalent to <code>[0-9]</code>.</td>
+  </tr>
+  <tr>
+    <td><code>[0-9]</code></td>
+    <td>Matches a single digit in the range 0 - 9. Equivalent to <code>\d</code>.</td>
+  </tr>
+  <tr>
+    <td><code>\s</code></td>
+    <td>Matches any whitespace character (spaces, tabs, line breaks).</td>
+  </tr>
+  <tr>
+    <td><code>.</code></td>
+    <td>Matches any character besides new line.</td>
+  </tr>
+
+          </tbody></table>
+        </div>
+        
+
+
+
+<p>Character classes can be combined, like in <code>[a-zA-Z0-9]</code>.</p>
+
+
+<h3 id="combining-patterns">Combining patterns</h3>
+
+
+<p>There are multiple ways to combine patterns together in regular expressions.</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tbody><tr>
+    <th>Combo</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>AB</code></td>
+    <td>A match for A followed immediately by one for B.  Example: <code>x[.,]y</code> matches "x.y" or "x,y".</td>
+  </tr>
+  <tr>
+    <td><code>A|B</code></td>
+    <td>Matches either A or B.  Example: <code>\d+|Inf</code> matches either a sequence containing 1 or more digits <strong>or</strong> "Inf".</td>
+  </tr>
+
+          </tbody></table>
+        </div>
+        
+
+
+
+<p>A pattern can be followed by one of these quantifiers to specify how many instances of the pattern can occur.</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tbody><tr>
+    <th>Symbol</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>*</code></td>
+    <td>0 or more occurrences of the preceding pattern. Example: <code>[a-z]*</code> matches any sequence of lower-case letters or the empty string.</td>
+  </tr>
+  <tr>
+    <td><code>+</code></td>
+    <td>1 or more occurrences of the preceding pattern. Example: <code>\d+</code> matches any non-empty sequence of digits.</td>
+  </tr>
+  <tr>
+    <td><code>?</code></td>
+    <td>0 or 1 occurrences of the preceding pattern. Example: <code>[-+]?</code> matches an optional sign.</td>
+  </tr>
+  <tr>
+    <td><code>{1,3}</code></td>
+    <td>Matches the specified quantity of the preceding pattern. <code>{1,3}</code> will match from 1 to 3 instances. <code>{3}</code> will match exactly 3 instances. <code>{3,}</code> will match 3 or more instances. Example: <code>\d{5,6}</code> matches either 5 or 6 digit numbers.</td>
+  </tr>
+
+          </tbody></table>
+        </div>
+        
+
+
+
+
+<h3 id="groups">Groups</h3>
+
+
+<p>Parentheses are used similarly as in arithmetic expressions, to create groups. For example, <code>(Mahna)+</code> matches strings with 1 or more "Mahna", like "MahnaMahna". Without the parentheses, <code>Mahna+</code> would match strings with "Mahn" followed by 1 or more "a" characters, like "Mahnaaaa".</p>
+
+
+<h3 id="anchors">Anchors</h3>
+
+
+<ul>
+  <li><code>^</code>: Matches the beginning of a string. Example: <code>^(I|You)</code> matches I or You at the start of a string.</li>
+  <li><code>$</code>: Normally matches the empty string at the end of a string or just before a newline at the end of a string. Example: <code>(\.edu|\.org|\.com)$</code> matches .edu, .org, or .com at the end of a string.</li>
+  <li><code>\b</code>: Matches a "word boundary", the beginning or end of a word.  Example: <code>s\b</code> matches s characters at the end of words.</li>
+</ul>
+
+
+<h3 id="special-characters">Special characters</h3>
+
+
+<p>The following special characters are used above to denote types of patterns:</p>
+
+<pre><code class="hljs">\ ( ) [ ] { } + * ? | $ ^ .</code></pre>
+
+
+
+<p>That means if you actually want to match one of those characters, you have to <em>escape</em> it using a backslash. For example, <code>\(1\+3\)</code> matches "(1 + 3)".</p>
+
+
+<h3 id="using-regular-expressions-in-python">Using regular expressions in Python</h3>
+
+
+<p>Many programming languages have built-in functions for matching strings to regular expressions. We'll use the Python re module in 61A, but you can also use similar functionality in SQL, JavaScript, Excel, shell scripting, etc.</p>
+
+<p>The search method searches for a pattern anywhere in a string:</p>
+
+<pre><code class="hljs python">re.search(<span class="hljs-string">r"(Mahna)+"</span>, <span class="hljs-string">"Mahna Mahna Ba Dee Bedebe"</span>)</code></pre>
+
+
+
+<p>That method returns back a match object, which is considered truth-y in Python and can be inspected to find the matching strings. If no match is found, returns <code>None</code>.</p>
+
+<p>For more details, please consult the <a href="https://docs.python.org/3/library/re.html">re module documentation</a> or the <a href="https://docs.python.org/3/howto/regex.html">re tutorial</a>.
+</p></div>
+<br><p></p>
+
+
+<h1 id="questions">Questions</h1>
+
+
+
+<h2 id="regular-expressions-2">Regular Expressions</h2>
+
+
+
+<h3 id="q1-what-would-regex-match">Q1: What Would RegEx Match?</h3>
+
+
+<p>For each of the following regular expressions, suggest a string that would be fully matched.</p>
+
+<blockquote><p>Use Ok to test your knowledge by choosing the best answer for each of the following questions:</p>
+
+<pre><code class="hljs">python3 ok -q wwrm -u</code></pre></blockquote>
+
+<!-- hack for separate blockquotes -->
+
+<blockquote><p>A hexadecimal color code begins with <code>#</code> and is followed by exactly six hexadecimal numbers, which can be the digits 0-9 or letters a-f.</p></blockquote>
+
+<pre><code class="hljs sql">Q: <span class="hljs-comment">#[a-f0-9]{6}</span>
+Choose the number of the correct choice:
+0) A hexadecimal color code <span class="hljs-keyword">with</span> <span class="hljs-number">3</span> letters <span class="hljs-keyword">and</span> <span class="hljs-number">3</span> numbers
+<span class="hljs-number">1</span>) A hexadecimal color code that starts <span class="hljs-keyword">with</span> letters <span class="hljs-keyword">and</span> ends <span class="hljs-keyword">with</span> numbers, <span class="hljs-keyword">like</span> <span class="hljs-comment">#gg1234</span>
+<span class="hljs-number">2</span>) <span class="hljs-keyword">Any</span> <span class="hljs-number">6</span>-digit hexadecimal color code, <span class="hljs-keyword">like</span> <span class="hljs-comment">#fdb515</span>
+<span class="hljs-number">3</span>) <span class="hljs-keyword">Any</span> hexadecimal color code <span class="hljs-keyword">with</span> <span class="hljs-number">0</span><span class="hljs-number">-6</span> digits
+
+Q: (fizz(buzz|)|buzz)
+<span class="hljs-keyword">Choose</span> the <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> the correct choice:
+<span class="hljs-number">0</span>) <span class="hljs-keyword">Only</span> fizzbuzz <span class="hljs-keyword">or</span> buzz
+<span class="hljs-number">1</span>) <span class="hljs-keyword">Only</span> fizzbuzzbuzz
+<span class="hljs-number">2</span>) <span class="hljs-keyword">Only</span> fizz
+<span class="hljs-number">3</span>) <span class="hljs-keyword">Only</span> fizzbuzz, fizz, <span class="hljs-keyword">and</span> buzz
+<span class="hljs-number">4</span>) <span class="hljs-keyword">Only</span> fizzbuzz
+
+Q: [-+]?\d*\.?\d+
+<span class="hljs-keyword">Choose</span> the <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> the correct choice:
+<span class="hljs-number">0</span>) <span class="hljs-keyword">Only</span> signed numbers <span class="hljs-keyword">like</span> +<span class="hljs-number">1000</span>, <span class="hljs-number">-1.5</span>
+<span class="hljs-number">1</span>) <span class="hljs-keyword">Only</span> signed <span class="hljs-keyword">or</span> <span class="hljs-keyword">unsigned</span> integers <span class="hljs-keyword">like</span> +<span class="hljs-number">1000</span>, <span class="hljs-number">-33</span>
+<span class="hljs-number">2</span>) Signed <span class="hljs-keyword">or</span> <span class="hljs-keyword">unsigned</span> numbers <span class="hljs-keyword">like</span> +<span class="hljs-number">1000</span>, <span class="hljs-number">-1.5</span>, <span class="hljs-number">.051</span>
+<span class="hljs-number">3</span>) <span class="hljs-keyword">Only</span> <span class="hljs-keyword">unsigned</span> numbers <span class="hljs-keyword">like</span> <span class="hljs-number">0.051</span>
+
+Q: [<span class="hljs-number">1</span><span class="hljs-number">-9</span>]+[<span class="hljs-number">05</span>]+
+<span class="hljs-keyword">Choose</span> the <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> the correct choice:
+<span class="hljs-number">0</span>) <span class="hljs-keyword">Any</span> positive <span class="hljs-built_in">number</span>
+<span class="hljs-number">1</span>) Numbers that <span class="hljs-keyword">are</span> <span class="hljs-keyword">both</span> greater <span class="hljs-keyword">than</span> <span class="hljs-number">5</span> <span class="hljs-keyword">and</span> divisible <span class="hljs-keyword">by</span> <span class="hljs-number">5</span> <span class="hljs-keyword">like</span> <span class="hljs-number">10</span>, <span class="hljs-number">25</span>, <span class="hljs-number">800</span>
+<span class="hljs-number">2</span>) Numbers that <span class="hljs-keyword">are</span> divisible <span class="hljs-keyword">by</span> <span class="hljs-number">5</span> but <span class="hljs-keyword">do</span> <span class="hljs-keyword">not</span> have the digits <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> <span class="hljs-number">5</span> adjacent <span class="hljs-keyword">to</span> <span class="hljs-keyword">each</span> other <span class="hljs-keyword">as</span> the <span class="hljs-keyword">last</span> <span class="hljs-number">2</span> digits
+<span class="hljs-number">3</span>) Numbers that <span class="hljs-keyword">are</span> divisible <span class="hljs-keyword">by</span> <span class="hljs-number">5</span> <span class="hljs-keyword">like</span> <span class="hljs-number">5</span>, <span class="hljs-number">20</span>, <span class="hljs-number">6325</span></code></pre>
+
+
+<h3 id="q2-scientific-name">Q2: Scientific Name</h3>
+
+
+<p>Returns whether the input string <code>name</code> follows the correct format for a scientific name. A scientific name's format is as follows: starts with a capital letter, followed by a period (<code>.</code>) or a series of lowercase letters, followed by a space, followed by a series of lowercase letters. Refer to the doctests for examples of valid and invalid strings.</p>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> re
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">scientific_name</span><span class="hljs-params">(name)</span>:</span>
+    <span class="hljs-string">"""
+    Returns True for strings that are in the correct notation for scientific names;
+    i.e. contains a capital letter followed by a period or lowercase letters, 
+    followed by a space, followed by more lowercase letters. Returns False for 
+    invalid strings.
+
+    &gt;&gt;&gt; scientific_name("T. rex")
+    True
+    &gt;&gt;&gt; scientific_name("t. rex")
+    False
+    &gt;&gt;&gt; scientific_name("tyrannosurus rex")
+    False
+    &gt;&gt;&gt; scientific_name("t rex")
+    False
+    &gt;&gt;&gt; scientific_name("Falco peregrinus")
+    True
+    &gt;&gt;&gt; scientific_name("F peregrinus")
+    False
+    &gt;&gt;&gt; scientific_name("Annie the F. peregrinus")
+    False
+    &gt;&gt;&gt; scientific_name("I want a pet T. rex right now")
+    False
+    """</span>
+    <span class="hljs-keyword">return</span> bool(re.search(__________, name))
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q scientific_name</code><button id="copy-code-python3ok-qscientific_name" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qscientific_name").onclick = () => copyCode('python3 ok -q scientific_name', "copy-code-python3ok-qscientific_name");
+        </script>
+        <br>
+
+
+<h3 id="q3-calculator-ops">Q3: Calculator Ops</h3>
+
+
+<p>Write a regular expression that parses strings written
+in the 61A Calculator language and returns <code>True</code> if any expression
+has exactly two numeric operands. Returns <code>False</code> otherwise.</p>
+
+<blockquote><p>Note: the allowed operators are <code>+</code>, <code>-</code>, <code>*</code>, and <code>/</code>. Check these <a href="https://cs61a.org/assets/slides/27-Interpreters_Calculator.html#/15">lecture slides</a> for a refresher
+on what the 61A calculator language is.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> re
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calculator_ops</span><span class="hljs-params">(calc_str)</span>:</span>
+    <span class="hljs-string">"""
+    Returns True if an expression from the Calculator language that has two
+    numeric operands exists in calc_str, False otherwise.
+
+    &gt;&gt;&gt; calculator_ops("(* 2 4)")
+    True
+    &gt;&gt;&gt; calculator_ops("(+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))")
+    True
+    &gt;&gt;&gt; calculator_ops("(* 2)")
+    False
+    &gt;&gt;&gt; calculator_ops("(/ 8 4 2)")
+    False
+    &gt;&gt;&gt; calculator_ops("(- 8 3)")
+    True
+    &gt;&gt;&gt; calculator_ops("+ 3 23")
+    False
+    """</span>
+    <span class="hljs-keyword">return</span> bool(re.search(__________, calc_str))
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q calculator_ops</code><button id="copy-code-python3ok-qcalculator_ops" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcalculator_ops").onclick = () => copyCode('python3 ok -q calculator_ops', "copy-code-python3ok-qcalculator_ops");
+        </script>
+        <br>
+
+
+<h3 id="q4-roman-numerals">Q4: Roman Numerals</h3>
+
+
+<p>Return <code>True</code> if any string of letters that resemble a Roman numeral
+exists in <code>text</code> and aren't part of another word. A Roman numeral is made up of the letters <code>I</code>, <code>V</code>, <code>X</code>, <code>L</code>, <code>C</code>, <code>D</code>, <code>M</code> and is at least one letter long.</p>
+
+<blockquote><p>For the purposes of this problem, don't worry about whether or not a Roman numeral is valid.
+For example, "VIIIII" is not a Roman numeral, but it is fine if your regex matches it.</p></blockquote>
+
+<solution>
+
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> re
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">roman_numerals</span><span class="hljs-params">(text)</span>:</span>
+    <span class="hljs-string">"""
+    Returns True if any string of letters that could be a Roman numeral
+    (made up of the letters I, V, X, L, C, D, M) is found. Returns False otherwise.
+
+    &gt;&gt;&gt; roman_numerals("Sir Richard IIV, can you tell Richard VI that Richard IV is on the phone?")
+    True
+    &gt;&gt;&gt; roman_numerals("My TODOs: I. Groceries II. Learn how to count in Roman IV. Profit")
+    True
+    &gt;&gt;&gt; roman_numerals("I. Act 1 II. Act 2 III. Act 3 IV. Act 4 V. Act 5")
+    True
+    &gt;&gt;&gt; roman_numerals("Let's play Civ VII")
+    True
+    &gt;&gt;&gt; roman_numerals("i love vi so much more than emacs.")
+    False
+    &gt;&gt;&gt; roman_numerals("she loves ALL editors equally.")
+    False
+    """</span>
+    <span class="hljs-keyword">return</span> bool(re.search(__________, text))
+</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q roman_numerals</code><button id="copy-code-python3ok-qroman_numerals" class="inline-copy-button"><code class="nohighlight"><div class="copy-tooltip"><span>Copy</span></div>✂️</code></button></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qroman_numerals").onclick = () => copyCode('python3 ok -q roman_numerals', "copy-code-python3ok-qroman_numerals");
+        </script>
+        <br>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code class="hljs sql">python3 ok <span class="hljs-comment">--submit</span></code></pre>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class="col-md-3 sticky">
+    <nav class="hidden-print hidden-sm hidden-xs sidebar">
+      <ul class="nav nav-stacked noselect">
+  <li class=""><a href="https://cs61a.org/lab/lab13/#topics">Topics</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li><a href="https://cs61a.org/lab/lab13/#regular-expressions">Regular Expressions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li><a href="https://cs61a.org/lab/lab13/#character-classes">Character classes</a></li>
+      <li><a href="https://cs61a.org/lab/lab13/#combining-patterns">Combining patterns</a></li>
+      <li><a href="https://cs61a.org/lab/lab13/#groups">Groups</a></li>
+      <li><a href="https://cs61a.org/lab/lab13/#anchors">Anchors</a></li>
+      <li><a href="https://cs61a.org/lab/lab13/#special-characters">Special characters</a></li>
+      <li><a href="https://cs61a.org/lab/lab13/#using-regular-expressions-in-python">Using regular expressions in Python</a></li>
+    </ul>
+  </ul>
+  <li class=""><a href="https://cs61a.org/lab/lab13/#questions">Questions</a></li>
+  <ul class="nav nav-stacked noselect">
+    <li class=""><a href="https://cs61a.org/lab/lab13/#regular-expressions-2">Regular Expressions</a></li>
+    <ul class="nav nav-stacked noselect">
+      <li class=""><a href="https://cs61a.org/lab/lab13/#q1-what-would-regex-match">Q1: What Would RegEx Match?</a></li>
+      <li class=""><a href="https://cs61a.org/lab/lab13/#q2-scientific-name">Q2: Scientific Name</a></li>
+      <li class=""><a href="https://cs61a.org/lab/lab13/#q3-calculator-ops">Q3: Calculator Ops</a></li>
+      <li class=""><a href="https://cs61a.org/lab/lab13/#q4-roman-numerals">Q4: Roman Numerals</a></li>
+    </ul>
+    <li><a href="https://cs61a.org/lab/lab13/#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/weekly">Weekly Schedule</a></li>
+            <li><a href="https://cs61a.org/office-hours">Office Hours</a></li>
+            <li><a href="https://cs61a.org/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/studying">Studying Guide</a></li>
+            <li><a href="https://cs61a.org/articles/debugging">Debugging Guide</a></li>
+            <li><a href="https://cs61a.org/articles/composition">Composition Guide</a></li>
+            <li><a href="https://cs61a.org/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="https://cs61a.org/articles/about#assignments">Assignments</a></li>
+            <li><a href="https://cs61a.org/articles/about#exams">Exams</a></li>
+            <li><a href="https://cs61a.org/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/loader.min.js.download"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/jsplumb.min.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/network_storage.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/storable.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/editor.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/copy-button.js.download"></script>
+    <script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/env-diagram.js.download"></script>
+    
+<script src="./Lab 13_ Regular Expressions _ CS 61A Spring 2022_files/sketchy.js.download"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
